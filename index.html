@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>DM Dynamic Pro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0d6efd; --success: #10b981; }
+    body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; font-size: 14px; }
+    .card-main { border: none; border-radius: 0; box-shadow: none; min-height: 100vh; }
+    @media (min-width: 768px) { .card-main { border-radius: 15px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: auto; } }
+    
+    .header-clinica { background: var(--primary); color: white; padding: 12px; text-align: center; }
+    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 12px 5px; color: #6c757d; border: none; }
+    .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--primary) !important; background: none !important; }
+    
+    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #dee2e6; background: white; padding: 10px; border-radius: 10px; font-size: 0.75rem; text-align: left; }
+    .cart-item { background: #fff; border-left: 4px solid var(--success); padding: 10px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .total-box { font-size: 1.2rem; font-weight: bold; color: var(--primary); text-align: right; padding: 10px 0; }
+    
+    #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+    #custom-alert { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; }
+    .alert-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; text-align: center; width: 80%; max-width: 300px; }
+    
+    .historial-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    label { font-weight: 600; color: #444; margin-bottom: 2px; display: block; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+<div id="spinner-overlay">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2 fw-bold text-primary">Procesando...</p>
+</div>
+
+<div id="custom-alert">
+  <div class="alert-content">
+    <div style="font-size: 40px; color: var(--success);">✔</div>
+    <h5 class="my-3 fw-bold">REGISTRO EXITOSO</h5>
+    <button class="btn btn-primary w-100" onclick="location.reload()">Aceptar</button>
+  </div>
+</div>
+
+<div class="container-fluid p-0">
+  <div class="card card-main">
+    <div class="header-clinica">
+      <h6 class="mb-0 fw-bold">DM DYNAMIC PRO</h6>
+    </div>
+
+    <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button">ADMISIÓN</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-res" type="button">RESULTADOS</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-his" type="button">HISTORIAL</button></li>
+    </ul>
+
+    <div class="tab-content p-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control form-control-sm"></div>
+          <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control form-control-sm"></div>
+          <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control form-control-sm"></div>
+          <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control form-control-sm"></div>
+          <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control form-control-sm"></div>
+          <div class="col-6"><label>Celular</label><input type="tel" id="celular" class="form-control form-control-sm"></div>
+          <div class="col-6"><label>Pago</label>
+            <select id="tipoPago" class="form-select form-select-sm">
+              <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
+            </select>
+          </div>
+          <div class="col-12"><label>Origen</label>
+            <select id="origen" class="form-select form-select-sm">
+              <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+        <div id="container-cats" class="mb-2 d-flex overflow-auto pb-2" style="gap: 5px;"></div>
+        <div id="container-items" class="d-flex flex-wrap bg-light rounded p-1 mb-3"></div>
+        <div id="cart-list"></div>
+        <div id="cart-total" class="total-box">Total: S/ 0.00</div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-res" role="tabpanel">
+        <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="5"></textarea></div>
+        <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="5"></textarea></div>
+        <div class="mb-3"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-his" role="tabpanel">
+        <div class="input-group mb-3 shadow-sm">
+          <input type="tel" id="buscardni" class="form-control" placeholder="DNI del paciente...">
+          <button class="btn btn-primary" onclick="ejecutarBusqueda()">🔍</button>
+        </div>
+        <div id="historial-resultados">
+          <p class="text-center text-muted small py-4">Ingrese un DNI para buscar antecedentes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-3 bg-white border-top">
+      <button id="btnEnviar" onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow py-3 fw-bold">GUARDAR TODO</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // CONFIGURACIÓN API
+  const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
+  const params = new URLSearchParams(window.location.search);
+  const ID_CLINICA = params.get('id');
+
+  let configLocal = [];
+  let carrito = [];
+
+  window.onload = async () => {
+    if (!ID_CLINICA) {
+      alert("⚠️ Error: No se detectó el ID de la clínica en la URL.");
+      return;
+    }
+    document.getElementById('spinner-overlay').style.display = 'flex';
+    try {
+      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      configLocal = await resp.json();
+      if(configLocal.error) throw new Error(configLocal.error);
+      dibujarCategorias();
+    } catch (e) {
+      alert("Error al cargar configuración: " + e.message);
+    }
+    document.getElementById('spinner-overlay').style.display = 'none';
+  };
+
+  function dibujarCategorias() {
+    const cats = [...new Set(configLocal.map(i => i.categoria))];
+    document.getElementById('container-cats').innerHTML = cats.map(c => 
+      `<button class="btn btn-sm btn-outline-primary flex-shrink-0" onclick="dibujarItems('${c}')">${c}</button>`
+    ).join('');
+  }
+
+  function dibujarItems(cat) {
+    const filtrados = configLocal.filter(i => i.categoria === cat);
+    document.getElementById('container-items').innerHTML = filtrados.map(i => 
+      `<button class="btn btn-item shadow-sm" onclick="agregarAlCarrito('${i.nombre}')">
+        <b>${i.nombre}</b><br><span class="text-primary">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
+      </button>`
+    ).join('');
+  }
+
+  function agregarAlCarrito(nombre) {
+    const item = configLocal.find(i => i.nombre === nombre);
+    carrito.push({...item, idUnico: Date.now() + Math.random()});
+    actualizarVistaCarrito();
+  }
+
+  function actualizarVistaCarrito() {
+    let total = 0;
+    document.getElementById('cart-list').innerHTML = carrito.map(i => {
+      total += parseFloat(i.pvp);
+      return `<div class="cart-item">
+                <span class="text-truncate" style="max-width:60%">${i.nombre}</span>
+                <div>
+                  <span class="fw-bold text-primary me-2">S/${parseFloat(i.pvp).toFixed(2)}</span>
+                  <span class="text-danger fw-bold" style="cursor:pointer" onclick="borrar(${i.idUnico})">✕</span>
+                </div>
+              </div>`;
+    }).join('');
+    document.getElementById('cart-total').innerText = `Total: S/ ${total.toFixed(2)}`;
+  }
+  
+  function borrar(id) { carrito = carrito.filter(x => x.idUnico !== id); actualizarVistaCarrito(); }
+
+  async function ejecutarBusqueda() {
+    const dni = document.getElementById('buscardni').value.trim();
+    if(!dni) return;
+    document.getElementById('spinner-overlay').style.display = 'flex';
+    try {
+      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${dni}`);
+      const res = await resp.json();
+      const cont = document.getElementById('historial-resultados');
+      
+      if(!res || res.length === 0) {
+        cont.innerHTML = '<div class="alert alert-light text-center border mt-3 small">Sin antecedentes encontrados.</div>';
+      } else {
+        cont.innerHTML = res.map(r => `
+          <div class="historial-card">
+            <div class="d-flex justify-content-between small mb-1 border-bottom pb-1 text-primary fw-bold">
+              <span>📅 ${r.fecha}</span><span class="badge bg-light text-primary border">${r.servicio}</span>
+            </div>
+            <div class="fw-bold mt-1" style="font-size:0.9rem">${r.producto}</div>
+            <div class="bg-light p-2 rounded mt-2 small" style="font-size:0.75rem"><b>Dx:</b> ${r.diagnostico || '-'}</div>
+            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.tratamiento || '-'}</div>
+          </div>`).join('');
+      }
+    } catch (e) { alert("Error en búsqueda de historial"); }
+    document.getElementById('spinner-overlay').style.display = 'none';
+  }
+
+  async function enviarDatos() {
+    const dni = document.getElementById('dni').value;
+    if(!dni || carrito.length === 0) return alert("DNI y servicios en el carrito son obligatorios");
+    
+    document.getElementById('spinner-overlay').style.display = 'flex';
+    const payload = {
+      dni, 
+      nombre: document.getElementById('nombrePac').value,
+      apellidoP: document.getElementById('apePat').value,
+      apellidoM: document.getElementById('apeMat').value,
+      edad: document.getElementById('edad').value,
+      celular: document.getElementById('celular').value,
+      tipoPago: document.getElementById('tipoPago').value,
+      origen: document.getElementById('origen').value,
+      diagnostico: document.getElementById('diag').value,
+      analisis: document.getElementById('analisis').value,
+      tratamiento: document.getElementById('trat').value,
+      carrito
+    };
+
+    try {
+      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const res = await resp.json();
+      if(res.resultado === "OK") {
+        document.getElementById('custom-alert').style.display = 'block';
+      } else {
+        alert("Error: " + (res.error || "No se pudo guardar"));
+      }
+    } catch (e) { alert("Error al conectar con el servidor"); }
+    document.getElementById('spinner-overlay').style.display = 'none';
+  }
+</script>
+</body>
+</html>
