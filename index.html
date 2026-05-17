@@ -22,14 +22,18 @@
     
     body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
     
-    /* CABECERA CO-BRANDING PREMIUM */
-    .header-clinica { background: #ffffff; padding: 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .brand-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
-    .logo-dm { max-height: 48px; width: auto; object-fit: contain; }
-    .brand-divider { width: 1px; height: 35px; background-color: #cbd5e1; display: none; } 
-    .client-brand-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .logo-cliente { max-height: 48px; width: auto; object-fit: contain; display: none; } 
-    .txt-clinica-nombre { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; text-align: center; }
+    /* CABECERA CO-BRANDING PREMIUM TOTALMENTE CENTRADA Y VERTICAL */
+    .header-clinica { background: #ffffff; padding: 18px 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .brand-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    .logos-container { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; }
+    
+    .logo-dm { max-height: 55px; width: auto; object-fit: contain; }
+    .brand-divider { width: 1px; height: 40px; background-color: #cbd5e1; display: none; } 
+    .logo-cliente { max-height: 55px; width: auto; object-fit: contain; display: none; } 
+    
+    .txt-potenciando-box { width: 100%; text-align: center; margin-top: 4px; }
+    .txt-clinica-nombre { font-size: 0.8rem; font-weight: 500; color: #64748b; letter-spacing: 0.3px; line-height: 1.4; }
+    .txt-clinica-nombre strong { color: var(--primary); font-weight: 700; text-transform: uppercase; }
 
     .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
     .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 14px 5px; text-transform: uppercase; }
@@ -92,13 +96,16 @@
   <div class="card border-0 rounded-0 min-vh-100" style="background: transparent;">
     
     <div class="header-clinica">
-      <div class="brand-container">
-        <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
-        
-        <div id="web-brand-divider" class="brand-divider"></div>
-        
-        <div class="client-brand-box">
+      <div class="brand-wrapper">
+        <div class="logos-container">
+          <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
+          
+          <div id="web-brand-divider" class="brand-divider"></div>
+          
           <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Cliente">
+        </div>
+        
+        <div class="txt-potenciando-box">
           <div id="web-clinica-nombre" class="txt-clinica-nombre">Cargando...</div>
         </div>
       </div>
@@ -207,7 +214,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Asegúrate de cambiar esta URL por la de tu nueva implementación ejecutora de Apps Script si es necesario
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
@@ -221,8 +227,13 @@
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
       const respuestaBackend = await r.json();
       
-      // PROCESADO DINÁMICO DE MARCAS COMPARTIDAS
-      document.getElementById('web-clinica-nombre').innerText = respuestaBackend.clinicaNombre;
+      // FORMATEO DINÁMICO DE LA ALIANZA CENTRADA ABAJO
+      if(respuestaBackend.clinicaNombre && respuestaBackend.clinicaNombre.trim() !== "") {
+         document.getElementById('web-clinica-nombre').innerHTML = `DM DYNAMIC ANALYTICS está potenciando a <strong>${respuestaBackend.clinicaNombre}</strong>`;
+      } else {
+         document.getElementById('web-clinica-nombre').innerText = "";
+      }
+
       if(respuestaBackend.clinicaLogo && respuestaBackend.clinicaLogo.trim() !== "") {
          document.getElementById('web-clinica-logo').src = respuestaBackend.clinicaLogo;
          document.getElementById('web-clinica-logo').style.display = 'block';
