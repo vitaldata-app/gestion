@@ -5,15 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>DM Dynamic Pro</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #0d6efd; --success: #10b981; }
+    :root { 
+      --primary: #0d6efd; 
+      --success: #10b981; 
+      /* Colores Conductuales */
+      --color-0-30: #94a3b8;   /* Platino / Gris Azulado */
+      --color-31-60: #38bdf8;  /* Azul Turquesa */
+      --color-61-90: #10b981;  /* Verde Esmeralda */
+      --color-91-99: #f59e0b;  /* Oro / Amarillo */
+      --color-100: #d946ef;    /* Magenta Eléctrico / Éxito */
+    }
     body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; font-size: 14px; }
     .card-main { border: none; border-radius: 0; box-shadow: none; min-height: 100vh; }
     @media (min-width: 768px) { .card-main { border-radius: 15px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: auto; } }
     
     .header-clinica { background: var(--primary); color: white; padding: 12px; text-align: center; }
-    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 12px 5px; color: #6c757d; border: none; }
+    .nav-tabs .nav-link { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; padding: 12px 3px; color: #6c757d; border: none; }
     .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--primary) !important; background: none !important; }
     
     .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #dee2e6; background: white; padding: 10px; border-radius: 10px; font-size: 0.75rem; text-align: left; }
@@ -26,6 +35,22 @@
     
     .historial-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     label { font-weight: 600; color: #444; margin-bottom: 2px; display: block; font-size: 0.75rem; }
+
+    /* ESTILOS DEL NUEVO COMPONENTE: DASHBOARD MOTIVACIONAL */
+    .dashboard-locked { text-align: center; padding: 40px 20px; }
+    .pin-input { font-size: 1.8rem; text-align: center; letter-spacing: 10px; width: 160px; margin: 15px auto; display: block; border-radius: 10px; border: 2px solid #ced4da; }
+    
+    .circle-progress-wrapper { position: relative; width: 200px; height: 200px; margin: 20px auto; }
+    .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .circle-bg { fill: none; stroke: #e6e6e6; stroke-width: 14; }
+    .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 565.48; stroke-dashoffset: 565.48; transition: stroke-dashoffset 0.8s ease, stroke 0.5s ease; }
+    .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: #333; }
+    
+    .motivacion-box { background: #f8fafc; border-radius: 12px; padding: 15px; border-left: 5px solid var(--color-0-30); transition: border-color 0.5s ease; }
+    .meta-num-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .task-item { background: #fff; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; }
+    .task-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; cursor: not-allowed; }
+    .task-completed { text-decoration: line-through; color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -46,13 +71,14 @@
 <div class="container-fluid p-0">
   <div class="card card-main">
     <div class="header-clinica">
-      <h6 class="mb-0 fw-bold">DM DYNAMIC PRO</h6>
+      <h6 id="titulo-header" class="mb-0 fw-bold">DM DYNAMIC PRO</h6>
     </div>
 
     <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
       <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button">ADMISIÓN</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-res" type="button">RESULTADOS</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-his" type="button">HISTORIAL</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dash" type="button" onclick="verificarAccesoDashboard()">DASHBOARD</button></li>
     </ul>
 
     <div class="tab-content p-3" id="myTabContent">
@@ -97,9 +123,43 @@
           <p class="text-center text-muted small py-4">Ingrese un DNI para buscar antecedentes.</p>
         </div>
       </div>
+
+      <div class="tab-pane fade" id="tab-dash" role="tabpanel">
+        <div id="dash-lock-view" class="dashboard-locked">
+          <div style="font-size:35px;">🔒</div>
+          <h6 class="fw-bold mt-2 text-secondary">Acceso Privado Gerencial</h6>
+          <p class="text-muted small">Por seguridad, ingrese el PIN de la clínica:</p>
+          <input type="password" id="dash-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPin()">
+          <div id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;">⚠️ PIN Incorrecto</div>
+        </div>
+
+        <div id="dash-content-view" style="display:none;">
+          <h6 class="fw-bold text-center text-primary uppercase mb-1">PROGRESO FINANCIERO SEMANAL</h6>
+          
+          <div class="circle-progress-wrapper">
+            <svg class="circle-progress-svg">
+              <circle class="circle-bg" cx="100" cy="100" r="90"></circle>
+              <circle id="dash-circle-fill" class="circle-fill" cx="100" cy="100" r="90"></circle>
+            </svg>
+            <div id="dash-txt-porcentaje" class="circle-percentage">0%</div>
+          </div>
+
+          <div id="dash-mensaje-box" class="motivacion-box text-center shadow-sm mb-3">
+            <p id="dash-txt-mensaje" class="fw-bold small mb-0 text-secondary">Cargando análisis...</p>
+          </div>
+
+          <div class="row g-2 mb-4">
+            <div class="col-6"><div class="meta-num-box"><b>Meta:</b><br><span id="dash-txt-meta" class="text-secondary fw-bold">S/ 0.00</span></div></div>
+            <div class="col-6"><div class="meta-num-box"><b>Logrado:</b><br><span id="dash-txt-logrado" class="text-dark fw-bold">S/ 0.00</span></div></div>
+          </div>
+
+          <h6 class="fw-bold text-secondary border-bottom pb-2 mb-2" style="font-size:0.8rem; letter-spacing: 1px;">OBJETIVOS ACTUARIALES DE LA SEMANA</h6>
+          <div id="dash-container-tareas"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="p-3 bg-white border-top">
+    <div id="panel-guardar" class="p-3 bg-white border-top">
       <button id="btnEnviar" onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow py-3 fw-bold">GUARDAR TODO</button>
     </div>
   </div>
@@ -107,13 +167,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // CONFIGURACIÓN API
+  // CONFIGURACIÓN API (Enlace verificado de tu Apps Script publicado)
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
+  const PIN_MAESTRO = "8520"; // Pin por defecto para el dueño de la clínica
 
   let configLocal = [];
   let carrito = [];
+  let dashboardCargado = false;
 
   window.onload = async () => {
     if (!ID_CLINICA) {
@@ -132,6 +194,114 @@
     document.getElementById('spinner-overlay').style.display = 'none';
   };
 
+  // Manejo visual del botón inferior según la pestaña seleccionada
+  function verificarAccesoDashboard() {
+    document.getElementById('panel-guardar').style.display = 'none';
+  }
+  
+  // Escuchar clicks en las pestañas comunes para devolver el botón "Guardar"
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      if(e.target.innerText !== "DASHBOARD") {
+        document.getElementById('panel-guardar').style.display = 'block';
+      }
+    });
+  });
+
+  // Validación de PIN en pantalla del celular
+  function evaluarPin() {
+    const input = document.getElementById('dash-pin');
+    const errorTxt = document.getElementById('pin-error');
+    if(input.value === PIN_MAESTRO) {
+      errorTxt.style.display = 'none';
+      document.getElementById('dash-lock-view').style.display = 'none';
+      document.getElementById('dash-content-view').style.display = 'block';
+      input.value = "";
+      cargarMetasServidor();
+    } else if (input.value.length === 4) {
+      errorTxt.style.display = 'block';
+      input.value = "";
+    }
+  }
+
+  // Carga e interpretación Neuro-Conductual de los datos de la pestaña METAS
+  async function cargarMetasServidor() {
+    if(dashboardCargado) return; // Evita peticiones dobles innecesarias
+    document.getElementById('spinner-overlay').style.display = 'flex';
+    try {
+      const response = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas`);
+      const res = await response.json();
+      
+      if(res.error) {
+        alert(res.mensaje);
+        return;
+      }
+      
+      dashboardCargado = true;
+      const f = res.metaFinanciera;
+      
+      // Actualizar montos en pantalla
+      document.getElementById('dash-txt-meta').innerText = `S/ ${parseFloat(f.meta).toFixed(2)}`;
+      document.getElementById('dash-txt-logrado').innerText = `S/ ${parseFloat(f.logrado).toFixed(2)}`;
+      document.getElementById('dash-txt-porcentaje').innerText = `${f.porcentaje}%`;
+
+      // 1. Física de la barra circular animada (Radio = 90, Circunferencia = 2 * PI * r = 565.48)
+      const ring = document.getElementById('dash-circle-fill');
+      const circunferencia = 565.48;
+      // Capamos el porcentaje visual al 100% para que el círculo no dé vueltas raras si se superan las utilidades
+      const porcentajeVisual = Math.min(f.porcentaje, 100);
+      const offset = circunferencia - (porcentajeVisual / 100) * circunferencia;
+      ring.style.strokeDashoffset = offset;
+
+      // 2. Selección del color conductual y mensaje psicológico basado en el porcentaje exacto
+      const msgBox = document.getElementById('dash-mensaje-box');
+      const msgTxt = document.getElementById('dash-txt-mensaje');
+      let colorAplicado = "";
+      let fraseMotivadora = "";
+
+      if(f.porcentaje <= 30) {
+        colorAplicado = "var(--color-0-30)";
+        fraseMotivadora = "¡Buen arranque! Cada paciente cuenta para el éxito.";
+      } else if (f.porcentaje <= 60) {
+        colorAplicado = "var(--color-31-60)";
+        fraseMotivadora = "¡Gran ritmo! La clínica está en movimiento. ¡Sigamos sumando!";
+      } else if (f.porcentaje <= 90) {
+        colorAplicado = "var(--color-61-90)";
+        fraseMotivadora = "¡Impresionante! Estás a un paso de la meta semanal. ¡No te detengas!";
+      } else if (f.porcentaje <= 99) {
+        colorAplicado = "var(--color-91-99)";
+        fraseMotivadora = "¡Casi en la cima! Un último esfuerzo y la victoria es tuya.";
+      } else {
+        colorAplicado = "var(--color-100)";
+        fraseMotivadora = "🏆 ¡OBJETIVO LOGRADO! Tu gestión ha sido impecable. ¡Eres un líder!";
+      }
+
+      // Aplicar color en vivo al círculo y a la caja de mensajes
+      ring.style.stroke = colorAplicado;
+      msgBox.style.borderColor = colorAplicado;
+      msgTxt.innerText = fraseMotivadora;
+      msgTxt.style.color = colorAplicado === "var(--color-0-30)" ? "#475569" : colorAplicado;
+
+      // 3. Pintar lista de objetivos semanales filtrados
+      const containerTareas = document.getElementById('dash-container-tareas');
+      if(!res.objetivosTareas || res.objetivosTareas.length === 0) {
+        containerTareas.innerHTML = `<p class="text-center text-muted small py-3">No hay objetivos programados para esta semana.</p>`;
+      } else {
+        containerTareas.innerHTML = res.objetivosTareas.map(t => `
+          <div class="task-item shadow-sm">
+            <input type="checkbox" ${t.completado ? 'checked' : ''}>
+            <span class="${t.completado ? 'task-completed' : 'fw-bold text-dark'}">${t.descripcion}</span>
+          </div>
+        `).join('');
+      }
+
+    } catch (e) {
+      alert("Error al conectar con el módulo de metas: " + e.message);
+    }
+    document.getElementById('spinner-overlay').style.display = 'none';
+  }
+
+  // --- MÓDULOS BASE ORIGINALES MANTENIDOS AL 100% ---
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
     document.getElementById('container-cats').innerHTML = cats.map(c => 
@@ -190,7 +360,7 @@
             </div>
             <div class="fw-bold mt-1" style="font-size:0.9rem">${r.producto}</div>
             <div class="bg-light p-2 rounded mt-2 small" style="font-size:0.75rem"><b>Dx:</b> ${r.diagnostico || '-'}</div>
-            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.tratamiento || '-'}</div>
+            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.treatment || r.tratamiento || '-'}</div>
           </div>`).join('');
       }
     } catch (e) { alert("Error en búsqueda de historial"); }
