@@ -1,189 +1,392 @@
-// CONFIGURACIÓN CENTRALIZADA: ID de tu planilla DM_Control_Maestro
-const ID_CONTROL_MAESTRO = "1GW9ONwxBtKp8SJfMzo3KqRKRrhuKk1Dgk1QduH-wqDw";
-
-function doGet(e) {
-  const idClinica = e.parameter.id;
-  const accion = e.parameter.accion;
-  const pinIngresado = e.parameter.pin;
-
-  if (!idClinica) return responderJSON({ error: true, mensaje: "Falta ID de la clínica" });
-
-  try {
-    if (accion === "obtenerConfig") return responderJSON(getConfiguracionInicial(idClinica));
-    if (accion === "buscarHistorial") return responderJSON(buscarHistorial(idClinica, e.parameter.dni));
-    if (accion === "obtenerMetas") return responderJSON(obtenerMetasYProgreso(idClinica, pinIngresado));
-    
-    return responderJSON({ error: true, mensaje: "Accion no valida" });
-  } catch (err) {
-    return responderJSON({ error: true, mensaje: err.message });
-  }
-}
-
-function doPost(e) {
-  const idClinica = e.parameter.id;
-  const accion = e.parameter.accion;
-  
-  try {
-    const datos = JSON.parse(e.postData.contents);
-    
-    if (accion === "actualizarTareas") {
-      return responderJSON({ resultado: actualizarTareasEnExcel(idClinica, datos) });
-    }
-    
-    const resultado = registrarTodo(idClinica, datos);
-    return responderJSON({ resultado: resultado });
-  } catch (err) {
-    return responderJSON({ error: err.message });
-  }
-}
-
-function responderJSON(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
-
-// TRAE EL NOMBRE Y LOGO DEL CLIENTE DESDE EL PANEL MAESTRO (CON CONVERSOR DE ID INTELIGENTE)
-function getConfiguracionInicial(id) {
-  const ssMaestro = SpreadsheetApp.openById(ID_CONTROL_MAESTRO);
-  const hojaControl = ssMaestro.getSheets()[0]; 
-  const datosControl = hojaControl.getDataRange().getValues();
-  
-  let nombreCliente = "Clínica Partner";
-  let logoCliente = ""; 
-  
-  // Buscar datos de Co-branding en el Panel Maestro
-  for (let i = 1; i < datosControl.length; i++) {
-    if (datosControl[i][2].toString().trim() === id.toString().trim()) {
-      nombreCliente = datosControl[i][1].toString().trim(); // Columna B (Índice 1): Nombre Empresa
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>DM Dynamic Analytics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --primary: #101c3e;    
+      --accent: #14b8a6;     
+      --success: #10b981; 
+      --bg-main: #f1f5f9;    
       
-      if(datosControl[i][4]) { 
-        let rawLink = datosControl[i][4].toString().trim(); // Columna E (Índice 4): Logo Cliente
+      --color-0-30: #94a3b8;
+      --color-31-60: #38bdf8;
+      --color-61-90: var(--accent);
+      --color-91-99: #f59e0b;
+      --color-100: #d946ef;
+    }
+    
+    body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
+    
+    /* CABECERA CO-BRANDING PREMIUM */
+    .header-clinica { background: #ffffff; padding: 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .brand-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
+    .logo-dm { max-height: 48px; width: auto; object-fit: contain; }
+    .brand-divider { width: 1px; height: 35px; background-color: #cbd5e1; display: none; } 
+    .client-brand-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .logo-cliente { max-height: 48px; width: auto; object-fit: contain; display: none; } 
+    .txt-clinica-nombre { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; text-align: center; }
+
+    .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
+    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 14px 5px; text-transform: uppercase; }
+    .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
+    
+    .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 15px; }
+    .ui-card-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
+
+    label { font-size: 0.8rem; font-weight: 500; color: #64748b; margin-bottom: 4px; }
+    .form-control, .form-select { border-radius: 8px; border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 0.85rem; background-color: #f8fafc; transition: all 0.2s; }
+    .form-control:focus, .form-select:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15); color: var(--primary); }
+    
+    .btn-cat { font-size: 0.75rem; font-weight: 600; border-radius: 20px; padding: 6px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #64748b; transition: all 0.2s; }
+    .btn-cat.active-cat { background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(16, 28, 62, 0.2); }
+
+    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #e2e8f0; background: white; padding: 12px 10px; border-radius: 12px; font-size: 0.75rem; text-align: left; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
+    .item-precio { color: var(--primary); font-weight: 700; }
+
+    .cart-row { background: #f8fafc; border-left: 4px solid var(--success); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+    .btn-remove { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+    
+    .circle-progress-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+    .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 12; }
+    .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 502.65; stroke-dashoffset: 502.65; transition: all 0.8s ease; }
+    .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: var(--primary); }
+    
+    .task-item { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; }
+    .task-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); }
+    .task-completed { text-decoration: line-through; color: #94a3b8; }
+    
+    #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+    .pin-input { font-size: 2rem; text-align: center; letter-spacing: 12px; width: 180px; margin: 20px auto; border: 2px solid #cbd5e1; border-radius: 12px; }
+
+    .btn-actualizar { background-color: var(--accent); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 15px; box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3); }
+    
+    .btn-primary { background-color: var(--primary); border-color: var(--primary); font-weight: 600; border-radius: 10px; }
+    .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
+    
+    #panel-inferior { z-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
+  </style>
+</head>
+<body>
+
+<div id="spinner-overlay">
+  <div class="spinner-border" style="color:var(--accent)" role="status"></div>
+  <p class="mt-2 fw-bold" style="color:var(--primary)">Sincronizando...</p>
+</div>
+
+<div id="custom-alert" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px;">
+    <div style="font-size: 50px; color: var(--accent);">✔</div>
+    <h5 id="alert-title" class="my-3 fw-bold">ÉXITO</h5>
+    <button class="btn btn-primary w-100 py-2" onclick="location.reload()">Cerrar</button>
+  </div>
+</div>
+
+<div class="container-fluid p-0">
+  <div class="card border-0 rounded-0 min-vh-100" style="background: transparent;">
+    
+    <div class="header-clinica">
+      <div class="brand-container">
+        <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
         
-        // CONVERSOR INTELIGENTE: Extrae el ID sin importar cómo pegues el enlace
-        let extractedId = "";
-        if (rawLink.indexOf("id=") > -1) {
-          extractedId = rawLink.split("id=")[1].split("&")[0];
-        } else if (rawLink.indexOf("/d/") > -1) {
-          extractedId = rawLink.split("/d/")[1].split("/")[0];
-        } else {
-          extractedId = rawLink; // Por si acaso dejes el ID limpio
-        }
+        <div id="web-brand-divider" class="brand-divider"></div>
         
-        if (extractedId !== "") {
-          logoCliente = "https://drive.google.com/thumbnail?id=" + extractedId + "&sz=w500";
-        }
+        <div class="client-brand-box">
+          <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Cliente">
+          <div id="web-clinica-nombre" class="txt-clinica-nombre">Cargando...</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs nav-justified" id="mainTabs" role="tablist">
+      <li class="nav-item" role="presentation"><button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab">Admisión</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#tab-res" type="button" role="tab">Resultados</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab">Historial</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">Metas</button></li>
+    </ul>
+
+    <div class="tab-content p-3">
+      <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Datos del Paciente</div>
+          <div class="row g-2">
+            <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control"></div>
+            <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control"></div>
+            <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control"></div>
+            <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control"></div>
+            <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control"></div>
+            <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control"></div>
+            <div class="col-6"><label>Método de Pago</label>
+              <select id="tipoPago" class="form-select">
+                <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
+              </select>
+            </div>
+            <div class="col-6"><label>Origen</label>
+              <select id="origen" class="form-select">
+                <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-card">
+          <div class="ui-card-title">Servicios y Tarifas</div>
+          <div id="container-cats" class="d-flex overflow-auto pb-2 mb-3" style="gap:8px"></div>
+          <div id="container-items" class="d-flex flex-wrap rounded mb-3" style="background: #f8fafc; padding: 8px 3px;"></div>
+          
+          <div class="fw-bold small text-secondary mb-2">Detalle de Selección:</div>
+          <div id="cart-list"></div>
+          <div id="cart-total" class="h5 text-end fw-bold text-primary mt-3 mb-0">Total a Pagar: S/ 0.00</div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-res" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Clínica e Informes</div>
+          <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="4"></textarea></div>
+          <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="4"></textarea></div>
+          <div class="mb-0"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-his" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Búsqueda de Pacientes</div>
+          <div class="input-group mb-0">
+            <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI para buscar...">
+            <button class="btn btn-primary px-3" onclick="ejecutarBusqueda()">🔍 Buscar</button>
+          </div>
+        </div>
+        <div id="historial-resultados"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-metas" role="tabpanel">
+        <div id="metas-lock" class="ui-card text-center py-5">
+          <div style="font-size:40px">🔒</div>
+          <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
+          <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
+          <p id="pin-error" class="text-danger small fw-bold" style="display:none; margin-top:10px;">PIN Incorrecto</p>
+        </div>
+
+        <div id="metas-content" style="display:none">
+          <div class="ui-card">
+            <div class="ui-card-title text-center">Estado de Metas Semanales</div>
+            <div class="circle-progress-wrapper">
+              <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
+              <div id="progreso-texto" class="circle-percentage">0%</div>
+            </div>
+            <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 6px solid #ccc; background: #f8fafc;">
+              <p id="txt-motivador" class="fw-bold mb-0 small"></p>
+            </div>
+            <div class="row g-2">
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Meta: <br><b id="val-meta" class="text-primary">S/ 0</b></div></div>
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Logrado: <br><b id="val-logrado" class="text-success">S/ 0</b></div></div>
+            </div>
+          </div>
+          
+          <div class="ui-card">
+            <div class="ui-card-title">Tareas Semanales</div>
+            <div id="lista-tareas"></div>
+            <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-inferior" class="p-3 bg-white border-top mt-auto">
+      <button onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow fw-bold py-3">GUARDAR REGISTRO</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Asegúrate de cambiar esta URL por la de tu nueva implementación ejecutora de Apps Script si es necesario
+  const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
+  const params = new URLSearchParams(window.location.search);
+  const ID_CLINICA = params.get('id');
+
+  let configLocal = [], carrito = [], tareasLocales = [];
+
+  window.onload = async () => {
+    if(!ID_CLINICA) return alert("Falta ID de Clínica");
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      const respuestaBackend = await r.json();
+      
+      // PROCESADO DINÁMICO DE MARCAS COMPARTIDAS
+      document.getElementById('web-clinica-nombre').innerText = respuestaBackend.clinicaNombre;
+      if(respuestaBackend.clinicaLogo && respuestaBackend.clinicaLogo.trim() !== "") {
+         document.getElementById('web-clinica-logo').src = respuestaBackend.clinicaLogo;
+         document.getElementById('web-clinica-logo').style.display = 'block';
+         document.getElementById('web-brand-divider').style.display = 'block';
+      } else {
+         document.getElementById('web-clinica-logo').style.display = 'none';
+         document.getElementById('web-brand-divider').style.display = 'none';
       }
-      break;
+      
+      configLocal = respuestaBackend.servicios;
+      dibujarCategorias();
+    } catch(e) { alert("Error de conexión al cargar configuración"); }
+    mostrarLoading(false);
+  };
+
+  function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
+  function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
+  
+  document.querySelectorAll('.nav-link').forEach(t => {
+    t.addEventListener('click', (e) => { 
+      if(e.target.innerText.toUpperCase() !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
+    });
+  });
+
+  async function evaluarPinMaestro() {
+    const pin = document.getElementById('metas-pin').value;
+    if(pin.length === 4) {
+      mostrarLoading(true);
+      try {
+        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pin}`);
+        const res = await r.json();
+        if(res.error) {
+          document.getElementById('pin-error').style.display = 'block';
+          document.getElementById('metas-pin').value = "";
+        } else {
+          document.getElementById('metas-lock').style.display = 'none';
+          document.getElementById('metas-content').style.display = 'block';
+          dibujarMetas(res);
+        }
+      } catch(e) { alert("Error de validación de PIN"); }
+      mostrarLoading(false);
     }
   }
 
-  const ss = SpreadsheetApp.openById(id);
-  const sheet = ss.getSheetByName("CONFIGURACIÓN");
-  const data = sheet.getRange("A2:M" + sheet.getLastRow()).getValues();
-  
-  const servicios = data.filter(r => r[0] !== "").map(r => ({
-    nombre: r[0], categoria: r[1], pvp: r[2], honorarios: r[3], insumos: r[4], 
-    otros: r[5], costoTotal: r[6], cuentaContable: r[11], centroCosto: r[12]
-  }));
+  function dibujarMetas(res) {
+    const f = res.metaFinanciera;
+    document.getElementById('val-meta').innerText = `S/ ${f.meta.toFixed(2)}`;
+    document.getElementById('val-logrado').innerText = `S/ ${f.logrado.toFixed(2)}`;
+    document.getElementById('progreso-texto').innerText = `${f.porcentaje}%`;
 
-  return {
-    clinicaNombre: nombreCliente,
-    clinicaLogo: logoCliente,
-    servicios: servicios
-  };
-}
+    const circle = document.getElementById('progreso-circulo');
+    const pct = Math.min(f.porcentaje, 100);
+    circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65; 
 
-function obtenerMetasYProgreso(idSheets, pinIngresado) {
-    var ssMaestro = SpreadsheetApp.openById(ID_CONTROL_MAESTRO);
-    var hojaControl = ssMaestro.getSheets()[0]; 
-    var datosControl = hojaControl.getDataRange().getValues();
-    var pinCorrecto = "";
-    var clienteEncontrado = false;
-    
-    for (var i = 1; i < datosControl.length; i++) {
-      if (datosControl[i][2].toString().trim() === idSheets.toString().trim()) {
-        pinCorrecto = datosControl[i][3].toString().trim();
-        clienteEncontrado = true;
-        break;
+    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el éxito.";
+    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Gran ritmo! Sigamos sumando."; }
+    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Impresionante! A un paso de la meta."; }
+    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima!"; }
+    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡OBJETIVO LOGRADO! Eres un líder."; }
+
+    circle.style.stroke = `var(${color})`;
+    document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
+    document.getElementById('txt-motivador').innerText = msg;
+    document.getElementById('txt-motivador').style.color = `var(${color})`;
+
+    tareasLocales = res.objetivosTareas;
+    const cont = document.getElementById('lista-tareas');
+    cont.innerHTML = tareasLocales.map((t, i) => `
+      <div class="task-item">
+        <input type="checkbox" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
+        <span class="${t.completado ? 'task-completed' : 'fw-bold'}">${t.descripcion}</span>
+      </div>
+    `).join('');
+  }
+
+  function actualizarEstadoTarea(index, completado) {
+    tareasLocales[index].completado = completado;
+  }
+
+  async function enviarActualizacionTareas() {
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
+        method: 'POST',
+        body: JSON.stringify(tareasLocales)
+      });
+      const res = await r.json();
+      if(res.resultado === "OK") {
+        document.getElementById('alert-title').innerText = "METAS ACTUALIZADAS";
+        document.getElementById('custom-alert').style.display = 'block';
       }
-    }
-    
-    if (!clienteEncontrado) return { error: true, mensaje: "Clínica no registrada en el panel maestro." };
-    if (pinIngresado !== pinCorrecto) return { error: true, mensaje: "PIN_INCORRECTO" };
-    
-    var spreadsheet = SpreadsheetApp.openById(idSheets);
-    var hojaMetas = spreadsheet.getSheetByName("METAS");
-    if (!hojaMetas) return { error: true, mensaje: "La pestaña METAS no existe en el cliente." };
-    
-    var metaDinero = hojaMetas.getRange("A2").getValue() || 0;
-    var logradoDinero = hojaMetas.getRange("B2").getValue() || 0;
-    var porcentajeDinero = metaDinero > 0 ? Math.round((logradoDinero / metaDinero) * 100) : 0;
-    
-    var ultimaFila = hojaMetas.getLastRow();
-    var listaObjetivos = [];
-    
-    if (ultimaFila >= 5) {
-      var rangoObjetivos = hojaMetas.getRange(5, 1, ultimaFila - 4, 4).getValues();
-      for (var j = 0; j < rangoObjetivos.length; j++) {
-        var mostrarEnApp = rangoObjetivos[j][3];
-        if (mostrarEnApp === "SI" || mostrarEnApp === true) {
-          listaObjetivos.push({
-            fila: j + 5,
-            descripcion: rangoObjetivos[j][1],
-            completado: (rangoObjetivos[j][2] === "SI" || rangoObjetivos[j][2] === true)
-          });
-        }
-      }
-    }
-    
-    return {
-      error: false,
-      metaFinanciera: { meta: metaDinero, logrado: logradoDinero, porcentaje: porcentajeDinero },
-      objetivosTareas: listaObjetivos
-    };
-}
+    } catch(e) { alert("Error al actualizar tareas en la base de datos"); }
+    mostrarLoading(false);
+  }
 
-function actualizarTareasEnExcel(idSheets, tareasParaActualizar) {
-  var ss = SpreadsheetApp.openById(idSheets);
-  var sheet = ss.getSheetByName("METAS");
-  
-  tareasParaActualizar.forEach(t => {
-    var valorStatus = t.completado ? "SI" : "NO";
-    sheet.getRange(t.fila, 3).setValue(valorStatus);
-  });
-  
-  return "OK";
-}
+  function dibujarCategorias() {
+    const cats = [...new Set(configLocal.map(i => i.categoria))];
+    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-cat flex-shrink-0" onclick="seleccionarCategoria(this, '${c}')">${c}</button>`).join('');
+  }
 
-function buscarHistorial(id, dni) {
-  const ss = SpreadsheetApp.openById(id);
-  const sheet = ss.getSheetByName("HISTORIAL_CLINICO");
-  if (!sheet) return [];
-  const data = sheet.getDataRange().getValues();
-  const dniBusqueda = dni.toString().trim();
-  let resultados = data.filter(row => row[0].toString().split('.')[0].trim() === dniBusqueda);
-  return resultados.reverse().slice(0, 10).map(r => ({
-    fecha: r[3] instanceof Date ? Utilities.formatDate(r[3], "GMT-5", "dd/MM/yyyy") : r[3],
-    producto: r[1], servicio: r[2], diagnostico: r[4], treatment: r[6], tratamiento: r[6]
-  }));
-}
-
-function registrarTodo(id, datos) {
-  const ss = SpreadsheetApp.openById(id);
-  const ahora = new Date();
-  const fechaStr = Utilities.formatDate(ahora, "GMT-5", "dd/MM/yyyy");
-  const hora = Utilities.formatDate(ahora, "GMT-5", "HH:mm:ss");
-  const sheetDM = ss.getSheetByName("DATA_MADRE");
-  const sheetPac = ss.getSheetByName("PACIENTES");
-  const sheetPago = ss.getSheetByName("PAGO");
-  const sheetHist = ss.getSheetByName("HISTORIAL_CLINICO");
-  const nombreCompleto = `${datos.nombre} ${datos.apellidoP} ${datos.apellidoM}`.trim();
+  function seleccionarCategoria(btn, c) {
+    document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
+    btn.classList.add('active-cat');
+    dibujarItems(c);
+  }
   
-  sheetPac.appendRow([datos.dni, datos.nombre, datos.apellidoP, datos.apellidoM, "", datos.celular, datos.origen]);
-  datos.carrito.forEach(item => {
-    const utilidad = parseFloat(item.pvp) - parseFloat(item.costoTotal);
-    sheetDM.appendRow([fechaStr, "ID-"+ahora.getTime(), nombreCompleto, item.honorarios, item.insumos, item.otros, item.costoTotal, item.nombre, 1, item.pvp, item.pvp, item.pvp, utilidad, ahora.getMonth()+1, ahora.getFullYear(), hora, datos.tipoPago, datos.origen, datos.edad, "Completado", item.cuentaContable, item.centroCosto, "WEB", datos.dni]);
-    sheetPago.appendRow([datos.dni, item.pvp, datos.tipoPago]);
-    sheetHist.appendRow([datos.dni.toString().trim(), item.nombre, item.categoria, fechaStr, datos.diagnostico, datos.analisis, datos.treatment || datos.tratamiento]);
-  });
-  return "OK";
-}
+  function dibujarItems(c) {
+    const items = configLocal.filter(i => i.categoria === c);
+    document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
+  }
+  
+  function agregarAlCarrito(n) {
+    const i = configLocal.find(x => x.nombre === n);
+    carrito.push({...i, idU: Date.now()});
+    actualizarCarrito();
+  }
+
+  function eliminarDelCarrito(idU) {
+    carrito = carrito.filter(item => item.idU !== idU);
+    actualizarCarrito();
+  }
+
+  function actualizarCarrito() {
+    let t = 0;
+    document.getElementById('cart-list').innerHTML = carrito.map(i => { 
+      t += parseFloat(i.pvp); 
+      return `
+        <div class="cart-row">
+          <span>${i.nombre}</span>
+          <div>
+            <b class="me-2 text-dark">S/${parseFloat(i.pvp).toFixed(2)}</b>
+            <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})">❌</button>
+          </div>
+        </div>`; 
+    }).join('');
+    document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${t.toFixed(2)}`;
+  }
+
+  async function enviarDatos() {
+    const dni = document.getElementById('dni').value;
+    if(!dni || carrito.length === 0) return alert("DNI y servicios requeridos");
+    mostrarLoading(true);
+    const p = { dni, nombre: document.getElementById('nombrePac').value, apellidoP: document.getElementById('apePat').value, apellidoM: document.getElementById('apeMat').value, edad: document.getElementById('edad').value, celular: document.getElementById('celular').value, tipoPago: document.getElementById('tipoPago').value, origen: document.getElementById('origen').value, diagnostico: document.getElementById('diag').value, analisis: document.getElementById('analisis').value, tratamiento: document.getElementById('trat').value, carrito };
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}`, { method: 'POST', body: JSON.stringify(p) });
+      const res = await r.json();
+      if(res.resultado === "OK") document.getElementById('custom-alert').style.display = 'block';
+    } catch(e) { alert("Error al guardar registro"); }
+    mostrarLoading(false);
+  }
+
+  async function ejecutarBusqueda() {
+    const d = document.getElementById('buscardni').value;
+    if(!d) return;
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
+      const res = await r.json();
+      const c = document.getElementById('historial-resultados');
+      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos de historial.</p>";
+      else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div><div class='small text-muted'>Dx: ${h.diagnostico}</div></div>`).join('');
+    } catch(e) { alert("Error en búsqueda de historial"); }
+    mostrarLoading(false);
+  }
+</script>
+</body>
+</html>
