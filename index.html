@@ -8,11 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root { 
-      /* COLORES CORPORATIVOS DM DYNAMIC */
       --primary: #101c3e;    
       --accent: #14b8a6;     
       --success: #10b981; 
-      --bg-main: #f1f5f9;    /* Gris azulado premium para el fondo general */
+      --bg-main: #f1f5f9;    
       
       --color-0-30: #94a3b8;
       --color-31-60: #38bdf8;
@@ -21,42 +20,38 @@
       --color-100: #d946ef;
     }
     
-    /* CAMBIO 1: FONDO GENERAL CON CONTRASTE */
     body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
     
-    /* CAMBIO 2: CABECERA INTEGRADA Y REFINADA */
-    .header-clinica { background: #ffffff; padding: 20px 15px 12px 15px; text-align: center; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .header-logo { max-height: 65px; width: auto; object-fit: contain; }
-    .header-subtitle { font-size: 0.7rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+    /* CABECERA CO-BRANDING PREMIUM */
+    .header-clinica { background: #ffffff; padding: 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .brand-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
+    .logo-dm { max-height: 48px; width: auto; object-fit: contain; }
+    .brand-divider { width: 1px; height: 35px; background-color: #cbd5e1; display: none; } /* Se activa dinámicamente */
+    .client-brand-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .logo-cliente { max-height: 48px; width: auto; object-fit: contain; display: none; } /* Se activa dinámicamente */
+    .txt-clinica-nombre { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; text-align: center; }
 
-    /* REDISEÑO DE PESTAÑAS */
     .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
     .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 14px 5px; text-transform: uppercase; }
     .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
     
-    /* CAMBIO 3: TARJETAS EN BLANCO FLOTANTE (ESTRUCTURA) */
     .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 15px; }
     .ui-card-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
 
-    /* CAMBIO 4: INPUTS MODERNOS */
     label { font-size: 0.8rem; font-weight: 500; color: #64748b; margin-bottom: 4px; }
     .form-control, .form-select { border-radius: 8px; border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 0.85rem; background-color: #f8fafc; transition: all 0.2s; }
     .form-control:focus, .form-select:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15); color: var(--primary); }
     
-    /* BOTONES DE CATEGORÍAS TIPO PILLS */
     .btn-cat { font-size: 0.75rem; font-weight: 600; border-radius: 20px; padding: 6px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #64748b; transition: all 0.2s; }
     .btn-cat.active-cat { background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(16, 28, 62, 0.2); }
 
-    /* ITEMS DEL CATÁLOGO */
     .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #e2e8f0; background: white; padding: 12px 10px; border-radius: 12px; font-size: 0.75rem; text-align: left; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
     .item-precio { color: var(--primary); font-weight: 700; }
 
-    /* ELEMENTOS DEL CARRITO */
-    .cart-row { background: #f8fafc; border-left: 4px solid var(--success); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #e2e8f0; border-left: 4px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
+    .cart-row { background: #f8fafc; border-left: 4px solid var(--success); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
     .btn-remove { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
     
-    /* METAS */
     .circle-progress-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
     .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
     .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 12; }
@@ -75,7 +70,7 @@
     .btn-primary { background-color: var(--primary); border-color: var(--primary); font-weight: 600; border-radius: 10px; }
     .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
     
-    #panel-inferior { p-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
+    #panel-inferior { z-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
   </style>
 </head>
 <body>
@@ -97,8 +92,16 @@
   <div class="card border-0 rounded-0 min-vh-100" style="background: transparent;">
     
     <div class="header-clinica">
-      <img src="https://lh3.googleusercontent.com/d/1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb" class="header-logo" alt="DM Dynamic Analytics">
-      <div class="header-subtitle">Gestor de Operaciones</div>
+      <div class="brand-container">
+        <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w300" class="logo-dm" alt="DM Dynamic Analytics">
+        
+        <div id="web-brand-divider" class="brand-divider"></div>
+        
+        <div class="client-brand-box">
+          <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Cliente">
+          <div id="web-clinica-nombre" class="txt-clinica-nombre">Cargando...</div>
+        </div>
+      </div>
     </div>
 
     <ul class="nav nav-tabs nav-justified" id="mainTabs" role="tablist">
@@ -110,7 +113,6 @@
 
     <div class="tab-content p-3">
       <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
-        
         <div class="ui-card">
           <div class="ui-card-title">Datos del Paciente</div>
           <div class="row g-2">
@@ -216,7 +218,17 @@
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
-      configLocal = await r.json();
+      const respuestaBackend = await r.json();
+      
+      // PROCESADO DINÁMICO DE CO-BRANDING
+      document.getElementById('web-clinica-nombre').innerText = respuestaBackend.clinicaNombre;
+      if(respuestaBackend.clinicaLogo && respuestaBackend.clinicaLogo.trim() !== "") {
+         document.getElementById('web-clinica-logo').src = respuestaBackend.clinicaLogo;
+         document.getElementById('web-clinica-logo').style.display = 'block';
+         document.getElementById('web-brand-divider').style.display = 'block';
+      }
+      
+      configLocal = respuestaBackend.servicios;
       dibujarCategorias();
     } catch(e) { alert("Error de conexión al cargar configuración"); }
     mostrarLoading(false);
