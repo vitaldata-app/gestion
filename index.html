@@ -5,60 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>DM Dynamic Analytics</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root { 
       /* COLORES CORPORATIVOS DM DYNAMIC */
-      --primary: #101c3e;    /* Azul Marino Oscuro */
-      --accent: #14b8a6;     /* Turquesa / Cian */
+      --primary: #101c3e;    
+      --accent: #14b8a6;     
       --success: #10b981; 
+      --bg-main: #f1f5f9;    /* Gris azulado premium para el fondo general */
       
-      /* Colores para la meta circular (Gamificación) */
       --color-0-30: #94a3b8;
       --color-31-60: #38bdf8;
       --color-61-90: var(--accent);
       --color-91-99: #f59e0b;
       --color-100: #d946ef;
     }
-    body { background-color: #f8fafc; font-family: 'Poppins', sans-serif; font-size: 14px; }
     
-    /* CABECERA CON TU LOGO REESCALADO */
-    .header-clinica { background: #ffffff; color: var(--primary); padding: 18px 15px; text-align: center; border-bottom: 3px solid var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .header-logo { max-height: 75px; width: auto; object-fit: contain; }
+    /* CAMBIO 1: FONDO GENERAL CON CONTRASTE */
+    body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
+    
+    /* CAMBIO 2: CABECERA INTEGRADA Y REFINADA */
+    .header-clinica { background: #ffffff; padding: 20px 15px 12px 15px; text-align: center; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .header-logo { max-height: 65px; width: auto; object-fit: contain; }
+    .header-subtitle { font-size: 0.7rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
-    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 12px 5px; }
+    /* REDISEÑO DE PESTAÑAS */
+    .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
+    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 14px 5px; text-transform: uppercase; }
     .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
     
-    .btn-primary { background-color: var(--primary); border-color: var(--primary); }
-    .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
-    .text-primary { color: var(--primary) !important; }
+    /* CAMBIO 3: TARJETAS EN BLANCO FLOTANTE (ESTRUCTURA) */
+    .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 15px; }
+    .ui-card-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
 
-    /* SECCIÓN METAS / INTERACTIVA */
+    /* CAMBIO 4: INPUTS MODERNOS */
+    label { font-size: 0.8rem; font-weight: 500; color: #64748b; margin-bottom: 4px; }
+    .form-control, .form-select { border-radius: 8px; border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 0.85rem; background-color: #f8fafc; transition: all 0.2s; }
+    .form-control:focus, .form-select:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15); color: var(--primary); }
+    
+    /* BOTONES DE CATEGORÍAS TIPO PILLS */
+    .btn-cat { font-size: 0.75rem; font-weight: 600; border-radius: 20px; padding: 6px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #64748b; transition: all 0.2s; }
+    .btn-cat.active-cat { background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(16, 28, 62, 0.2); }
+
+    /* ITEMS DEL CATÁLOGO */
+    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #e2e8f0; background: white; padding: 12px 10px; border-radius: 12px; font-size: 0.75rem; text-align: left; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
+    .item-precio { color: var(--primary); font-weight: 700; }
+
+    /* ELEMENTOS DEL CARRITO */
+    .cart-row { background: #f8fafc; border-left: 4px solid var(--success); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #e2e8f0; border-left: 4px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
+    .btn-remove { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+    
+    /* METAS */
     .circle-progress-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
     .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
     .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 12; }
     .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 502.65; stroke-dashoffset: 502.65; transition: all 0.8s ease; }
     .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: var(--primary); }
     
-    .task-item { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .task-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--accent); }
+    .task-item { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; }
+    .task-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); }
     .task-completed { text-decoration: line-through; color: #94a3b8; }
     
     #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
     .pin-input { font-size: 2rem; text-align: center; letter-spacing: 12px; width: 180px; margin: 20px auto; border: 2px solid #cbd5e1; border-radius: 12px; }
 
-    .btn-actualizar { background-color: var(--accent); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 15px; box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3); transition: background 0.2s; }
-    .btn-actualizar:active { background-color: #0d9488; }
+    .btn-actualizar { background-color: var(--accent); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 15px; box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3); }
     
-    /* BOTONES DE ITEMS Y COLOR DE PRECIO CORREGIDO */
-    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #dee2e6; background: white; padding: 12px 10px; border-radius: 10px; font-size: 0.75rem; text-align: left; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-    .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
-    .item-precio { color: var(--primary); font-weight: 700; }
-
-    /* ESTILO PARA CADA ELEMENTO DEL CARRITO CON SU X */
-    .cart-row { background: white; border-start: 4px solid var(--success); padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; }
-    .btn-remove { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 0.9rem; padding: 0 5px; cursor: pointer; transition: transform 0.1s; }
-    .btn-remove:active { transform: scale(0.8); }
+    .btn-primary { background-color: var(--primary); border-color: var(--primary); font-weight: 600; border-radius: 10px; }
+    .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
+    
+    #panel-inferior { p-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
   </style>
 </head>
 <body>
@@ -77,108 +94,117 @@
 </div>
 
 <div class="container-fluid p-0">
-  <div class="card border-0 rounded-0 min-vh-100">
+  <div class="card border-0 rounded-0 min-vh-100" style="background: transparent;">
     
     <div class="header-clinica">
       <img src="https://lh3.googleusercontent.com/d/1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb" class="header-logo" alt="DM Dynamic Analytics">
+      <div class="header-subtitle">Gestor de Operaciones</div>
     </div>
 
     <ul class="nav nav-tabs nav-justified" id="mainTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab" aria-selected="true">ADMISIÓN</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#tab-res" type="button" role="tab" aria-selected="false">RESULTADOS</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab" aria-selected="false">HISTORIAL</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" aria-selected="false" onclick="ocultarBotonGuardar()">METAS</button>
-      </li>
+      <li class="nav-item" role="presentation"><button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab">Admisión</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#tab-res" type="button" role="tab">Resultados</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab">Historial</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">Metas</button></li>
     </ul>
 
     <div class="tab-content p-3">
       <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
-        <div class="row g-2 mb-3">
-          <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control form-control-sm"></div>
-          <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control form-control-sm"></div>
-          <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control form-control-sm"></div>
-          <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control form-control-sm"></div>
-          <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control form-control-sm"></div>
-          <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control form-control-sm"></div>
-          <div class="col-6"><label>Pago</label>
-            <select id="tipoPago" class="form-select form-select-sm">
-              <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
-            </select>
-          </div>
-          <div class="col-6"><label>Origen</label>
-            <select id="origen" class="form-select form-select-sm">
-              <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
-            </select>
+        
+        <div class="ui-card">
+          <div class="ui-card-title">Datos del Paciente</div>
+          <div class="row g-2">
+            <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control"></div>
+            <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control"></div>
+            <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control"></div>
+            <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control"></div>
+            <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control"></div>
+            <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control"></div>
+            <div class="col-6"><label>Método de Pago</label>
+              <select id="tipoPago" class="form-select">
+                <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
+              </select>
+            </div>
+            <div class="col-6"><label>Origen</label>
+              <select id="origen" class="form-select">
+                <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
+              </select>
+            </div>
           </div>
         </div>
-        <hr>
-        <div id="container-cats" class="d-flex overflow-auto pb-2 mb-2" style="gap:5px"></div>
-        <div id="container-items" class="d-flex flex-wrap bg-light rounded p-2 mb-3"></div>
-        <div id="cart-list"></div>
-        <div id="cart-total" class="h5 text-end fw-bold text-primary mt-2">Total: S/ 0.00</div>
+
+        <div class="ui-card">
+          <div class="ui-card-title">Servicios y Tarifas</div>
+          <div id="container-cats" class="d-flex overflow-auto pb-2 mb-3" style="gap:8px"></div>
+          <div id="container-items" class="d-flex flex-wrap rounded mb-3" style="background: #f8fafc; padding: 8px 3px;"></div>
+          
+          <div class="fw-bold small text-secondary mb-2">Detalle de Selección:</div>
+          <div id="cart-list"></div>
+          <div id="cart-total" class="h5 text-end fw-bold text-primary mt-3 mb-0">Total a Pagar: S/ 0.00</div>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="tab-res" role="tabpanel">
-        <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="4"></textarea></div>
-        <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="4"></textarea></div>
-        <div class="mb-3"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
+        <div class="ui-card">
+          <div class="ui-card-title">Clínica e Informes</div>
+          <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="4"></textarea></div>
+          <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="4"></textarea></div>
+          <div class="mb-0"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="tab-his" role="tabpanel">
-        <div class="input-group mb-3">
-          <input type="tel" id="buscardni" class="form-control" placeholder="DNI del paciente">
-          <button class="btn btn-primary" onclick="ejecutarBusqueda()">🔍</button>
+        <div class="ui-card">
+          <div class="ui-card-title">Búsqueda de Pacientes</div>
+          <div class="input-group mb-0">
+            <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI para buscar...">
+            <button class="btn btn-primary px-3" onclick="ejecutarBusqueda()">🔍 Buscar</button>
+          </div>
         </div>
         <div id="historial-resultados"></div>
       </div>
 
       <div class="tab-pane fade" id="tab-metas" role="tabpanel">
-        <div id="metas-lock">
-          <div class="text-center py-5">
-            <div style="font-size:40px">🔒</div>
-            <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
-            <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
-            <p id="pin-error" class="text-danger small fw-bold" style="display:none">PIN Incorrecto</p>
-          </div>
+        <div id="metas-lock" class="ui-card text-center py-5">
+          <div style="font-size:40px">🔒</div>
+          <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
+          <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
+          <p id="pin-error" class="text-danger small fw-bold" style="display:none; margin-top:10px;">PIN Incorrecto</p>
         </div>
 
         <div id="metas-content" style="display:none">
-          <h6 class="fw-bold text-center text-primary mb-3">ESTADO DE METAS SEMANALES</h6>
-          <div class="circle-progress-wrapper">
-            <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
-            <div id="progreso-texto" class="circle-percentage">0%</div>
+          <div class="ui-card">
+            <div class="ui-card-title text-center">Estado de Metas Semanales</div>
+            <div class="circle-progress-wrapper">
+              <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
+              <div id="progreso-texto" class="circle-percentage">0%</div>
+            </div>
+            <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 6px solid #ccc; background: #f8fafc;">
+              <p id="txt-motivador" class="fw-bold mb-0 small"></p>
+            </div>
+            <div class="row g-2">
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Meta: <br><b id="val-meta" class="text-primary">S/ 0</b></div></div>
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Logrado: <br><b id="val-logrado" class="text-success">S/ 0</b></div></div>
+            </div>
           </div>
-          <div id="mensaje-motivador" class="p-3 rounded-4 text-center mb-3" style="border-left: 6px solid #ccc; background: #fff;">
-            <p id="txt-motivador" class="fw-bold mb-0 small"></p>
+          
+          <div class="ui-card">
+            <div class="ui-card-title">Tareas Semanales</div>
+            <div id="lista-tareas"></div>
+            <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
           </div>
-          <div class="row g-2 mb-3">
-            <div class="col-6"><div class="bg-white p-2 border rounded text-center small">Meta: <br><b id="val-meta">S/ 0</b></div></div>
-            <div class="col-6"><div class="bg-white p-2 border rounded text-center small">Logrado: <br><b id="val-logrado">S/ 0</b></div></div>
-          </div>
-          <h6 class="fw-bold small text-secondary border-bottom pb-1">TAREAS SEMANALES</h6>
-          <div id="lista-tareas"></div>
-          <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
         </div>
       </div>
     </div>
 
-    <div id="panel-inferior" class="p-3 bg-white border-top">
+    <div id="panel-inferior" class="p-3 bg-white border-top mt-auto">
       <button onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow fw-bold py-3">GUARDAR REGISTRO</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-  // REEMPLAZA CON LA URL DE TU NUEVA IMPLEMENTACIÓN DE APPS SCRIPT
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
@@ -199,10 +225,9 @@
   function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
   function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
   
-  // Escucha clics en las pestañas para devolver el botón de guardado en las vistas que corresponda
   document.querySelectorAll('.nav-link').forEach(t => {
     t.addEventListener('click', (e) => { 
-      if(e.target.innerText !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
+      if(e.target.innerText.toUpperCase() !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
     });
   });
 
@@ -279,10 +304,15 @@
 
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
-    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-sm btn-outline-primary flex-shrink-0" onclick="dibujarItems('${c}')">${c}</button>`).join('');
+    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-cat flex-shrink-0" onclick="seleccionarCategoria(this, '${c}')">${c}</button>`).join('');
+  }
+
+  function seleccionarCategoria(btn, c) {
+    document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
+    btn.classList.add('active-cat');
+    dibujarItems(c);
   }
   
-  // IMPRIME LOS ITEMS CON EL COLOR CORPORATIVO ORIGINAL EN EL PRECIO (item-precio)
   function dibujarItems(c) {
     const items = configLocal.filter(i => i.categoria === c);
     document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
@@ -294,13 +324,11 @@
     actualizarCarrito();
   }
 
-  // ELIMINA UN ELEMENTO INDIVIDUAL DEL CARRITO USANDO SU IDENTIFICADOR ÚNICO (idU)
   function eliminarDelCarrito(idU) {
     carrito = carrito.filter(item => item.idU !== idU);
     actualizarCarrito();
   }
 
-  // RENDERIZA EL CARRITO DE MANERA INTERACTIVA CON SU BOTÓN DE ELIMINACIÓN (❌)
   function actualizarCarrito() {
     let t = 0;
     document.getElementById('cart-list').innerHTML = carrito.map(i => { 
@@ -309,12 +337,12 @@
         <div class="cart-row">
           <span>${i.nombre}</span>
           <div>
-            <b class="me-2">S/${parseFloat(i.pvp).toFixed(2)}</b>
+            <b class="me-2 text-dark">S/${parseFloat(i.pvp).toFixed(2)}</b>
             <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})">❌</button>
           </div>
         </div>`; 
     }).join('');
-    document.getElementById('cart-total').innerText = `Total: S/ ${t.toFixed(2)}`;
+    document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${t.toFixed(2)}`;
   }
 
   async function enviarDatos() {
@@ -338,8 +366,8 @@
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
       const res = await r.json();
       const c = document.getElementById('historial-resultados');
-      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3'>Sin historial.</p>";
-      else c.innerHTML = res.map(h => `<div class='bg-white p-3 rounded shadow-sm mb-2 border-start border-primary border-4'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold'>${h.producto}</div><div class='small'>Dx: ${h.diagnostico}</div></div>`).join('');
+      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos de historial.</p>";
+      else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div><div class='small text-muted'>Dx: ${h.diagnostico}</div></div>`).join('');
     } catch(e) { alert("Error en búsqueda de historial"); }
     mostrarLoading(false);
   }
