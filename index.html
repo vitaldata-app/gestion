@@ -3,406 +3,304 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>DM Dynamic Pro</title>
+  <title>DM Dynamic Analytics</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root { 
-      --primary: #0d6efd; 
+      /* COLORES CORPORATIVOS DM DYNAMIC */
+      --primary: #101c3e;    /* Azul Marino Oscuro */
+      --accent: #14b8a6;     /* Turquesa / Cian */
       --success: #10b981; 
-      /* Colores de Comportamiento (Gamificación) */
-      --color-0-30: #94a3b8;   /* Platino / Gris Neutral */
-      --color-31-60: #38bdf8;  /* Azul Turquesa Progresivo */
-      --color-61-90: #10b981;  /* Verde Esmeralda Monetario */
-      --color-91-99: #f59e0b;  /* Oro / Expectativa Alta */
-      --color-100: #d946ef;    /* Magenta Eléctrico / Logro Extraordinario */
+      
+      /* Colores para la meta circular (Gamificación) */
+      --color-0-30: #94a3b8;
+      --color-31-60: #38bdf8;
+      --color-61-90: var(--accent);
+      --color-91-99: #f59e0b;
+      --color-100: #d946ef;
     }
-    body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; font-size: 14px; }
-    .card-main { border: none; border-radius: 0; box-shadow: none; min-height: 100vh; }
-    @media (min-width: 768px) { .card-main { border-radius: 15px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: auto; } }
+    body { background-color: #f8fafc; font-family: 'Poppins', sans-serif; font-size: 14px; }
     
-    .header-clinica { background: var(--primary); color: white; padding: 12px; text-align: center; }
-    .nav-tabs .nav-link { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; padding: 12px 3px; color: #6c757d; border: none; }
-    .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--primary) !important; background: none !important; }
-    
-    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #dee2e6; background: white; padding: 10px; border-radius: 10px; font-size: 0.75rem; text-align: left; }
-    .cart-item { background: #fff; border-left: 4px solid var(--success); padding: 10px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .total-box { font-size: 1.2rem; font-weight: bold; color: var(--primary); text-align: right; padding: 10px 0; }
-    
-    #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
-    #custom-alert { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; }
-    .alert-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; text-align: center; width: 80%; max-width: 300px; }
-    
-    .historial-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    label { font-weight: 600; color: #444; margin-bottom: 2px; display: block; font-size: 0.75rem; }
+    /* CABECERA EN FONDO BLANCO PARA RESALTAR TU LOGO CORRECAMENTE */
+    .header-clinica { background: #ffffff; color: var(--primary); padding: 15px; text-align: center; border-bottom: 3px solid var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .header-logo { max-height: 50px; object-fit: contain; margin-bottom: 2px; }
 
-    /* ESTILOS DEL SECTOR PRIVADO (DASHBOARD METAS) */
-    .dashboard-locked { text-align: center; padding: 40px 20px; }
-    .pin-input { font-size: 1.8rem; text-align: center; letter-spacing: 10px; width: 160px; margin: 15px auto; display: block; border-radius: 10px; border: 2px solid #ced4da; }
+    .nav-tabs .nav-link { font-size: 0.7rem; font-weight: 600; color: #64748b; border: none; }
+    .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
     
-    .circle-progress-wrapper { position: relative; width: 200px; height: 200px; margin: 20px auto; }
+    .btn-primary { background-color: var(--primary); border-color: var(--primary); }
+    .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
+    .text-primary { color: var(--primary) !important; }
+
+    /* SECCIÓN METAS / INTERACTIVA */
+    .circle-progress-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
     .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-    .circle-bg { fill: none; stroke: #e6e6e6; stroke-width: 14; }
-    .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 565.48; stroke-dashoffset: 565.48; transition: stroke-dashoffset 0.8s ease, stroke 0.5s ease; }
-    .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: #333; }
+    .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 12; }
+    .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 502.65; stroke-dashoffset: 502.65; transition: all 0.8s ease; }
+    .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: var(--primary); }
     
-    .motivacion-box { background: #f8fafc; border-radius: 12px; padding: 15px; border-left: 5px solid var(--color-0-30); transition: border-color 0.5s ease; }
-    .meta-num-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .task-item { background: #fff; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; }
-    .task-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; cursor: not-allowed; }
+    .task-item { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .task-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--accent); }
     .task-completed { text-decoration: line-through; color: #94a3b8; }
+    
+    #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+    .pin-input { font-size: 2rem; text-align: center; letter-spacing: 12px; width: 180px; margin: 20px auto; border: 2px solid #cbd5e1; border-radius: 12px; }
+
+    .btn-actualizar { background-color: var(--accent); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 15px; box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3); transition: background 0.2s; }
+    .btn-actualizar:active { background-color: #0d9488; }
+    
+    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #dee2e6; background: white; padding: 10px; border-radius: 10px; font-size: 0.75rem; text-align: left; transition: all 0.2s; }
+    .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
   </style>
 </head>
 <body>
 
 <div id="spinner-overlay">
-  <div class="spinner-border text-primary" role="status"></div>
-  <p class="mt-2 fw-bold text-primary">Procesando...</p>
+  <div class="spinner-border" style="color:var(--accent)" role="status"></div>
+  <p class="mt-2 fw-bold" style="color:var(--primary)">Sincronizando...</p>
 </div>
 
-<div id="custom-alert">
-  <div class="alert-content">
-    <div style="font-size: 40px; color: var(--success);">✔</div>
-    <h5 class="my-3 fw-bold">REGISTRO EXITOSO</h5>
-    <button class="btn btn-primary w-100" onclick="location.reload()">Aceptar</button>
+<div id="custom-alert" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px;">
+    <div style="font-size: 50px; color: var(--accent);">✔</div>
+    <h5 id="alert-title" class="my-3 fw-bold">ÉXITO</h5>
+    <button class="btn btn-primary w-100 py-2" onclick="location.reload()">Cerrar</button>
   </div>
 </div>
 
 <div class="container-fluid p-0">
-  <div class="card card-main">
+  <div class="card border-0 rounded-0 min-vh-100">
+    
     <div class="header-clinica">
-      <h6 id="titulo-header" class="mb-0 fw-bold">DM DYNAMIC PRO</h6>
+      <img src="https://lh3.googleusercontent.com/d/1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb" class="header-logo" alt="DM Dynamic Analytics">
     </div>
 
-    <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button">ADMISIÓN</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-res" type="button">RESULTADOS</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-his" type="button">HISTORIAL</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dash" type="button" onclick="ocultarBotonGuardar()">DASHBOARD</button></li>
+    <ul class="nav nav-tabs nav-justified" id="mainTabs">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-adm">ADMISIÓN</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-res">RESULTADOS</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-his">HISTORIAL</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-metas" onclick="ocultarBotonGuardar()">METAS</button></li>
     </ul>
 
-    <div class="tab-content p-3" id="myTabContent">
-      <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+    <div class="tab-content p-3">
+      <div class="tab-pane fade show active" id="tab-adm">
         <div class="row g-2 mb-3">
           <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control form-control-sm"></div>
           <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control form-control-sm"></div>
           <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control form-control-sm"></div>
           <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control form-control-sm"></div>
           <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control form-control-sm"></div>
-          <div class="col-6"><label>Celular</label><input type="tel" id="celular" class="form-control form-control-sm"></div>
+          <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control form-control-sm"></div>
           <div class="col-6"><label>Pago</label>
             <select id="tipoPago" class="form-select form-select-sm">
               <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
             </select>
           </div>
-          <div class="col-12"><label>Origen</label>
+          <div class="col-6"><label>Origen</label>
             <select id="origen" class="form-select form-select-sm">
               <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
             </select>
           </div>
         </div>
         <hr>
-        <div id="container-cats" class="mb-2 d-flex overflow-auto pb-2" style="gap: 5px;"></div>
-        <div id="container-items" class="d-flex flex-wrap bg-light rounded p-1 mb-3"></div>
+        <div id="container-cats" class="d-flex overflow-auto pb-2 mb-2" style="gap:5px"></div>
+        <div id="container-items" class="d-flex flex-wrap bg-light rounded p-2 mb-3"></div>
         <div id="cart-list"></div>
-        <div id="cart-total" class="total-box">Total: S/ 0.00</div>
+        <div id="cart-total" class="h5 text-end fw-bold text-primary mt-2">Total: S/ 0.00</div>
       </div>
 
-      <div class="tab-pane fade" id="tab-res" role="tabpanel">
-        <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="5"></textarea></div>
-        <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="5"></textarea></div>
+      <div class="tab-pane fade" id="tab-res">
+        <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="4"></textarea></div>
+        <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="4"></textarea></div>
         <div class="mb-3"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
       </div>
 
-      <div class="tab-pane fade" id="tab-his" role="tabpanel">
-        <div class="input-group mb-3 shadow-sm">
-          <input type="tel" id="buscardni" class="form-control" placeholder="DNI del paciente...">
+      <div class="tab-pane fade" id="tab-his">
+        <div class="input-group mb-3">
+          <input type="tel" id="buscardni" class="form-control" placeholder="DNI del paciente">
           <button class="btn btn-primary" onclick="ejecutarBusqueda()">🔍</button>
         </div>
-        <div id="historial-resultados">
-          <p class="text-center text-muted small py-4">Ingrese un DNI para buscar antecedentes.</p>
-        </div>
+        <div id="historial-resultados"></div>
       </div>
 
-      <div class="tab-pane fade" id="tab-dash" role="tabpanel">
-        <div id="dash-lock-view" class="dashboard-locked">
-          <div style="font-size:35px;">🔒</div>
-          <h6 class="fw-bold mt-2 text-secondary">Acceso Privado Gerencial</h6>
-          <p class="text-muted small">Ingrese el código de seguridad de la clínica:</p>
-          <input type="password" id="dash-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPinMaestro()">
-          <div id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;">⚠️ PIN Incorrecto</div>
+      <div class="tab-pane fade" id="tab-metas">
+        <div id="metas-lock">
+          <div class="text-center py-5">
+            <div style="font-size:40px">🔒</div>
+            <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
+            <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
+            <p id="pin-error" class="text-danger small fw-bold" style="display:none">PIN Incorrecto</p>
+          </div>
         </div>
 
-        <div id="dash-content-view" style="display:none;">
-          <h6 class="fw-bold text-center text-primary uppercase mb-1">PROGRESO FINANCIERO SEMANAL</h6>
-          
+        <div id="metas-content" style="display:none">
+          <h6 class="fw-bold text-center text-primary mb-3">ESTADO DE METAS SEMANALES</h6>
           <div class="circle-progress-wrapper">
-            <svg class="circle-progress-svg">
-              <circle class="circle-bg" cx="100" cy="100" r="90"></circle>
-              <circle id="dash-circle-fill" class="circle-fill" cx="100" cy="100" r="90"></circle>
-            </svg>
-            <div id="dash-txt-porcentaje" class="circle-percentage">0%</div>
+            <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
+            <div id="progreso-texto" class="circle-percentage">0%</div>
           </div>
-
-          <div id="dash-mensaje-box" class="motivacion-box text-center shadow-sm mb-3">
-            <p id="dash-txt-mensaje" class="fw-bold small mb-0 text-secondary">Procesando datos...</p>
+          <div id="mensaje-motivador" class="p-3 rounded-4 text-center mb-3" style="border-left: 6px solid #ccc; background: #fff;">
+            <p id="txt-motivador" class="fw-bold mb-0 small"></p>
           </div>
-
-          <div class="row g-2 mb-4">
-            <div class="col-6"><div class="meta-num-box"><b>Meta:</b><br><span id="dash-txt-meta" class="text-secondary fw-bold">S/ 0.00</span></div></div>
-            <div class="col-6"><div class="meta-num-box"><b>Logrado:</b><br><span id="dash-txt-logrado" class="text-dark fw-bold">S/ 0.00</span></div></div>
+          <div class="row g-2 mb-3">
+            <div class="col-6"><div class="bg-white p-2 border rounded text-center small">Meta: <br><b id="val-meta">S/ 0</b></div></div>
+            <div class="col-6"><div class="bg-white p-2 border rounded text-center small">Logrado: <br><b id="val-logrado">S/ 0</b></div></div>
           </div>
-
-          <h6 class="fw-bold text-secondary border-bottom pb-2 mb-2" style="font-size:0.8rem; letter-spacing: 1px;">OBJETIVOS ACTUARIALES DE LA SEMANA</h6>
-          <div id="dash-container-tareas"></div>
+          <h6 class="fw-bold small text-secondary border-bottom pb-1">TAREAS SEMANALES</h6>
+          <div id="lista-tareas"></div>
+          <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
         </div>
       </div>
     </div>
 
-    <div id="panel-guardar" class="p-3 bg-white border-top">
-      <button id="btnEnviar" onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow py-3 fw-bold">GUARDAR TODO</button>
+    <div id="panel-inferior" class="p-3 bg-white border-top">
+      <button onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow fw-bold py-3">GUARDAR REGISTRO</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // CONFIGURACIÓN API EN LA NUBE
+  // REEMPLAZA CON LA URL DE TU NUEVA IMPLEMENTACIÓN DE APPS SCRIPT
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
 
-  let configLocal = [];
-  let carrito = [];
-  let dashboardCargado = false;
+  let configLocal = [], carrito = [], tareasLocales = [];
 
   window.onload = async () => {
-    if (!ID_CLINICA) {
-      alert("⚠️ Error: No se detectó el ID de la clínica en la URL.");
-      return;
-    }
-    document.getElementById('spinner-overlay').style.display = 'flex';
+    if(!ID_CLINICA) return alert("Falta ID de Clínica");
+    mostrarLoading(true);
     try {
-      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
-      configLocal = await resp.json();
-      if(configLocal.error) throw new Error(configLocal.error);
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      configLocal = await r.json();
       dibujarCategorias();
-    } catch (e) {
-      alert("Error al cargar configuración: " + e.message);
-    }
-    document.getElementById('spinner-overlay').style.display = 'none';
+    } catch(e) { alert("Error de conexión al cargar configuración"); }
+    mostrarLoading(false);
   };
 
-  // Ocultar botón "Guardar todo" cuando se ingresa a revisar el Dashboard
-  function ocultarBotonGuardar() {
-    document.getElementById('panel-guardar').style.display = 'none';
-  }
+  function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
+  function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
   
-  // Reestablecer el botón de guardado si vuelve a presionar Admisión, Resultados o Historial
-  document.querySelectorAll('.nav-link').forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      if(e.target.innerText !== "DASHBOARD") {
-        document.getElementById('panel-guardar').style.display = 'block';
-      }
+  document.querySelectorAll('.nav-link').forEach(t => {
+    t.addEventListener('click', (e) => { 
+      if(e.target.innerText !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
     });
   });
 
-  // Envía el PIN dinámicamente al servidor maestro al completar los 4 dígitos
-  function evaluarPinMaestro() {
-    const input = document.getElementById('dash-pin');
-    if (input.value.length === 4) {
-      cargarMetasConAutenticacion(input.value);
-    }
-  }
-
-  // Consulta al backend pasando el ID de la clínica y el PIN ingresado por pantalla
-  async function cargarMetasConAutenticacion(pinDigitado) {
-    document.getElementById('spinner-overlay').style.display = 'flex';
-    const errorTxt = document.getElementById('pin-error');
-    const input = document.getElementById('dash-pin');
-    
-    try {
-      const response = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pinDigitado}`);
-      const res = await response.json();
-      
-      if(res.error) {
-        if(res.mensaje === "PIN_INCORRECTO") {
-          errorTxt.style.display = 'block';
+  async function evaluarPinMaestro() {
+    const pin = document.getElementById('metas-pin').value;
+    if(pin.length === 4) {
+      mostrarLoading(true);
+      try {
+        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pin}`);
+        const res = await r.json();
+        if(res.error) {
+          document.getElementById('pin-error').style.display = 'block';
+          document.getElementById('metas-pin').value = "";
         } else {
-          alert(res.mensaje);
+          document.getElementById('metas-lock').style.display = 'none';
+          document.getElementById('metas-content').style.display = 'block';
+          dibujarMetas(res);
         }
-        input.value = "";
-        document.getElementById('spinner-overlay').style.display = 'none';
-        return;
-      }
-      
-      // Acceso concedido
-      errorTxt.style.display = 'none';
-      document.getElementById('dash-lock-view').style.display = 'none';
-      document.getElementById('dash-content-view').style.display = 'block';
-      input.value = "";
-      
-      const f = res.metaFinanciera;
-      
-      // Renderizar datos en los contadores
-      document.getElementById('dash-txt-meta').innerText = `S/ ${parseFloat(f.meta).toFixed(2)}`;
-      document.getElementById('dash-txt-logrado').innerText = `S/ ${parseFloat(f.logrado).toFixed(2)}`;
-      document.getElementById('dash-txt-porcentaje').innerText = `${f.porcentaje}%`;
-
-      // Física de la Barra de Carga Animada (Circunferencia fija = 565.48)
-      const ring = document.getElementById('dash-circle-fill');
-      const circunferencia = 565.48;
-      const porcentajeVisual = Math.min(f.porcentaje, 100);
-      const offset = circunferencia - (porcentajeVisual / 100) * circunferencia;
-      ring.style.strokeDashoffset = offset;
-
-      // Inyección Neuro-Conductual de Colores y Frases Motivacionales
-      const msgBox = document.getElementById('dash-mensaje-box');
-      const msgTxt = document.getElementById('dash-txt-mensaje');
-      let colorAplicado = "";
-      let fraseMotivadora = "";
-
-      if(f.porcentaje <= 30) {
-        colorAplicado = "var(--color-0-30)";
-        fraseMotivadora = "¡Buen arranque! Cada paciente cuenta para el éxito.";
-      } else if (f.porcentaje <= 60) {
-        colorAplicado = "var(--color-31-60)";
-        fraseMotivadora = "¡Gran ritmo! La clínica está en movimiento. ¡Sigamos sumando!";
-      } else if (f.porcentaje <= 90) {
-        colorAplicado = "var(--color-61-90)";
-        fraseMotivadora = "¡Impresionante! Estás a un paso de la meta semanal. ¡No te detengas!";
-      } else if (f.porcentaje <= 99) {
-        colorAplicado = "var(--color-91-99)";
-        fraseMotivadora = "¡Casi en la cima! Un último esfuerzo y la victoria es tuya.";
-      } else {
-        colorAplicado = "var(--color-100)";
-        fraseMotivadora = "🏆 ¡OBJETIVO LOGRADO! Tu gestión ha sido impecable. ¡Eres un líder!";
-      }
-
-      // Aplicar estilos dinámicos calculados en vivo
-      ring.style.stroke = colorAplicado;
-      msgBox.style.borderColor = colorAplicado;
-      msgTxt.innerText = fraseMotivadora;
-      msgTxt.style.color = colorAplicado === "var(--color-0-30)" ? "#475569" : colorAplicado;
-
-      // Pintar listado de objetivos semanales
-      const containerTareas = document.getElementById('dash-container-tareas');
-      if(!res.objetivosTareas || res.objetivosTareas.length === 0) {
-        containerTareas.innerHTML = `<p class="text-center text-muted small py-3">No hay objetivos programados para esta semana.</p>`;
-      } else {
-        containerTareas.innerHTML = res.objetivosTareas.map(t => `
-          <div class="task-item shadow-sm">
-            <input type="checkbox" ${t.completado ? 'checked' : ''}>
-            <span class="${t.completado ? 'task-completed' : 'fw-bold text-dark'}">${t.descripcion}</span>
-          </div>
-        `).join('');
-      }
-
-    } catch (e) {
-      alert("Error crítico en la comunicación de seguridad: " + e.message);
+      } catch(e) { alert("Error de validación de PIN"); }
+      mostrarLoading(false);
     }
-    document.getElementById('spinner-overlay').style.display = 'none';
   }
 
-  // --- MÓDULOS DE NEGOCIO ORIGINALES MANTENIDOS AL 100% ---
+  function dibujarMetas(res) {
+    const f = res.metaFinanciera;
+    document.getElementById('val-meta').innerText = `S/ ${f.meta.toFixed(2)}`;
+    document.getElementById('val-logrado').innerText = `S/ ${f.logrado.toFixed(2)}`;
+    document.getElementById('progreso-texto').innerText = `${f.porcentaje}%`;
+
+    const circle = document.getElementById('progreso-circulo');
+    const pct = Math.min(f.porcentaje, 100);
+    circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65; 
+
+    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el éxito.";
+    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Gran ritmo! Sigamos sumando."; }
+    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Impresionante! A un paso de la meta."; }
+    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima!"; }
+    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡OBJETIVO LOGRADO! Eres un líder."; }
+
+    circle.style.stroke = `var(${color})`;
+    document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
+    document.getElementById('txt-motivador').innerText = msg;
+    document.getElementById('txt-motivador').style.color = `var(${color})`;
+
+    tareasLocales = res.objetivosTareas;
+    const cont = document.getElementById('lista-tareas');
+    cont.innerHTML = tareasLocales.map((t, i) => `
+      <div class="task-item">
+        <input type="checkbox" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
+        <span class="${t.completado ? 'task-completed' : 'fw-bold'}">${t.descripcion}</span>
+      </div>
+    `).join('');
+  }
+
+  function actualizarEstadoTarea(index, completado) {
+    tareasLocales[index].completado = completado;
+  }
+
+  async function enviarActualizacionTareas() {
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
+        method: 'POST',
+        body: JSON.stringify(tareasLocales)
+      });
+      const res = await r.json();
+      if(res.resultado === "OK") {
+        document.getElementById('alert-title').innerText = "METAS ACTUALIZADAS";
+        document.getElementById('custom-alert').style.display = 'block';
+      }
+    } catch(e) { alert("Error al actualizar tareas en la base de datos"); }
+    mostrarLoading(false);
+  }
+
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
-    document.getElementById('container-cats').innerHTML = cats.map(c => 
-      `<button class="btn btn-sm btn-outline-primary flex-shrink-0" onclick="dibujarItems('${c}')">${c}</button>`
-    ).join('');
+    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-sm btn-outline-primary flex-shrink-0" onclick="dibujarItems('${c}')">${c}</button>`).join('');
   }
-
-  function dibujarItems(cat) {
-    const filtrados = configLocal.filter(i => i.categoria === cat);
-    document.getElementById('container-items').innerHTML = filtrados.map(i => 
-      `<button class="btn btn-item shadow-sm" onclick="agregarAlCarrito('${i.nombre}')">
-        <b>${i.nombre}</b><br><span class="text-primary">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
-      </button>`
-    ).join('');
+  function dibujarItems(c) {
+    const items = configLocal.filter(i => i.categoria === c);
+    document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item shadow-sm" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="text-primary">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
   }
-
-  function agregarAlCarrito(nombre) {
-    const item = configLocal.find(i => i.nombre === nombre);
-    carrito.push({...item, idUnico: Date.now() + Math.random()});
-    actualizarVistaCarrito();
+  function agregarAlCarrito(n) {
+    const i = configLocal.find(x => x.nombre === n);
+    carrito.push({...i, idU: Date.now()});
+    actualizarCarrito();
   }
-
-  function actualizarVistaCarrito() {
-    let total = 0;
-    document.getElementById('cart-list').innerHTML = carrito.map(i => {
-      total += parseFloat(i.pvp);
-      return `<div class="cart-item">
-                <span class="text-truncate" style="max-width:60%">${i.nombre}</span>
-                <div>
-                  <span class="fw-bold text-primary me-2">S/${parseFloat(i.pvp).toFixed(2)}</span>
-                  <span class="text-danger fw-bold" style="cursor:pointer" onclick="borrar(${i.idUnico})">✕</span>
-                </div>
-              </div>`;
-    }).join('');
-    document.getElementById('cart-total').innerText = `Total: S/ ${total.toFixed(2)}`;
+  function actualizarCarrito() {
+    let t = 0;
+    document.getElementById('cart-list').innerHTML = carrito.map(i => { t += parseFloat(i.pvp); return `<div class="bg-white border-start border-4 border-success p-2 mb-2 rounded shadow-sm d-flex justify-content-between"><span>${i.nombre}</span><b>S/${i.pvp}</b></div>`; }).join('');
+    document.getElementById('cart-total').innerText = `Total: S/ ${t.toFixed(2)}`;
   }
-  
-  function borrar(id) { carrito = carrito.filter(x => x.idUnico !== id); actualizarVistaCarrito(); }
-
-  async function ejecutarBusqueda() {
-    const dni = document.getElementById('buscardni').value.trim();
-    if(!dni) return;
-    document.getElementById('spinner-overlay').style.display = 'flex';
-    try {
-      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${dni}`);
-      const res = await resp.json();
-      const cont = document.getElementById('historial-resultados');
-      
-      if(!res || res.length === 0) {
-        cont.innerHTML = '<div class="alert alert-light text-center border mt-3 small">Sin antecedentes encontrados.</div>';
-      } else {
-        cont.innerHTML = res.map(r => `
-          <div class="historial-card">
-            <div class="d-flex justify-content-between small mb-1 border-bottom pb-1 text-primary fw-bold">
-              <span>📅 ${r.fecha}</span><span class="badge bg-light text-primary border">${r.servicio}</span>
-            </div>
-            <div class="fw-bold mt-1" style="font-size:0.9rem">${r.producto}</div>
-            <div class="bg-light p-2 rounded mt-2 small" style="font-size:0.75rem"><b>Dx:</b> ${r.diagnostico || '-'}</div>
-            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.tratamiento || '-'}</div>
-          </div>`).join('');
-      }
-    } catch (e) { alert("Error en búsqueda de historial"); }
-    document.getElementById('spinner-overlay').style.display = 'none';
-  }
-
   async function enviarDatos() {
     const dni = document.getElementById('dni').value;
-    if(!dni || carrito.length === 0) return alert("DNI y servicios en el carrito son obligatorios");
-    
-    document.getElementById('spinner-overlay').style.display = 'flex';
-    const payload = {
-      dni, 
-      nombre: document.getElementById('nombrePac').value,
-      apellidoP: document.getElementById('apePat').value,
-      apellidoM: document.getElementById('apeMat').value,
-      edad: document.getElementById('edad').value,
-      celular: document.getElementById('celular').value,
-      tipoPago: document.getElementById('tipoPago').value,
-      origen: document.getElementById('origen').value,
-      diagnostico: document.getElementById('diag').value,
-      analisis: document.getElementById('analisis').value,
-      tratamiento: document.getElementById('trat').value,
-      carrito
-    };
-
+    if(!dni || carrito.length === 0) return alert("DNI y servicios requeridos");
+    mostrarLoading(true);
+    const p = { dni, nombre: document.getElementById('nombrePac').value, apellidoP: document.getElementById('apePat').value, apellidoM: document.getElementById('apeMat').value, edad: document.getElementById('edad').value, celular: document.getElementById('celular').value, tipoPago: document.getElementById('tipoPago').value, origen: document.getElementById('origen').value, diagnostico: document.getElementById('diag').value, analisis: document.getElementById('analisis').value, tratamiento: document.getElementById('trat').value, carrito };
     try {
-      const resp = await fetch(`${URL_API}?id=${ID_CLINICA}`, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      });
-      const res = await resp.json();
-      if(res.resultado === "OK") {
-        document.getElementById('custom-alert').style.display = 'block';
-      } else {
-        alert("Error: " + (res.error || "No se pudo guardar"));
-      }
-    } catch (e) { alert("Error al conectar con el servidor"); }
-    document.getElementById('spinner-overlay').style.display = 'none';
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}`, { method: 'POST', body: JSON.stringify(p) });
+      const res = await r.json();
+      if(res.resultado === "OK") document.getElementById('custom-alert').style.display = 'block';
+    } catch(e) { alert("Error al guardar registro"); }
+    mostrarLoading(false);
+  }
+  async function ejecutarBusqueda() {
+    const d = document.getElementById('buscardni').value;
+    if(!d) return;
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
+      const res = await r.json();
+      const c = document.getElementById('historial-resultados');
+      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3'>Sin historial.</p>";
+      else c.innerHTML = res.map(h => `<div class='bg-white p-3 rounded shadow-sm mb-2 border-start border-primary border-4'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold'>${h.producto}</div><div class='small'>Dx: ${h.diagnostico}</div></div>`).join('');
+    } catch(e) { alert("Error en búsqueda de historial"); }
+    mostrarLoading(false);
   }
 </script>
 </body>
