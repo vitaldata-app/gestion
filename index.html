@@ -108,4 +108,281 @@
       <li class="nav-item" role="presentation"><button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab">Admisión</button></li>
       <li class="nav-item" role="presentation"><button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#tab-res" type="button" role="tab">Resultados</button></li>
       <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab">Historial</button></li>
-      <li class="nav-item" role="presentation"><button class="nav-link"
+      <li class="nav-item" role="presentation"><button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">Metas</button></li>
+    </ul>
+
+    <div class="tab-content p-3">
+      <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Datos del Paciente</div>
+          <div class="row g-2">
+            <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control"></div>
+            <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control"></div>
+            <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control"></div>
+            <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control"></div>
+            <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control"></div>
+            <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control"></div>
+            <div class="col-6"><label>Método de Pago</label>
+              <select id="tipoPago" class="form-select">
+                <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
+              </select>
+            </div>
+            <div class="col-6"><label>Origen</label>
+              <select id="origen" class="form-select">
+                <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-card">
+          <div class="ui-card-title">Servicios y Tarifas</div>
+          <div id="container-cats" class="d-flex overflow-auto pb-2 mb-3" style="gap:8px"></div>
+          <div id="container-items" class="d-flex flex-wrap rounded mb-3" style="background: #f8fafc; padding: 8px 3px;"></div>
+          
+          <div class="fw-bold small text-secondary mb-2">Detalle de Selección:</div>
+          <div id="cart-list"></div>
+          <div id="cart-total" class="h5 text-end fw-bold text-primary mt-3 mb-0">Total a Pagar: S/ 0.00</div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-res" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Clínica e Informes</div>
+          <div class="mb-3"><label>Diagnóstico / Hallazgos</label><textarea id="diag" class="form-control" rows="4"></textarea></div>
+          <div class="mb-3"><label>Tratamiento / Receta</label><textarea id="trat" class="form-control" rows="4"></textarea></div>
+          <div class="mb-0"><label>Análisis Solicitados</label><textarea id="analisis" class="form-control" rows="2"></textarea></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-his" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title">Búsqueda de Pacientes</div>
+          <div class="input-group mb-0">
+            <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI para buscar...">
+            <button class="btn btn-primary px-3" onclick="ejecutarBusqueda()">🔍 Buscar</button>
+          </div>
+        </div>
+        <div id="historial-resultados"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-metas" role="tabpanel">
+        <div id="metas-lock" class="ui-card text-center py-5">
+          <div style="font-size:40px">🔒</div>
+          <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
+          <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
+          <p id="pin-error" class="text-danger small fw-bold" style="display:none; margin-top:10px;">PIN Incorrecto</p>
+        </div>
+
+        <div id="metas-content" style="display:none">
+          <div class="ui-card">
+            <div class="ui-card-title text-center">Estado de Metas Semanales</div>
+            <div class="circle-progress-wrapper">
+              <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
+              <div id="progreso-texto" class="circle-percentage">0%</div>
+            </div>
+            <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 6px solid #ccc; background: #f8fafc;">
+              <p id="txt-motivador" class="fw-bold mb-0 small"></p>
+            </div>
+            <div class="row g-2">
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Meta: <br><b id="val-meta" class="text-primary">S/ 0</b></div></div>
+              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Logrado: <br><b id="val-logrado" class="text-success">S/ 0</b></div></div>
+            </div>
+          </div>
+          
+          <div class="ui-card">
+            <div class="ui-card-title">Tareas Semanales</div>
+            <div id="lista-tareas"></div>
+            <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-inferior" class="p-3 bg-white border-top mt-auto">
+      <button onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow fw-bold py-3">GUARDAR REGISTRO</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
+  const params = new URLSearchParams(window.location.search);
+  const ID_CLINICA = params.get('id');
+
+  let configLocal = [], carrito = [], tareasLocales = [];
+
+  window.onload = async () => {
+    if(!ID_CLINICA) return alert("Falta ID de Clínica");
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      const respuestaBackend = await r.json();
+      
+      // PROCESADO DINÁMICO DE CO-BRANDING
+      document.getElementById('web-clinica-nombre').innerText = respuestaBackend.clinicaNombre;
+      if(respuestaBackend.clinicaLogo && respuestaBackend.clinicaLogo.trim() !== "") {
+         document.getElementById('web-clinica-logo').src = respuestaBackend.clinicaLogo;
+         document.getElementById('web-clinica-logo').style.display = 'block';
+         document.getElementById('web-brand-divider').style.display = 'block';
+      }
+      
+      configLocal = respuestaBackend.servicios;
+      dibujarCategorias();
+    } catch(e) { alert("Error de conexión al cargar configuración"); }
+    mostrarLoading(false);
+  };
+
+  function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
+  function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
+  
+  document.querySelectorAll('.nav-link').forEach(t => {
+    t.addEventListener('click', (e) => { 
+      if(e.target.innerText.toUpperCase() !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
+    });
+  });
+
+  async function evaluarPinMaestro() {
+    const pin = document.getElementById('metas-pin').value;
+    if(pin.length === 4) {
+      mostrarLoading(true);
+      try {
+        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pin}`);
+        const res = await r.json();
+        if(res.error) {
+          document.getElementById('pin-error').style.display = 'block';
+          document.getElementById('metas-pin').value = "";
+        } else {
+          document.getElementById('metas-lock').style.display = 'none';
+          document.getElementById('metas-content').style.display = 'block';
+          dibujarMetas(res);
+        }
+      } catch(e) { alert("Error de validación de PIN"); }
+      mostrarLoading(false);
+    }
+  }
+
+  function dibujarMetas(res) {
+    const f = res.metaFinanciera;
+    document.getElementById('val-meta').innerText = `S/ ${f.meta.toFixed(2)}`;
+    document.getElementById('val-logrado').innerText = `S/ ${f.logrado.toFixed(2)}`;
+    document.getElementById('progreso-texto').innerText = `${f.porcentaje}%`;
+
+    const circle = document.getElementById('progreso-circulo');
+    const pct = Math.min(f.porcentaje, 100);
+    circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65; 
+
+    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el éxito.";
+    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Gran ritmo! Sigamos sumando."; }
+    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Impresionante! A un paso de la meta."; }
+    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima!"; }
+    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡OBJETIVO LOGRADO! Eres un líder."; }
+
+    circle.style.stroke = `var(${color})`;
+    document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
+    document.getElementById('txt-motivador').innerText = msg;
+    document.getElementById('txt-motivador').style.color = `var(${color})`;
+
+    tareasLocales = res.objetivosTareas;
+    const cont = document.getElementById('lista-tareas');
+    cont.innerHTML = tareasLocales.map((t, i) => `
+      <div class="task-item">
+        <input type="checkbox" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
+        <span class="${t.completado ? 'task-completed' : 'fw-bold'}">${t.descripcion}</span>
+      </div>
+    `).join('');
+  }
+
+  function actualizarEstadoTarea(index, completado) {
+    tareasLocales[index].completado = completado;
+  }
+
+  async function enviarActualizacionTareas() {
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
+        method: 'POST',
+        body: JSON.stringify(tareasLocales)
+      });
+      const res = await r.json();
+      if(res.resultado === "OK") {
+        document.getElementById('alert-title').innerText = "METAS ACTUALIZADAS";
+        document.getElementById('custom-alert').style.display = 'block';
+      }
+    } catch(e) { alert("Error al actualizar tareas en la base de datos"); }
+    mostrarLoading(false);
+  }
+
+  function dibujarCategorias() {
+    const cats = [...new Set(configLocal.map(i => i.categoria))];
+    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-cat flex-shrink-0" onclick="seleccionarCategoria(this, '${c}')">${c}</button>`).join('');
+  }
+
+  function seleccionarCategoria(btn, c) {
+    document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
+    btn.classList.add('active-cat');
+    dibujarItems(c);
+  }
+  
+  function dibujarItems(c) {
+    const items = configLocal.filter(i => i.categoria === c);
+    document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
+  }
+  
+  function agregarAlCarrito(n) {
+    const i = configLocal.find(x => x.nombre === n);
+    carrito.push({...i, idU: Date.now()});
+    actualizarCarrito();
+  }
+
+  function eliminarDelCarrito(idU) {
+    carrito = carrito.filter(item => item.idU !== idU);
+    actualizarCarrito();
+  }
+
+  function actualizarCarrito() {
+    let t = 0;
+    document.getElementById('cart-list').innerHTML = carrito.map(i => { 
+      t += parseFloat(i.pvp); 
+      return `
+        <div class="cart-row">
+          <span>${i.nombre}</span>
+          <div>
+            <b class="me-2 text-dark">S/${parseFloat(i.pvp).toFixed(2)}</b>
+            <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})">❌</button>
+          </div>
+        </div>`; 
+    }).join('');
+    document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${t.toFixed(2)}`;
+  }
+
+  async function enviarDatos() {
+    const dni = document.getElementById('dni').value;
+    if(!dni || carrito.length === 0) return alert("DNI y servicios requeridos");
+    mostrarLoading(true);
+    const p = { dni, nombre: document.getElementById('nombrePac').value, apellidoP: document.getElementById('apePat').value, apellidoM: document.getElementById('apeMat').value, edad: document.getElementById('edad').value, celular: document.getElementById('celular').value, tipoPago: document.getElementById('tipoPago').value, origen: document.getElementById('origen').value, diagnostico: document.getElementById('diag').value, analisis: document.getElementById('analisis').value, tratamiento: document.getElementById('trat').value, carrito };
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}`, { method: 'POST', body: JSON.stringify(p) });
+      const res = await r.json();
+      if(res.resultado === "OK") document.getElementById('custom-alert').style.display = 'block';
+    } catch(e) { alert("Error al guardar registro"); }
+    mostrarLoading(false);
+  }
+
+  async function ejecutarBusqueda() {
+    const d = document.getElementById('buscardni').value;
+    if(!d) return;
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
+      const res = await r.json();
+      const c = document.getElementById('historial-resultados');
+      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos de historial.</p>";
+      else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div><div class='small text-muted'>Dx: ${h.diagnostico}</div></div>`).join('');
+    } catch(e) { alert("Error en búsqueda de historial"); }
+    mostrarLoading(false);
+  }
+</script>
+</body>
+</html>
