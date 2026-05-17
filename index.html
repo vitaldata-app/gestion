@@ -10,12 +10,12 @@
     :root { 
       --primary: #0d6efd; 
       --success: #10b981; 
-      /* Colores Conductuales */
-      --color-0-30: #94a3b8;   /* Platino / Gris Azulado */
-      --color-31-60: #38bdf8;  /* Azul Turquesa */
-      --color-61-90: #10b981;  /* Verde Esmeralda */
-      --color-91-99: #f59e0b;  /* Oro / Amarillo */
-      --color-100: #d946ef;    /* Magenta Eléctrico / Éxito */
+      /* Colores de Comportamiento (Gamificación) */
+      --color-0-30: #94a3b8;   /* Platino / Gris Neutral */
+      --color-31-60: #38bdf8;  /* Azul Turquesa Progresivo */
+      --color-61-90: #10b981;  /* Verde Esmeralda Monetario */
+      --color-91-99: #f59e0b;  /* Oro / Expectativa Alta */
+      --color-100: #d946ef;    /* Magenta Eléctrico / Logro Extraordinario */
     }
     body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; font-size: 14px; }
     .card-main { border: none; border-radius: 0; box-shadow: none; min-height: 100vh; }
@@ -36,7 +36,7 @@
     .historial-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     label { font-weight: 600; color: #444; margin-bottom: 2px; display: block; font-size: 0.75rem; }
 
-    /* ESTILOS DEL NUEVO COMPONENTE: DASHBOARD MOTIVACIONAL */
+    /* ESTILOS DEL SECTOR PRIVADO (DASHBOARD METAS) */
     .dashboard-locked { text-align: center; padding: 40px 20px; }
     .pin-input { font-size: 1.8rem; text-align: center; letter-spacing: 10px; width: 160px; margin: 15px auto; display: block; border-radius: 10px; border: 2px solid #ced4da; }
     
@@ -78,7 +78,7 @@
       <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button">ADMISIÓN</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-res" type="button">RESULTADOS</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-his" type="button">HISTORIAL</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dash" type="button" onclick="verificarAccesoDashboard()">DASHBOARD</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dash" type="button" onclick="ocultarBotonGuardar()">DASHBOARD</button></li>
     </ul>
 
     <div class="tab-content p-3" id="myTabContent">
@@ -128,8 +128,8 @@
         <div id="dash-lock-view" class="dashboard-locked">
           <div style="font-size:35px;">🔒</div>
           <h6 class="fw-bold mt-2 text-secondary">Acceso Privado Gerencial</h6>
-          <p class="text-muted small">Por seguridad, ingrese el PIN de la clínica:</p>
-          <input type="password" id="dash-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPin()">
+          <p class="text-muted small">Ingrese el código de seguridad de la clínica:</p>
+          <input type="password" id="dash-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPinMaestro()">
           <div id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;">⚠️ PIN Incorrecto</div>
         </div>
 
@@ -145,7 +145,7 @@
           </div>
 
           <div id="dash-mensaje-box" class="motivacion-box text-center shadow-sm mb-3">
-            <p id="dash-txt-mensaje" class="fw-bold small mb-0 text-secondary">Cargando análisis...</p>
+            <p id="dash-txt-mensaje" class="fw-bold small mb-0 text-secondary">Procesando datos...</p>
           </div>
 
           <div class="row g-2 mb-4">
@@ -167,11 +167,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // CONFIGURACIÓN API (Enlace verificado de tu Apps Script publicado)
+  // CONFIGURACIÓN API EN LA NUBE
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
-  const PIN_MAESTRO = "8520"; // Pin por defecto para el dueño de la clínica
 
   let configLocal = [];
   let carrito = [];
@@ -194,12 +193,12 @@
     document.getElementById('spinner-overlay').style.display = 'none';
   };
 
-  // Manejo visual del botón inferior según la pestaña seleccionada
-  function verificarAccesoDashboard() {
+  // Ocultar botón "Guardar todo" cuando se ingresa a revisar el Dashboard
+  function ocultarBotonGuardar() {
     document.getElementById('panel-guardar').style.display = 'none';
   }
   
-  // Escuchar clicks en las pestañas comunes para devolver el botón "Guardar"
+  // Reestablecer el botón de guardado si vuelve a presionar Admisión, Resultados o Historial
   document.querySelectorAll('.nav-link').forEach(tab => {
     tab.addEventListener('click', (e) => {
       if(e.target.innerText !== "DASHBOARD") {
@@ -208,52 +207,56 @@
     });
   });
 
-  // Validación de PIN en pantalla del celular
-  function evaluarPin() {
+  // Envía el PIN dinámicamente al servidor maestro al completar los 4 dígitos
+  function evaluarPinMaestro() {
     const input = document.getElementById('dash-pin');
+    if (input.value.length === 4) {
+      cargarMetasConAutenticacion(input.value);
+    }
+  }
+
+  // Consulta al backend pasando el ID de la clínica y el PIN ingresado por pantalla
+  async function cargarMetasConAutenticacion(pinDigitado) {
+    document.getElementById('spinner-overlay').style.display = 'flex';
     const errorTxt = document.getElementById('pin-error');
-    if(input.value === PIN_MAESTRO) {
+    const input = document.getElementById('dash-pin');
+    
+    try {
+      const response = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pinDigitado}`);
+      const res = await response.json();
+      
+      if(res.error) {
+        if(res.mensaje === "PIN_INCORRECTO") {
+          errorTxt.style.display = 'block';
+        } else {
+          alert(res.mensaje);
+        }
+        input.value = "";
+        document.getElementById('spinner-overlay').style.display = 'none';
+        return;
+      }
+      
+      // Acceso concedido
       errorTxt.style.display = 'none';
       document.getElementById('dash-lock-view').style.display = 'none';
       document.getElementById('dash-content-view').style.display = 'block';
       input.value = "";
-      cargarMetasServidor();
-    } else if (input.value.length === 4) {
-      errorTxt.style.display = 'block';
-      input.value = "";
-    }
-  }
-
-  // Carga e interpretación Neuro-Conductual de los datos de la pestaña METAS
-  async function cargarMetasServidor() {
-    if(dashboardCargado) return; // Evita peticiones dobles innecesarias
-    document.getElementById('spinner-overlay').style.display = 'flex';
-    try {
-      const response = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas`);
-      const res = await response.json();
       
-      if(res.error) {
-        alert(res.mensaje);
-        return;
-      }
-      
-      dashboardCargado = true;
       const f = res.metaFinanciera;
       
-      // Actualizar montos en pantalla
+      // Renderizar datos en los contadores
       document.getElementById('dash-txt-meta').innerText = `S/ ${parseFloat(f.meta).toFixed(2)}`;
       document.getElementById('dash-txt-logrado').innerText = `S/ ${parseFloat(f.logrado).toFixed(2)}`;
       document.getElementById('dash-txt-porcentaje').innerText = `${f.porcentaje}%`;
 
-      // 1. Física de la barra circular animada (Radio = 90, Circunferencia = 2 * PI * r = 565.48)
+      // Física de la Barra de Carga Animada (Circunferencia fija = 565.48)
       const ring = document.getElementById('dash-circle-fill');
       const circunferencia = 565.48;
-      // Capamos el porcentaje visual al 100% para que el círculo no dé vueltas raras si se superan las utilidades
       const porcentajeVisual = Math.min(f.porcentaje, 100);
       const offset = circunferencia - (porcentajeVisual / 100) * circunferencia;
       ring.style.strokeDashoffset = offset;
 
-      // 2. Selección del color conductual y mensaje psicológico basado en el porcentaje exacto
+      // Inyección Neuro-Conductual de Colores y Frases Motivacionales
       const msgBox = document.getElementById('dash-mensaje-box');
       const msgTxt = document.getElementById('dash-txt-mensaje');
       let colorAplicado = "";
@@ -276,13 +279,13 @@
         fraseMotivadora = "🏆 ¡OBJETIVO LOGRADO! Tu gestión ha sido impecable. ¡Eres un líder!";
       }
 
-      // Aplicar color en vivo al círculo y a la caja de mensajes
+      // Aplicar estilos dinámicos calculados en vivo
       ring.style.stroke = colorAplicado;
       msgBox.style.borderColor = colorAplicado;
       msgTxt.innerText = fraseMotivadora;
       msgTxt.style.color = colorAplicado === "var(--color-0-30)" ? "#475569" : colorAplicado;
 
-      // 3. Pintar lista de objetivos semanales filtrados
+      // Pintar listado de objetivos semanales
       const containerTareas = document.getElementById('dash-container-tareas');
       if(!res.objetivosTareas || res.objetivosTareas.length === 0) {
         containerTareas.innerHTML = `<p class="text-center text-muted small py-3">No hay objetivos programados para esta semana.</p>`;
@@ -296,12 +299,12 @@
       }
 
     } catch (e) {
-      alert("Error al conectar con el módulo de metas: " + e.message);
+      alert("Error crítico en la comunicación de seguridad: " + e.message);
     }
     document.getElementById('spinner-overlay').style.display = 'none';
   }
 
-  // --- MÓDULOS BASE ORIGINALES MANTENIDOS AL 100% ---
+  // --- MÓDULOS DE NEGOCIO ORIGINALES MANTENIDOS AL 100% ---
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
     document.getElementById('container-cats').innerHTML = cats.map(c => 
@@ -360,7 +363,7 @@
             </div>
             <div class="fw-bold mt-1" style="font-size:0.9rem">${r.producto}</div>
             <div class="bg-light p-2 rounded mt-2 small" style="font-size:0.75rem"><b>Dx:</b> ${r.diagnostico || '-'}</div>
-            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.treatment || r.tratamiento || '-'}</div>
+            <div class="p-1 mt-1 small text-muted" style="font-size:0.7rem"><b>Rx:</b> ${r.tratamiento || '-'}</div>
           </div>`).join('');
       }
     } catch (e) { alert("Error en búsqueda de historial"); }
