@@ -36,7 +36,7 @@
     .txt-clinica-nombre strong { color: var(--primary); font-weight: 700; text-transform: uppercase; }
 
     .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
-    .nav-tabs .nav-link { font-size: 0.75rem; font-weight: 600; color: #64748b; border: none; padding: 14px 5px; text-transform: uppercase; }
+    .nav-tabs .nav-link { font-size: 0.72rem; font-weight: 600; color: #64748b; border: none; padding: 14px 2px; text-transform: uppercase; }
     .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
     
     .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 15px; }
@@ -75,6 +75,11 @@
     .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
     
     #panel-inferior { z-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
+
+    /* ESTILOS INTERNOS PARA CARTAS DE SEGUIMIENTO */
+    .card-seg { border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+    .btn-wa { background-color: #25d366; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+    .btn-wa:hover { background-color: #128c7e; color: white; }
   </style>
 </head>
 <body>
@@ -115,6 +120,7 @@
       <li class="nav-item" role="presentation"><button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab">Admisión</button></li>
       <li class="nav-item" role="presentation"><button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#tab-res" type="button" role="tab">Resultados</button></li>
       <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab">Historial</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="seguimiento-tab" data-bs-toggle="tab" data-bs-target="#tab-seg" type="button" role="tab" onclick="cargarMóduloSeguimiento()">Seguimiento</button></li>
       <li class="nav-item" role="presentation"><button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">Metas</button></li>
     </ul>
 
@@ -171,6 +177,24 @@
           </div>
         </div>
         <div id="historial-resultados"></div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-seg" role="tabpanel">
+        <div class="ui-card">
+          <div class="ui-card-title d-flex justify-content-between align-items-center">
+            <span>Alertas de Seguimiento</span>
+            <button class="btn btn-sm btn-light border" onclick="cargarMóduloSeguimiento()">🔄 Refrescar</button>
+          </div>
+          
+          <h6 class="fw-bold text-danger mb-2">🔴 ATRASADOS / POR CONTACTAR</h6>
+          <div id="seg-atrasados" class="mb-4"></div>
+          
+          <h6 class="fw-bold text-warning mb-2">🟡 HOY Y MAÑANA</h6>
+          <div id="seg-hoy-manana" class="mb-4"></div>
+          
+          <h6 class="fw-bold text-success mb-2">🟢 PRÓXIMOS 7 DÍAS</h6>
+          <div id="seg-proximos" class="mb-2"></div>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="tab-metas" role="tabpanel">
@@ -252,9 +276,15 @@
   function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
   function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
   
+  // MODIFICADO: CONTROL INTEGRAL DE VISIBILIDAD DEL BOTÓN INFERIOR SEGÚN PESTAÑA
   document.querySelectorAll('.nav-link').forEach(t => {
     t.addEventListener('click', (e) => { 
-      if(e.target.innerText.toUpperCase() !== "METAS") document.getElementById('panel-inferior').style.display = 'block'; 
+      const textoTab = e.target.innerText.toUpperCase();
+      if(textoTab !== "METAS" && textoTab !== "SEGUIMIENTO") {
+         document.getElementById('panel-inferior').style.display = 'block'; 
+      } else {
+         document.getElementById('panel-inferior').style.display = 'none';
+      }
     });
   });
 
@@ -396,6 +426,85 @@
       if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos de historial.</p>";
       else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div><div class='small text-muted'>Dx: ${h.diagnostico}</div></div>`).join('');
     } catch(e) { alert("Error en búsqueda de historial"); }
+    mostrarLoading(false);
+  }
+
+  // NUEVA FUNCIÓN FRONTEND: LLAMA AL BACKEND Y PINTA LAS ALERTAS AGRUPADAS POR FECHAS
+  async function cargarMóduloSeguimiento() {
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerSeguimiento`);
+      const data = await r.json();
+      
+      const atrasadosDiv = document.getElementById('seg-atrasados');
+      const hoyMananaDiv = document.getElementById('seg-hoy-manana');
+      const proximosDiv = document.getElementById('seg-proximos');
+      
+      let htmlAtrasados = "", htmlHoyManana = "", htmlProximos = "";
+      
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      const manana = new Date(hoy);
+      manana.setDate(hoy.getDate() + 1);
+      
+      if(!data || data.length === 0) {
+        const msgVacio = "<p class='text-center small py-2 text-muted'>No hay controles pendientes en agenda.</p>";
+        atrasadosDiv.innerHTML = msgVacio;
+        hoyMananaDiv.innerHTML = msgVacio;
+        proximosDiv.innerHTML = msgVacio;
+        mostrarLoading(false);
+        return;
+      }
+      
+      data.forEach(item => {
+        const fCita = new Date(item.fechaTime);
+        fCita.setHours(0,0,0,0);
+        
+        // Estructura del mensaje de WhatsApp dinámico
+        const mensajeWA = `Hola ${item.nombre}, te saludamos de la clínica. Te recordamos que tienes programado tu próximo control médico de ${item.motivo} para el día ${item.fechaStr}. Por favor, confírmanos tu asistencia respondiendo a este mensaje. ¡Te esperamos!`;
+        
+        // Conversión del celular al formato internacional de Perú (+51)
+        let nroCelular = item.celular.toString().replace(/\s+/g, '');
+        if(nroCelular.length === 9 && nroCelular.startsWith('9')) {
+          nroCelular = '51' + nroCelular;
+        }
+        
+        const linkWhatsApp = `https://wa.me/${nroCelular}?text=${encodeURIComponent(mensajeWA)}`;
+        
+        const cardHTML = `
+          <div class="card-seg">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-bold text-dark" style="font-size:0.85rem">${item.nombre}</div>
+                <div class="text-muted mt-1" style="font-size:0.75rem">
+                  <b>Motivo:</b> ${item.motivo}<br>
+                  <b>Fecha Programada:</b> <span class="badge bg-secondary">${item.fechaStr}</span>
+                </div>
+              </div>
+              <a href="${linkWhatsApp}" target="_blank" class="btn-wa">
+                <span>🟢</span> Recordar
+              </a>
+            </div>
+          </div>
+        `;
+        
+        // Clasificación por contenedores según fecha
+        if (fCita < hoy) {
+          htmlAtrasados += cardHTML;
+        } else if (fCita.getTime() === hoy.getTime() || fCita.getTime() === manana.getTime()) {
+          htmlHoyManana += cardHTML;
+        } else {
+          htmlProximos += cardHTML;
+        }
+      });
+      
+      atrasadosDiv.innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted text-secondary'>🎉 Sin citas retrasadas.</p>";
+      hoyMananaDiv.innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted text-secondary'>Sin pendientes para hoy ni mañana.</p>";
+      proximosDiv.innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted text-secondary'>Sin controles en los siguientes días.</p>";
+      
+    } catch(e) {
+      alert("Error al cargar la agenda de seguimiento");
+    }
     mostrarLoading(false);
   }
 </script>
