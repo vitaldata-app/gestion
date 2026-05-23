@@ -22,7 +22,6 @@
     
     body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
     
-    /* CABECERA CO-BRANDING PREMIUM */
     .header-clinica { background: #ffffff; padding: 18px 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
     .brand-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
     .logos-container { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; }
@@ -76,7 +75,6 @@
     
     #panel-inferior { z-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
 
-    /* ESTILOS INTERNOS PARA AGENDA DE SEGUIMIENTO */
     .card-seg { border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
     .btn-wa { background-color: #25d366; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
     .btn-wa:hover { background-color: #128c7e; color: white; }
@@ -104,12 +102,9 @@
       <div class="brand-wrapper">
         <div class="logos-container">
           <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
-          
           <div id="web-brand-divider" class="brand-divider"></div>
-          
           <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Cliente">
         </div>
-        
         <div class="txt-potenciando-box">
           <div id="web-clinica-nombre" class="txt-clinica-nombre">Cargando...</div>
         </div>
@@ -128,12 +123,26 @@
         <div class="ui-card">
           <div class="ui-card-title">Datos del Paciente</div>
           <div class="row g-2">
-            <div class="col-6"><label>DNI</label><input type="tel" id="dni" class="form-control"></div>
+            <div class="col-6">
+              <label>DNI</label>
+              <div class="input-group">
+                <input type="tel" id="dni" class="form-control" placeholder="Buscar...">
+                <button class="btn btn-outline-primary" type="button" onclick="buscarPacienteDNI()">🔍</button>
+              </div>
+            </div>
+            
             <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control"></div>
             <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control"></div>
             <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control"></div>
             <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control"></div>
             <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control"></div>
+            
+            <div class="col-12"><label>Distrito</label>
+              <select id="distrito" class="form-select">
+                <option value="">Seleccione...</option><option>Ate</option><option>Barranco</option><option>Breña</option><option>Callao</option><option>Carabayllo</option><option>Chorrillos</option><option>Comas</option><option>El Agustino</option><option>Independencia</option><option>Jesús María</option><option>La Molina</option><option>La Victoria</option><option>Lima Cercado</option><option>Lince</option><option>Los Olivos</option><option>Lurigancho</option><option>Magdalena</option><option>Miraflores</option><option>Pueblo Libre</option><option>Puente Piedra</option><option>Rímac</option><option>San Borja</option><option>San Isidro</option><option>San Juan de Lurigancho</option><option>San Juan de Miraflores</option><option>San Luis</option><option>San Martín de Porres</option><option>San Miguel</option><option>Santa Anita</option><option>Surco</option><option>Surquillo</option><option>Villa El Salvador</option><option>Villa María del Triunfo</option><option>Otro</option>
+              </select>
+            </div>
+            
             <div class="col-6"><label>Método de Pago</label>
               <select id="tipoPago" class="form-select">
                 <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
@@ -154,6 +163,15 @@
           
           <div class="fw-bold small text-secondary mb-2">Detalle de Selección:</div>
           <div id="cart-list"></div>
+          
+          <div class="mt-3 text-end">
+             <span class="text-primary small text-decoration-underline" style="cursor:pointer;" onclick="toggleDescuento()">¿Aplicar descuento especial?</span>
+             <div id="box-desc" style="display:none; justify-content:flex-end; align-items:center; gap:8px; margin-top:8px;">
+               <span class="small fw-bold">Descuento (S/):</span>
+               <input type="number" id="val-desc" class="form-control form-control-sm border-primary" style="width:80px; text-align:right" value="0" min="0" oninput="actualizarCarrito()">
+             </div>
+          </div>
+
           <div id="cart-total" class="h5 text-end fw-bold text-primary mt-3 mb-0">Total a Pagar: S/ 0.00</div>
         </div>
       </div>
@@ -258,14 +276,13 @@
       
       configLocal = respuestaBackend.servicios;
       dibujarCategorias();
-    } catch(e) { alert("Error de conexión al cargar configuración"); }
+    } catch(e) { alert("Error de conexión"); }
     mostrarLoading(false);
   };
 
   function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
   function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
   
-  // NAVEGACIÓN INTELIGENTE DE VISIBILIDAD DEL BOTÓN INFERIOR
   document.querySelectorAll('.nav-link').forEach(t => {
     t.addEventListener('click', (e) => { 
       const textoTab = e.target.innerText.toUpperCase();
@@ -276,6 +293,34 @@
       }
     });
   });
+
+  // NUEVA FUNCIÓN: BÚSQUEDA DE CLIENTE CON AUTO-RELLENADO Y BLOQUEO DE NOMBRES
+  async function buscarPacienteDNI() {
+    const d = document.getElementById('dni').value;
+    if(!d) return;
+    mostrarLoading(true);
+    try {
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarPaciente&dni=${d}`);
+      const res = await r.json();
+      if(!res.error && res.encontrado) {
+        document.getElementById('nombrePac').value = res.data.nombre;
+        document.getElementById('apePat').value = res.data.apePat;
+        document.getElementById('apeMat').value = res.data.apeMat;
+        document.getElementById('celular').value = res.data.celular;
+        document.getElementById('distrito').value = res.data.distrito;
+        
+        // Bloqueamos nombres para no estropear la base
+        ['nombrePac', 'apePat', 'apeMat'].forEach(id => document.getElementById(id).readOnly = true);
+        alert("¡Paciente recurrente encontrado!");
+      } else {
+        ['nombrePac', 'apePat', 'apeMat', 'celular', 'distrito'].forEach(id => {
+          document.getElementById(id).value = "";
+          document.getElementById(id).readOnly = false;
+        });
+      }
+    } catch(e) { alert("Error buscando paciente"); }
+    mostrarLoading(false);
+  }
 
   async function evaluarPinMaestro() {
     const pin = document.getElementById('metas-pin').value;
@@ -318,7 +363,7 @@
     document.getElementById('txt-motivador').innerText = msg;
     document.getElementById('txt-motivador').style.color = `var(${color})`;
 
-    tareasLocales = res.objetivosTareas; // BUG ORTOGRÁFICO CORREGIDO EN INTEGRACIÓN
+    tareasLocales = res.objetivosTareas;
     const cont = document.getElementById('lista-tareas');
     cont.innerHTML = tareasLocales.map((t, i) => `
       <div class="task-item">
@@ -328,23 +373,18 @@
     `).join('');
   }
 
-  function actualizarEstadoTarea(index, completado) {
-    tareasLocales[index].completado = completado;
-  }
+  function actualizarEstadoTarea(index, completado) { tareasLocales[index].completado = completado; }
 
   async function enviarActualizacionTareas() {
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
-        method: 'POST',
-        body: JSON.stringify(tareasLocales)
-      });
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, { method: 'POST', body: JSON.stringify(tareasLocales) });
       const res = await r.json();
       if(res.resultado === "OK") {
         document.getElementById('alert-title').innerText = "METAS ACTUALIZADAS";
         document.getElementById('custom-alert').style.display = 'block';
       }
-    } catch(e) { alert("Error al actualizar tareas en la base de datos"); }
+    } catch(e) { alert("Error actualizando tareas"); }
     mostrarLoading(false);
   }
 
@@ -356,17 +396,12 @@
   function seleccionarCategoria(btn, c) {
     document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
     btn.classList.add('active-cat');
-    dibujarItems(c);
-  }
-  
-  function dibujarItems(c) {
     const items = configLocal.filter(i => i.categoria === c);
     document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
   }
   
   function agregarAlCarrito(n) {
-    const i = configLocal.find(x => x.nombre === n);
-    carrito.push({...i, idU: Date.now()});
+    carrito.push({...configLocal.find(x => x.nombre === n), idU: Date.now()});
     actualizarCarrito();
   }
 
@@ -375,7 +410,13 @@
     actualizarCarrito();
   }
 
-  // DINÁMICO: DESPLEGABLES DE PRÓXIMA CITA INCORPORADOS DENTRO DE CADA FILA DEL CARRITO
+  function toggleDescuento() {
+    const box = document.getElementById('box-desc');
+    box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'flex' : 'none';
+    if(box.style.display === 'none') { document.getElementById('val-desc').value = 0; actualizarCarrito(); }
+  }
+
+  // CÁLCULO DEL TOTAL Y DEL DESCUENTO
   function actualizarCarrito() {
     let t = 0;
     document.getElementById('cart-list').innerHTML = carrito.map(i => { 
@@ -389,25 +430,30 @@
               <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})">❌</button>
             </div>
           </div>
-          
           <div class="w-100 bg-white p-2 rounded border mt-1">
             <div style="font-size:0.75rem; color:#64748b; margin-bottom:5px;">Agendar próximo control (Opcional):</div>
             <div class="d-flex gap-2 align-items-center">
               <span style="font-size:0.8rem">En:</span>
               <input type="number" id="seg-num-${i.idU}" class="form-control form-control-sm" style="width:70px" placeholder="Ej: 15" min="1">
               <select id="seg-tipo-${i.idU}" class="form-select form-select-sm" style="width:110px">
-                <option value="d">Días</option>
-                <option value="s">Semanas</option>
-                <option value="m">Meses</option>
+                <option value="d">Días</option><option value="s">Semanas</option><option value="m">Meses</option>
               </select>
             </div>
           </div>
         </div>`; 
     }).join('');
-    document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${t.toFixed(2)}`;
+    
+    let desc = parseFloat(document.getElementById('val-desc').value) || 0;
+    let finalTotal = t - desc;
+    if(finalTotal < 0) finalTotal = 0;
+    
+    if (desc > 0) {
+      document.getElementById('cart-total').innerHTML = `Subtotal: S/ ${t.toFixed(2)} <br> <span class="text-success h4">Total Final: S/ ${finalTotal.toFixed(2)}</span>`;
+    } else {
+      document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${finalTotal.toFixed(2)}`;
+    }
   }
 
-  // PROCESAMIENTO AUTOMÁTICO DE FECHAS DE CONTROL DESDE ADMISIÓN
   async function enviarDatos() {
     const dni = document.getElementById('dni').value;
     if(!dni || carrito.length === 0) return alert("DNI y servicios requeridos");
@@ -416,19 +462,16 @@
     carrito.forEach(item => {
        const numInput = document.getElementById(`seg-num-${item.idU}`).value;
        const tipoIntervalo = document.getElementById(`seg-tipo-${item.idU}`).value;
-       
        if (numInput && parseInt(numInput) > 0) {
          let fechaFutura = new Date();
          const cantidad = parseInt(numInput);
-         
          if (tipoIntervalo === 'd') fechaFutura.setDate(fechaFutura.getDate() + cantidad);
          else if (tipoIntervalo === 's') fechaFutura.setDate(fechaFutura.getDate() + (cantidad * 7));
          else if (tipoIntervalo === 'm') fechaFutura.setMonth(fechaFutura.getMonth() + cantidad);
          
          const dia = String(fechaFutura.getDate()).padStart(2, '0');
          const mes = String(fechaFutura.getMonth() + 1).padStart(2, '0');
-         const anio = fechaFutura.getFullYear();
-         item.fechaSeguimiento = `${dia}/${mes}/${anio}`;
+         item.fechaSeguimiento = `${dia}/${mes}/${fechaFutura.getFullYear()}`;
        }
     });
 
@@ -436,10 +479,12 @@
       dni, nombre: document.getElementById('nombrePac').value, 
       apellidoP: document.getElementById('apePat').value, 
       apellidoM: document.getElementById('apeMat').value, 
+      distrito: document.getElementById('distrito').value,
       edad: document.getElementById('edad').value, 
       celular: document.getElementById('celular').value, 
       tipoPago: document.getElementById('tipoPago').value, 
       origen: document.getElementById('origen').value, 
+      descuento: document.getElementById('val-desc').value,
       carrito 
     };
 
@@ -459,49 +504,34 @@
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
       const res = await r.json();
       const c = document.getElementById('historial-resultados');
-      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos de historial.</p>";
+      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos.</p>";
       else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div></div>`).join('');
-    } catch(e) { alert("Error en búsqueda de historial"); }
+    } catch(e) { alert("Error en búsqueda"); }
     mostrarLoading(false);
   }
 
-  // COMPONENTE DE SEGUIMIENTO CON BOTÓN DE INTEGRACIÓN DE WHATSAPP Y ACCIÓN COMPLEMENTARIA FEEDBACK
+  // ALGORITMO CORREGIDO DE CLASIFICACIÓN DE SEGUIMIENTOS GUIADO POR EL SERVIDOR
   async function cargarMóduloSeguimiento() {
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerSeguimiento`);
       const data = await r.json();
       
-      const atrasadosDiv = document.getElementById('seg-atrasados');
-      const hoyMananaDiv = document.getElementById('seg-hoy-manana');
-      const proximosDiv = document.getElementById('seg-proximos');
-      
       let htmlAtrasados = "", htmlHoyManana = "", htmlProximos = "";
-      
-      const hoy = new Date();
-      hoy.setHours(0,0,0,0);
-      const manana = new Date(hoy);
-      manana.setDate(hoy.getDate() + 1);
       
       if(!data || data.length === 0) {
         const msgVacio = "<p class='text-center small py-2 text-muted'>No hay controles pendientes en agenda.</p>";
-        atrasadosDiv.innerHTML = msgVacio;
-        hoyMananaDiv.innerHTML = msgVacio;
-        proximosDiv.innerHTML = msgVacio;
-        mostrarLoading(false);
-        return;
+        document.getElementById('seg-atrasados').innerHTML = msgVacio;
+        document.getElementById('seg-hoy-manana').innerHTML = msgVacio;
+        document.getElementById('seg-proximos').innerHTML = msgVacio;
+        mostrarLoading(false); return;
       }
       
       data.forEach(item => {
-        const fCita = new Date(item.fechaTime);
-        fCita.setHours(0,0,0,0);
-        
         const mensajeWA = `Hola ${item.nombre}, te saludamos de la clínica. Te recordamos que tienes programado tu próximo control médico de ${item.motivo} para el día ${item.fechaStr}. Por favor, confírmanos tu asistencia respondiendo a este mensaje. ¡Te esperamos!`;
         
         let nroCelular = item.celular.toString().replace(/\s+/g, '');
-        if(nroCelular.length === 9 && nroCelular.startsWith('9')) {
-          nroCelular = '51' + nroCelular;
-        }
+        if(nroCelular.length === 9 && nroCelular.startsWith('9')) nroCelular = '51' + nroCelular;
         
         const linkWhatsApp = `https://wa.me/${nroCelular}?text=${encodeURIComponent(mensajeWA)}`;
         
@@ -512,51 +542,36 @@
                 <div class="fw-bold text-dark" style="font-size:0.85rem">${item.nombre}</div>
                 <div class="text-muted mt-1" style="font-size:0.75rem">
                   <b>Motivo:</b> ${item.motivo}<br>
-                  <b>Fecha Programada:</b> <span class="badge bg-secondary">${item.fechaStr}</span>
+                  <b>Fecha:</b> <span class="badge bg-secondary">${item.fechaStr}</span>
                 </div>
               </div>
               <div class="d-flex flex-column gap-2">
-                <a href="${linkWhatsApp}" target="_blank" class="btn-wa text-center">
-                  <span>💬</span> Enviar WA
-                </a>
-                <button onclick="marcarComoContactado(${item.fila})" class="btn btn-sm btn-outline-success" style="font-size:0.75rem; font-weight:bold;">
-                  ✅ Contactado
-                </button>
+                <a href="${linkWhatsApp}" target="_blank" class="btn-wa text-center">💬 Enviar WA</a>
+                <button onclick="marcarComoContactado(${item.fila})" class="btn btn-sm btn-outline-success" style="font-size:0.75rem; font-weight:bold;">✅ Contactado</button>
               </div>
             </div>
           </div>
         `;
         
-        if (fCita < hoy) {
-          htmlAtrasados += cardHTML;
-        } else if (fCita.getTime() === hoy.getTime() || fCita.getTime() === manana.getTime()) {
-          htmlHoyManana += cardHTML;
-        } else {
-          htmlProximos += cardHTML;
-        }
+        // El servidor nos dicta exactamente en qué bloque va para evitar errores de fecha en la computadora
+        if (item.categoria === 'atrasado') htmlAtrasados += cardHTML;
+        else if (item.categoria === 'hoy_manana') htmlHoyManana += cardHTML;
+        else htmlProximos += cardHTML;
       });
       
-      atrasadosDiv.innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted text-secondary'>🎉 Sin citas retrasadas.</p>";
-      hoyMananaDiv.innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted text-secondary'>Sin pendientes para hoy ni mañana.</p>";
-      proximosDiv.innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted text-secondary'>Sin controles en los siguientes días.</p>";
+      document.getElementById('seg-atrasados').innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted'>Sin citas retrasadas.</p>";
+      document.getElementById('seg-hoy-manana').innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted'>Sin pendientes.</p>";
+      document.getElementById('seg-proximos').innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted'>Sin controles futuros.</p>";
       
-    } catch(e) {
-      alert("Error al cargar la agenda de seguimiento");
-    }
+    } catch(e) { alert("Error al cargar seguimiento"); }
     mostrarLoading(false);
   }
 
-  // ACCIÓN POST HACIA EL EXCEL DESTINADA A ELIMINAR REGISTROS YA ATENDIDOS DE LA VISTA
   async function marcarComoContactado(filaExcel) {
     if(!confirm("¿Confirmas que ya escribiste a este paciente? Desaparecerá de tu lista.")) return;
     mostrarLoading(true);
     try {
-      const p = { fila: filaExcel };
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, { 
-        method: 'POST', 
-        body: JSON.stringify(p) 
-      });
-      await r.json();
+      await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, { method: 'POST', body: JSON.stringify({ fila: filaExcel }) });
       cargarMóduloSeguimiento();
     } catch(e) { alert("Error al actualizar la base de datos."); }
     mostrarLoading(false);
