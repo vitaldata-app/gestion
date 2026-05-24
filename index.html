@@ -139,7 +139,7 @@
             
             <div class="col-12"><label>Distrito</label>
               <select id="distrito" class="form-select">
-                <option value="">Seleccione...</option><option>Ate</option><option>Barranco</option><option>Breña</option><option>Callao</option><option>Carabayllo</option><option>Chorrillos</option><option>Comas</option><option>El Agustino</option><option>Independencia</option><option>Jesús María</option><option>La Molina</option><option>La Victoria</option><option>Lima Cercado</option><option>Lince</option><option>Los Olivos</option><option>Lurigancho</option><option>Magdalena</option><option>Miraflores</option><option>Pueblo Libre</option><option>Puente Piedra</option><option>Rímac</option><option>San Borja</option><option>San Isidro</option><option>San Juan de Lurigancho</option><option>San Juan de Miraflores</option><option>San Luis</option><option>San Martín de Porres</option><option>San Miguel</option><option>Santa Anita</option><option>Surco</option><option>Surquillo</option><option>Villa El Salvador</option><option>Villa María del Triunfo</option><option>Otro</option>
+                <option value="">Seleccione...</option><option value="Ate">Ate</option><option value="Barranco">Barranco</option><option value="Breña">Breña</option><option value="Callao">Callao</option><option value="Carabayllo">Carabayllo</option><option value="Chorrillos">Chorrillos</option><option value="Comas">Comas</option><option value="El Agustino">El Agustino</option><option value="Independencia">Independencia</option><option value="Jesús María">Jesús María</option><option value="La Molina">La Molina</option><option value="La Victoria">La Victoria</option><option value="Lima Cercado">Lima Cercado</option><option value="Lince">Lince</option><option value="Los Olivos">Los Olivos</option><option value="Lurigancho">Lurigancho</option><option value="Magdalena">Magdalena</option><option value="Miraflores">Miraflores</option><option value="Pueblo Libre">Pueblo Libre</option><option value="Puente Piedra">Puente Piedra</option><option value="Rímac">Rímac</option><option value="San Borja">San Borja</option><option value="San Isidro">San Isidro</option><option value="San Juan de Lurigancho">San Juan de Lurigancho</option><option value="San Juan de Miraflores">San Juan de Miraflores</option><option value="San Luis">San Luis</option><option value="San Martín de Porres">San Martín de Porres</option><option value="San Miguel">San Miguel</option><option value="Santa Anita">Santa Anita</option><option value="Surco">Surco</option><option value="Surquillo">Surquillo</option><option value="Villa El Salvador">Villa El Salvador</option><option value="Villa María del Triunfo">Villa María del Triunfo</option><option value="Otro">Otro</option>
               </select>
             </div>
             
@@ -294,7 +294,6 @@
     });
   });
 
-  // NUEVA FUNCIÓN: BÚSQUEDA DE CLIENTE CON AUTO-RELLENADO Y BLOQUEO DE NOMBRES
   async function buscarPacienteDNI() {
     const d = document.getElementById('dni').value;
     if(!d) return;
@@ -307,16 +306,22 @@
         document.getElementById('apePat').value = res.data.apePat;
         document.getElementById('apeMat').value = res.data.apeMat;
         document.getElementById('celular').value = res.data.celular;
-        document.getElementById('distrito').value = res.data.distrito;
         
-        // Bloqueamos nombres para no estropear la base
+        // Asignación correcta del select de Distrito
+        if (res.data.distrito) {
+           let selectDistrito = document.getElementById('distrito');
+           let options = Array.from(selectDistrito.options);
+           let match = options.find(opt => opt.value.toLowerCase() === res.data.distrito.toLowerCase());
+           if(match) selectDistrito.value = match.value;
+        }
+
         ['nombrePac', 'apePat', 'apeMat'].forEach(id => document.getElementById(id).readOnly = true);
-        alert("¡Paciente recurrente encontrado!");
       } else {
-        ['nombrePac', 'apePat', 'apeMat', 'celular', 'distrito'].forEach(id => {
+        ['nombrePac', 'apePat', 'apeMat', 'celular'].forEach(id => {
           document.getElementById(id).value = "";
           document.getElementById(id).readOnly = false;
         });
+        document.getElementById('distrito').value = "";
       }
     } catch(e) { alert("Error buscando paciente"); }
     mostrarLoading(false);
@@ -416,7 +421,6 @@
     if(box.style.display === 'none') { document.getElementById('val-desc').value = 0; actualizarCarrito(); }
   }
 
-  // CÁLCULO DEL TOTAL Y DEL DESCUENTO
   function actualizarCarrito() {
     let t = 0;
     document.getElementById('cart-list').innerHTML = carrito.map(i => { 
@@ -510,7 +514,6 @@
     mostrarLoading(false);
   }
 
-  // ALGORITMO CORREGIDO DE CLASIFICACIÓN DE SEGUIMIENTOS GUIADO POR EL SERVIDOR
   async function cargarMóduloSeguimiento() {
     mostrarLoading(true);
     try {
@@ -553,7 +556,6 @@
           </div>
         `;
         
-        // El servidor nos dicta exactamente en qué bloque va para evitar errores de fecha en la computadora
         if (item.categoria === 'atrasado') htmlAtrasados += cardHTML;
         else if (item.categoria === 'hoy_manana') htmlHoyManana += cardHTML;
         else htmlProximos += cardHTML;
