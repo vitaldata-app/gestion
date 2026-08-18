@@ -3,248 +3,778 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>DM Dynamic Analytics</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>DM Dynamic Analytics - Gestión Clínica</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
   <style>
-    :root { 
-      --primary: #101c3e;    
-      --accent: #14b8a6;     
-      --success: #10b981; 
-      --bg-main: #f1f5f9;    
+    :root {
+      --primary: #0f172a;
+      --primary-accent: #1e293b;
+      --accent: #0d9488;
+      --accent-light: #ccfbf1;
+      --accent-hover: #0f766e;
+      --secondary-blue: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-body: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
       
       --color-0-30: #94a3b8;
       --color-31-60: #38bdf8;
-      --color-61-90: var(--accent);
+      --color-61-90: #0d9488;
       --color-91-99: #f59e0b;
-      --color-100: #d946ef;
+      --color-100: #8b5cf6;
     }
-    
-    body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; font-size: 14px; color: #334155; }
-    
-    .header-clinica { background: #ffffff; padding: 18px 15px; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .brand-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-    .logos-container { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; }
-    
-    .logo-dm { max-height: 55px; width: auto; object-fit: contain; }
-    .brand-divider { width: 1px; height: 40px; background-color: #cbd5e1; display: none; } 
-    .logo-cliente { max-height: 55px; width: auto; object-fit: contain; display: none; } 
-    
-    .txt-potenciando-box { width: 100%; text-align: center; margin-top: 4px; }
-    .txt-clinica-nombre { font-size: 0.8rem; font-weight: 500; color: #64748b; letter-spacing: 0.3px; line-height: 1.4; }
-    .txt-clinica-nombre strong { color: var(--primary); font-weight: 700; text-transform: uppercase; }
 
-    .nav-tabs { background: #ffffff; border-bottom: 1px solid #e2e8f0; }
-    .nav-tabs .nav-link { font-size: 0.72rem; font-weight: 600; color: #64748b; border: none; padding: 14px 2px; text-transform: uppercase; }
-    .nav-tabs .nav-link.active { color: var(--primary) !important; border-bottom: 3px solid var(--accent) !important; background: none !important; }
-    
-    .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 15px; }
-    .ui-card-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    label { font-size: 0.8rem; font-weight: 500; color: #64748b; margin-bottom: 4px; }
-    .form-control, .form-select { border-radius: 8px; border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 0.85rem; background-color: #f8fafc; transition: all 0.2s; }
-    .form-control:focus, .form-select:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15); color: var(--primary); }
-    
-    .btn-cat { font-size: 0.75rem; font-weight: 600; border-radius: 20px; padding: 6px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #64748b; transition: all 0.2s; }
-    .btn-cat.active-cat { background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(16, 28, 62, 0.2); }
+    body {
+      background-color: var(--bg-body);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13.5px;
+      color: var(--text-main);
+      margin: 0;
+      padding-bottom: 90px;
+    }
 
-    .btn-item { width: calc(50% - 10px); margin: 5px; border: 1px solid #e2e8f0; background: white; padding: 12px 10px; border-radius: 12px; font-size: 0.75rem; text-align: left; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .btn-item:active { transform: scale(0.95); background: #f1f5f9; }
-    .item-precio { color: var(--primary); font-weight: 700; }
+    /* Header */
+    .app-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 1020;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .brand-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .logo-dm {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+    .brand-divider {
+      width: 1px;
+      height: 32px;
+      background-color: var(--border-color);
+      display: none;
+    }
+    .logo-cliente {
+      max-height: 38px;
+      max-width: 140px;
+      object-fit: contain;
+      display: none;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 6px;
+      letter-spacing: 0.2px;
+    }
+    .brand-subtitle strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
 
-    .cart-row { background: #f8fafc; border-left: 4px solid var(--success); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-    .btn-remove { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
-    
-    .circle-progress-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
-    .circle-progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-    .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 12; }
-    .circle-fill { fill: none; stroke: var(--color-0-30); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 502.65; stroke-dashoffset: 502.65; transition: all 0.8s ease; }
-    .circle-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: var(--primary); }
-    
-    .task-item { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; }
-    .task-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); }
-    .task-completed { text-decoration: line-through; color: #94a3b8; }
-    
-    #spinner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
-    .pin-input { font-size: 2rem; text-align: center; letter-spacing: 12px; width: 180px; margin: 20px auto; border: 2px solid #cbd5e1; border-radius: 12px; }
+    /* Navigation Tabs */
+    .nav-tabs-container {
+      background: #ffffff;
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .nav-pills-custom {
+      gap: 6px;
+      display: flex;
+    }
+    .nav-pills-custom .nav-link {
+      flex: 1;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 10px;
+      padding: 9px 4px;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.2s ease;
+    }
+    .nav-pills-custom .nav-link i {
+      font-size: 1rem;
+    }
+    .nav-pills-custom .nav-link.active {
+      background: var(--primary);
+      color: #ffffff !important;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    }
 
-    .btn-actualizar { background-color: var(--accent); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; width: 100%; margin-top: 15px; box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3); }
-    
-    .btn-primary { background-color: var(--primary); border-color: var(--primary); font-weight: 600; border-radius: 10px; }
-    .btn-primary:hover { background-color: #0a1229; border-color: #0a1229; }
-    
-    #panel-inferior { z-index: 10; box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05); }
+    /* Cards */
+    .ui-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+      margin-bottom: 14px;
+    }
+    .ui-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .ui-card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+    }
+    .ui-card-title i {
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
 
-    .card-seg { border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
-    .btn-wa { background-color: #25d366; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
-    .btn-wa:hover { background-color: #128c7e; color: white; }
+    /* Inputs & Selects */
+    .form-label {
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .form-control, .form-select {
+      border-radius: 9px;
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      background-color: #ffffff;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+    .form-control[readonly] {
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* Category Chips & Item Badges */
+    .btn-cat {
+      font-size: 0.74rem;
+      font-weight: 600;
+      border-radius: 30px;
+      padding: 6px 14px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-cat.active-cat {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 3px 8px rgba(13, 148, 136, 0.25);
+    }
+
+    .btn-item {
+      width: calc(50% - 6px);
+      margin: 3px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      text-align: left;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .btn-item:active {
+      transform: scale(0.97);
+      background: #f8fafc;
+    }
+    .item-name {
+      font-weight: 600;
+      color: var(--primary);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .item-precio {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    /* Cart Rows */
+    .cart-row {
+      background: #ffffff;
+      border-left: 4px solid var(--accent);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .btn-remove {
+      background: #fee2e2;
+      border: none;
+      color: var(--danger);
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-remove:hover {
+      background: #fecaca;
+    }
+
+    /* Seguimiento Cards */
+    .card-seg {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: transform 0.15s;
+    }
+    .btn-wa {
+      background-color: #25d366;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.72rem;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
+    }
+    .btn-wa:hover {
+      background-color: #1eb956;
+      color: white;
+    }
+
+    /* Metas & Cirle */
+    .circle-progress-wrapper {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      margin: 15px auto;
+    }
+    .circle-progress-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+    .circle-bg {
+      fill: none;
+      stroke: #f1f5f9;
+      stroke-width: 12;
+    }
+    .circle-fill {
+      fill: none;
+      stroke: var(--color-0-30);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 502.65;
+      stroke-dashoffset: 502.65;
+      transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s;
+    }
+    .circle-percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .pin-input {
+      font-size: 1.6rem;
+      text-align: center;
+      letter-spacing: 12px;
+      width: 160px;
+      margin: 15px auto;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 6px;
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .pin-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+    }
+
+    .task-item {
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 9px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .task-item input[type="checkbox"] {
+      width: 19px;
+      height: 19px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .task-completed {
+      text-decoration: line-through;
+      color: #94a3b8;
+    }
+
+    /* Bottom Panel */
+    #panel-inferior {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 16px;
+      z-index: 1030;
+      box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05);
+    }
+    .btn-guardar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-accent) 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 12px;
+      letter-spacing: 0.4px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+      transition: all 0.2s;
+    }
+    .btn-guardar:active {
+      transform: scale(0.98);
+    }
+
+    /* Loaders & Overlays */
+    #spinner-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .spinner-box {
+      background: #ffffff;
+      padding: 24px 32px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    #custom-alert {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(3px);
+      z-index: 9999;
+    }
+    .alert-modal-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ffffff;
+      padding: 26px 22px;
+      border-radius: 18px;
+      text-align: center;
+      width: 88%;
+      max-width: 320px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    .alert-icon-check {
+      width: 58px;
+      height: 58px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
 
+<!-- Spinner Overlay -->
 <div id="spinner-overlay">
-  <div class="spinner-border" style="color:var(--accent)" role="status"></div>
-  <p class="mt-2 fw-bold" style="color:var(--primary)">Sincronizando...</p>
-</div>
-
-<div id="custom-alert" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
-  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px;">
-    <div style="font-size: 50px; color: var(--accent);">✔</div>
-    <h5 id="alert-title" class="my-3 fw-bold">ÉXITO</h5>
-    <button class="btn btn-primary w-100 py-2" onclick="location.reload()">Cerrar</button>
+  <div class="spinner-box">
+    <div class="spinner-border text-teal" style="color:var(--accent)" role="status"></div>
+    <div class="mt-2 fw-bold text-dark" style="font-size:0.85rem">Sincronizando datos...</div>
   </div>
 </div>
 
-<div class="container-fluid p-0">
-  <div class="card border-0 rounded-0 min-vh-100" style="background: transparent;">
+<!-- Modal Alert -->
+<div id="custom-alert">
+  <div class="alert-modal-card">
+    <div class="alert-icon-check">
+      <i class="bi bi-check-lg"></i>
+    </div>
+    <h5 id="alert-title" class="fw-bold text-dark mb-2">OPERACIÓN EXITOSA</h5>
+    <p class="text-muted small mb-4">El registro ha sido procesado correctamente en el sistema.</p>
+    <button class="btn btn-primary w-100 py-2 fw-bold" style="background:var(--primary); border:none; border-radius:10px;" onclick="location.reload()">Aceptar</button>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="app-header">
+  <div class="brand-container">
+    <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
+    <div id="web-brand-divider" class="brand-divider"></div>
+    <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Clínica">
+  </div>
+  <div class="brand-subtitle">
+    <div id="web-clinica-nombre">Cargando consultorio...</div>
+  </div>
+</header>
+
+<!-- Navegación por Pestañas -->
+<div class="nav-tabs-container sticky-top" style="top:69px; z-index:1015;">
+  <ul class="nav nav-pills-custom nav-justified" id="mainTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="admision-tab" data-bs-toggle="pill" data-bs-target="#tab-adm" type="button" role="tab">
+        <i class="bi bi-person-plus-fill"></i> Admisión
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="historial-tab" data-bs-toggle="pill" data-bs-target="#tab-his" type="button" role="tab">
+        <i class="bi bi-journal-text"></i> Historial
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="seguimiento-tab" data-bs-toggle="pill" data-bs-target="#tab-seg" type="button" role="tab" onclick="cargarMóduloSeguimiento()">
+        <i class="bi bi-calendar2-week-fill"></i> Agenda
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="metas-tab" data-bs-toggle="pill" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">
+        <i class="bi bi-graph-up-arrow"></i> Metas
+      </button>
+    </li>
+  </ul>
+</div>
+
+<!-- Contenedor Principal -->
+<main class="container-fluid px-3 pt-3">
+  <div class="tab-content" id="mainTabContent">
     
-    <div class="header-clinica">
-      <div class="brand-wrapper">
-        <div class="logos-container">
-          <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
-          <div id="web-brand-divider" class="brand-divider"></div>
-          <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Cliente">
+    <!-- PESTAÑA 1: ADMISIÓN -->
+    <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+      <!-- Tarjeta: Datos Paciente -->
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <h2 class="ui-card-title"><i class="bi bi-person-vcard-fill"></i> Datos del Paciente</h2>
+          <span class="badge bg-light text-secondary border">Ficha Registro</span>
         </div>
-        <div class="txt-potenciando-box">
-          <div id="web-clinica-nombre" class="txt-clinica-nombre">Cargando...</div>
+        
+        <div class="row g-2">
+          <div class="col-7">
+            <label class="form-label">DNI / Documento</label>
+            <div class="input-group">
+              <input type="tel" id="dni" class="form-control" placeholder="Buscar DNI...">
+              <button class="btn btn-outline-secondary" type="button" onclick="buscarPacienteDNI()" title="Buscar Paciente">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-5">
+            <label class="form-label">Edad</label>
+            <input type="number" id="edad" class="form-control" placeholder="Años">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Nombres Completos</label>
+            <input type="text" id="nombrePac" class="form-control" placeholder="Ej. María">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Apellido Paterno</label>
+            <input type="text" id="apePat" class="form-control" placeholder="Ej. Pérez">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Apellido Materno</label>
+            <input type="text" id="apeMat" class="form-control" placeholder="Ej. López">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Teléfono / WhatsApp</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-phone"></i></span>
+              <input type="tel" id="celular" class="form-control" placeholder="Ej. 987654321">
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Distrito de Residencia</label>
+            <select id="distrito" class="form-select">
+              <option value="">Seleccione distrito...</option>
+              <option value="Ate">Ate</option><option value="Barranco">Barranco</option>
+              <option value="Breña">Breña</option><option value="Callao">Callao</option>
+              <option value="Carabayllo">Carabayllo</option><option value="Chorrillos">Chorrillos</option>
+              <option value="Comas">Comas</option><option value="El Agustino">El Agustino</option>
+              <option value="Independencia">Independencia</option><option value="Jesús María">Jesús María</option>
+              <option value="La Molina">La Molina</option><option value="La Victoria">La Victoria</option>
+              <option value="Lima Cercado">Lima Cercado</option><option value="Lince">Lince</option>
+              <option value="Los Olivos">Los Olivos</option><option value="Lurigancho">Lurigancho</option>
+              <option value="Magdalena">Magdalena</option><option value="Miraflores">Miraflores</option>
+              <option value="Pueblo Libre">Pueblo Libre</option><option value="Puente Piedra">Puente Piedra</option>
+              <option value="Rímac">Rímac</option><option value="San Borja">San Borja</option>
+              <option value="San Isidro">San Isidro</option><option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+              <option value="San Juan de Miraflores">San Juan de Miraflores</option><option value="San Luis">San Luis</option>
+              <option value="San Martín de Porres">San Martín de Porres</option><option value="San Miguel">San Miguel</option>
+              <option value="Santa Anita">Santa Anita</option><option value="Surco">Surco</option>
+              <option value="Surquillo">Surquillo</option><option value="Villa El Salvador">Villa El Salvador</option>
+              <option value="Villa María del Triunfo">Villa María del Triunfo</option><option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label">Método de Pago</label>
+            <select id="tipoPago" class="form-select">
+              <option>Efectivo</option>
+              <option>Tarjeta</option>
+              <option>Transferencia</option>
+              <option>Yape/plin</option>
+            </select>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label">Canal de Captación</label>
+            <select id="origen" class="form-select">
+              <option>Facebook</option>
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>WhatsApp</option>
+              <option>Recomendación</option>
+              <option>Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta: Servicios y Tarifas -->
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <h2 class="ui-card-title"><i class="bi bi-bag-check-fill"></i> Catálogo y Tarifas</h2>
+          <span class="badge bg-teal-subtle text-teal" style="background:#ccfbf1; color:#0f766e;">Precios Actualizados</span>
+        </div>
+
+        <div id="container-cats" class="d-flex overflow-auto pb-2 mb-2" style="gap:8px; scrollbar-width:none;"></div>
+        
+        <div id="container-items" class="d-flex flex-wrap rounded-3 mb-3" style="background: #f8fafc; border:1px solid #e2e8f0; padding: 6px;"></div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="form-label mb-0">Detalle de Atención:</span>
+          <span class="text-primary small fw-semibold text-decoration-none" style="cursor:pointer; font-size:0.75rem;" onclick="toggleDescuento()">
+            <i class="bi bi-tag-fill"></i> ¿Aplicar descuento?
+          </span>
+        </div>
+
+        <div id="cart-list"></div>
+
+        <div id="box-desc" class="p-2 mb-2 rounded bg-light border" style="display:none; justify-content:flex-end; align-items:center; gap:8px;">
+          <span class="small fw-bold text-muted">Descuento Especial (S/):</span>
+          <input type="number" id="val-desc" class="form-control form-control-sm border-primary" style="width:90px; text-align:right" value="0" min="0" oninput="actualizarCarrito()">
+        </div>
+
+        <div class="p-3 mt-3 rounded-3 bg-light border text-end">
+          <div id="cart-total" class="h6 fw-bold text-dark mb-0">Total a Pagar: S/ 0.00</div>
         </div>
       </div>
     </div>
 
-    <ul class="nav nav-tabs nav-justified" id="mainTabs" role="tablist">
-      <li class="nav-item" role="presentation"><button class="nav-link active" id="admision-tab" data-bs-toggle="tab" data-bs-target="#tab-adm" type="button" role="tab">Admisión</button></li>
-      <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab" data-bs-toggle="tab" data-bs-target="#tab-his" type="button" role="tab">Historial</button></li>
-      <li class="nav-item" role="presentation"><button class="nav-link" id="seguimiento-tab" data-bs-toggle="tab" data-bs-target="#tab-seg" type="button" role="tab" onclick="cargarMóduloSeguimiento()">Seguimiento</button></li>
-      <li class="nav-item" role="presentation"><button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">Metas</button></li>
-    </ul>
+    <!-- PESTAÑA 2: HISTORIAL -->
+    <div class="tab-pane fade" id="tab-his" role="tabpanel">
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <h2 class="ui-card-title"><i class="bi bi-search-heart"></i> Historial Clínico Rápido</h2>
+        </div>
+        <div class="input-group">
+          <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI del paciente...">
+          <button class="btn btn-primary px-3 fw-bold" style="background:var(--primary); border:none;" onclick="ejecutarBusqueda()">
+            <i class="bi bi-search"></i> Buscar
+          </button>
+        </div>
+      </div>
+      <div id="historial-resultados"></div>
+    </div>
 
-    <div class="tab-content p-3">
-      <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
+    <!-- PESTAÑA 3: SEGUIMIENTO -->
+    <div class="tab-pane fade" id="tab-seg" role="tabpanel">
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <h2 class="ui-card-title"><i class="bi bi-bell-fill"></i> Recordatorios y Controles</h2>
+          <button class="btn btn-sm btn-outline-secondary" onclick="cargarMóduloSeguimiento()">
+            <i class="bi bi-arrow-clockwise"></i> Refrescar
+          </button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-danger">Atrasados</span>
+          <span class="text-muted small fw-bold">Por contactar con prioridad</span>
+        </div>
+        <div id="seg-atrasados" class="mb-4"></div>
+
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-warning text-dark">Hoy y Mañana</span>
+          <span class="text-muted small fw-bold">Controles inmediatos</span>
+        </div>
+        <div id="seg-hoy-manana" class="mb-4"></div>
+
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-success">Próximos 7 Días</span>
+          <span class="text-muted small fw-bold">Agenda programada</span>
+        </div>
+        <div id="seg-proximos" class="mb-2"></div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 4: METAS -->
+    <div class="tab-pane fade" id="tab-metas" role="tabpanel">
+      
+      <!-- PIN Lock -->
+      <div id="metas-lock" class="ui-card text-center py-5">
+        <div style="font-size:36px; color:var(--text-muted);"><i class="bi bi-shield-lock-fill"></i></div>
+        <h6 class="fw-bold mt-2 mb-1">Módulo Administrativo</h6>
+        <p class="text-muted small mb-3">Ingrese su PIN de 4 dígitos para ver métricas y metas.</p>
+        <input type="password" id="metas-pin" class="pin-input form-control" maxlength="4" placeholder="••••" oninput="evaluarPinMaestro()">
+        <p id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;"><i class="bi bi-exclamation-triangle-fill"></i> PIN Incorrecto</p>
+      </div>
+
+      <!-- Contenido Metas -->
+      <div id="metas-content" style="display:none">
         <div class="ui-card">
-          <div class="ui-card-title">Datos del Paciente</div>
+          <div class="ui-card-header text-center justify-content-center">
+            <h2 class="ui-card-title"><i class="bi bi-pie-chart-fill"></i> Rendimiento Semanal</h2>
+          </div>
+
+          <div class="circle-progress-wrapper">
+            <svg class="circle-progress-svg">
+              <circle class="circle-bg" cx="85" cy="85" r="75"/>
+              <circle id="progreso-circulo" class="circle-fill" cx="85" cy="85" r="75"/>
+            </svg>
+            <div id="progreso-texto" class="circle-percentage">0%</div>
+          </div>
+
+          <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 5px solid #ccc; background: #f8fafc;">
+            <p id="txt-motivador" class="fw-bold mb-0 small"></p>
+          </div>
+
           <div class="row g-2">
             <div class="col-6">
-              <label>DNI</label>
-              <div class="input-group">
-                <input type="tel" id="dni" class="form-control" placeholder="Buscar...">
-                <button class="btn btn-outline-primary" type="button" onclick="buscarPacienteDNI()">🔍</button>
+              <div class="bg-light p-3 rounded-3 border text-center">
+                <span class="text-muted small fw-bold">Meta Semanal</span>
+                <div id="val-meta" class="h5 fw-bold text-dark mt-1 mb-0">S/ 0.00</div>
               </div>
             </div>
-            
-            <div class="col-6"><label>Edad</label><input type="number" id="edad" class="form-control"></div>
-            <div class="col-12"><label>Nombres</label><input type="text" id="nombrePac" class="form-control"></div>
-            <div class="col-6"><label>Ap. Paterno</label><input type="text" id="apePat" class="form-control"></div>
-            <div class="col-6"><label>Ap. Materno</label><input type="text" id="apeMat" class="form-control"></div>
-            <div class="col-12"><label>Celular</label><input type="tel" id="celular" class="form-control"></div>
-            
-            <div class="col-12"><label>Distrito</label>
-              <select id="distrito" class="form-select">
-                <option value="">Seleccione...</option><option value="Ate">Ate</option><option value="Barranco">Barranco</option><option value="Breña">Breña</option><option value="Callao">Callao</option><option value="Carabayllo">Carabayllo</option><option value="Chorrillos">Chorrillos</option><option value="Comas">Comas</option><option value="El Agustino">El Agustino</option><option value="Independencia">Independencia</option><option value="Jesús María">Jesús María</option><option value="La Molina">La Molina</option><option value="La Victoria">La Victoria</option><option value="Lima Cercado">Lima Cercado</option><option value="Lince">Lince</option><option value="Los Olivos">Los Olivos</option><option value="Lurigancho">Lurigancho</option><option value="Magdalena">Magdalena</option><option value="Miraflores">Miraflores</option><option value="Pueblo Libre">Pueblo Libre</option><option value="Puente Piedra">Puente Piedra</option><option value="Rímac">Rímac</option><option value="San Borja">San Borja</option><option value="San Isidro">San Isidro</option><option value="San Juan de Lurigancho">San Juan de Lurigancho</option><option value="San Juan de Miraflores">San Juan de Miraflores</option><option value="San Luis">San Luis</option><option value="San Martín de Porres">San Martín de Porres</option><option value="San Miguel">San Miguel</option><option value="Santa Anita">Santa Anita</option><option value="Surco">Surco</option><option value="Surquillo">Surquillo</option><option value="Villa El Salvador">Villa El Salvador</option><option value="Villa María del Triunfo">Villa María del Triunfo</option><option value="Otro">Otro</option>
-              </select>
-            </div>
-            
-            <div class="col-6"><label>Método de Pago</label>
-              <select id="tipoPago" class="form-select">
-                <option>Efectivo</option><option>Tarjeta</option><option>Transferencia</option><option>Yape/plin</option>
-              </select>
-            </div>
-            <div class="col-6"><label>Origen</label>
-              <select id="origen" class="form-select">
-                <option>Facebook</option><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>Recomendación</option><option>Otros</option>
-              </select>
+            <div class="col-6">
+              <div class="bg-light p-3 rounded-3 border text-center">
+                <span class="text-muted small fw-bold">Recaudado</span>
+                <div id="val-logrado" class="h5 fw-bold text-teal mt-1 mb-0" style="color:var(--accent);">S/ 0.00</div>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="ui-card">
-          <div class="ui-card-title">Servicios y Tarifas</div>
-          <div id="container-cats" class="d-flex overflow-auto pb-2 mb-3" style="gap:8px"></div>
-          <div id="container-items" class="d-flex flex-wrap rounded mb-3" style="background: #f8fafc; padding: 8px 3px;"></div>
-          
-          <div class="fw-bold small text-secondary mb-2">Detalle de Selección:</div>
-          <div id="cart-list"></div>
-          
-          <div class="mt-3 text-end">
-             <span class="text-primary small text-decoration-underline" style="cursor:pointer;" onclick="toggleDescuento()">¿Aplicar descuento especial?</span>
-             <div id="box-desc" style="display:none; justify-content:flex-end; align-items:center; gap:8px; margin-top:8px;">
-               <span class="small fw-bold">Descuento (S/):</span>
-               <input type="number" id="val-desc" class="form-control form-control-sm border-primary" style="width:80px; text-align:right" value="0" min="0" oninput="actualizarCarrito()">
-             </div>
+          <div class="ui-card-header">
+            <h2 class="ui-card-title"><i class="bi bi-check2-square"></i> Tareas y Objetivos Semanales</h2>
           </div>
-
-          <div id="cart-total" class="h5 text-end fw-bold text-primary mt-3 mb-0">Total a Pagar: S/ 0.00</div>
+          <div id="lista-tareas" class="mb-3"></div>
+          <button class="btn btn-primary w-100 py-3 fw-bold" style="background:var(--accent); border:none; border-radius:10px;" onclick="enviarActualizacionTareas()">
+            <i class="bi bi-cloud-arrow-up-fill"></i> GUARDAR ESTADO DE TAREAS
+          </button>
         </div>
       </div>
 
-      <div class="tab-pane fade" id="tab-his" role="tabpanel">
-        <div class="ui-card">
-          <div class="ui-card-title">Búsqueda de Pacientes</div>
-          <div class="input-group mb-0">
-            <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI para buscar...">
-            <button class="btn btn-primary px-3" onclick="ejecutarBusqueda()">🔍 Buscar</button>
-          </div>
-        </div>
-        <div id="historial-resultados"></div>
-      </div>
-
-      <div class="tab-pane fade" id="tab-seg" role="tabpanel">
-        <div class="ui-card">
-          <div class="ui-card-title d-flex justify-content-between align-items-center">
-            <span>Alertas de Seguimiento</span>
-            <button class="btn btn-sm btn-light border" onclick="cargarMóduloSeguimiento()">🔄 Refrescar</button>
-          </div>
-          
-          <h6 class="fw-bold text-danger mb-2">🔴 ATRASADOS / POR CONTACTAR</h6>
-          <div id="seg-atrasados" class="mb-4"></div>
-          
-          <h6 class="fw-bold text-warning mb-2">🟡 HOY Y MAÑANA</h6>
-          <div id="seg-hoy-manana" class="mb-4"></div>
-          
-          <h6 class="fw-bold text-success mb-2">🟢 PRÓXIMOS 7 DÍAS</h6>
-          <div id="seg-proximos" class="mb-2"></div>
-        </div>
-      </div>
-
-      <div class="tab-pane fade" id="tab-metas" role="tabpanel">
-        <div id="metas-lock" class="ui-card text-center py-5">
-          <div style="font-size:40px">🔒</div>
-          <h6 class="fw-bold mt-2">Acceso Administrativo</h6>
-          <input type="password" id="metas-pin" class="pin-input" maxlength="4" oninput="evaluarPinMaestro()">
-          <p id="pin-error" class="text-danger small fw-bold" style="display:none; margin-top:10px;">PIN Incorrecto</p>
-        </div>
-
-        <div id="metas-content" style="display:none">
-          <div class="ui-card">
-            <div class="ui-card-title text-center">Estado de Metas Semanales</div>
-            <div class="circle-progress-wrapper">
-              <svg class="circle-progress-svg"><circle class="circle-bg" cx="90" cy="90" r="80"/><circle id="progreso-circulo" class="circle-fill" cx="90" cy="90" r="80"/></svg>
-              <div id="progreso-texto" class="circle-percentage">0%</div>
-            </div>
-            <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 6px solid #ccc; background: #f8fafc;">
-              <p id="txt-motivador" class="fw-bold mb-0 small"></p>
-            </div>
-            <div class="row g-2">
-              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Meta: <br><b id="val-meta" class="text-primary">S/ 0</b></div></div>
-              <div class="col-6"><div class="bg-light p-2 border-0 rounded text-center small">Logrado: <br><b id="val-logrado" class="text-success">S/ 0</b></div></div>
-            </div>
-          </div>
-          
-          <div class="ui-card">
-            <div class="ui-card-title">Tareas Semanales</div>
-            <div id="lista-tareas"></div>
-            <button class="btn-actualizar" onclick="enviarActualizacionTareas()">ACTUALIZAR TAREAS</button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <div id="panel-inferior" class="p-3 bg-white border-top mt-auto">
-      <button onclick="enviarDatos()" class="btn btn-primary btn-lg w-100 shadow fw-bold py-3">GUARDAR REGISTRO</button>
-    </div>
   </div>
+</main>
+
+<!-- Barra Inferior de Acción -->
+<div id="panel-inferior">
+  <button onclick="enviarDatos()" class="btn btn-guardar w-100">
+    <i class="bi bi-check-circle-fill me-1"></i> GUARDAR REGISTRO DE ADMISIÓN
+  </button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
@@ -253,14 +783,14 @@
   let configLocal = [], carrito = [], tareasLocales = [];
 
   window.onload = async () => {
-    if(!ID_CLINICA) return alert("Falta ID de Clínica");
+    if(!ID_CLINICA) return alert("Falta ID de Clínica en la URL.");
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
       const respuestaBackend = await r.json();
       
       if(respuestaBackend.clinicaNombre && respuestaBackend.clinicaNombre.trim() !== "") {
-         document.getElementById('web-clinica-nombre').innerHTML = `DM DYNAMIC ANALYTICS está potenciando a <strong>${respuestaBackend.clinicaNombre}</strong>`;
+         document.getElementById('web-clinica-nombre').innerHTML = `DM DYNAMIC ANALYTICS potenciando a <strong>${respuestaBackend.clinicaNombre}</strong>`;
       } else {
          document.getElementById('web-clinica-nombre').innerText = "";
       }
@@ -276,7 +806,7 @@
       
       configLocal = respuestaBackend.servicios;
       dibujarCategorias();
-    } catch(e) { alert("Error de conexión"); }
+    } catch(e) { alert("Error de conexión con el servidor"); }
     mostrarLoading(false);
   };
 
@@ -285,8 +815,8 @@
   
   document.querySelectorAll('.nav-link').forEach(t => {
     t.addEventListener('click', (e) => { 
-      const textoTab = e.target.innerText.toUpperCase();
-      if(textoTab !== "METAS" && textoTab !== "SEGUIMIENTO") {
+      const textoTab = e.currentTarget.innerText.toUpperCase();
+      if(!textoTab.includes("METAS") && !textoTab.includes("AGENDA")) {
          document.getElementById('panel-inferior').style.display = 'block'; 
       } else {
          document.getElementById('panel-inferior').style.display = 'none';
@@ -295,19 +825,18 @@
   });
 
   async function buscarPacienteDNI() {
-    const d = document.getElementById('dni').value;
+    const d = document.getElementById('dni').value.trim();
     if(!d) return;
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarPaciente&dni=${d}`);
       const res = await r.json();
       if(!res.error && res.encontrado) {
-        document.getElementById('nombrePac').value = res.data.nombre;
-        document.getElementById('apePat').value = res.data.apePat;
-        document.getElementById('apeMat').value = res.data.apeMat;
-        document.getElementById('celular').value = res.data.celular;
+        document.getElementById('nombrePac').value = res.data.nombre || "";
+        document.getElementById('apePat').value = res.data.apePat || "";
+        document.getElementById('apeMat').value = res.data.apeMat || "";
+        document.getElementById('celular').value = res.data.celular || "";
         
-        // Asignación correcta del select de Distrito
         if (res.data.distrito) {
            let selectDistrito = document.getElementById('distrito');
            let options = Array.from(selectDistrito.options);
@@ -357,11 +886,11 @@
     const pct = Math.min(f.porcentaje, 100);
     circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65; 
 
-    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el éxito.";
-    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Gran ritmo! Sigamos sumando."; }
-    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Impresionante! A un paso de la meta."; }
-    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima!"; }
-    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡OBJETIVO LOGRADO! Eres un líder."; }
+    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el objetivo semanal.";
+    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Buen ritmo de atención! Sigamos sumando."; }
+    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Excelente desempeño! Muy cerca de la meta semanal."; }
+    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima! Último esfuerzo."; }
+    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡META SEMANAL SUPERADA! Extraordinario trabajo."; }
 
     circle.style.stroke = `var(${color})`;
     document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
@@ -372,8 +901,8 @@
     const cont = document.getElementById('lista-tareas');
     cont.innerHTML = tareasLocales.map((t, i) => `
       <div class="task-item">
-        <input type="checkbox" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
-        <span class="${t.completado ? 'task-completed' : 'fw-bold'}">${t.descripcion}</span>
+        <input type="checkbox" id="chk-task-${i}" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
+        <label for="chk-task-${i}" class="m-0 ${t.completado ? 'task-completed' : 'fw-semibold text-dark'}">${t.descripcion}</label>
       </div>
     `).join('');
   }
@@ -386,7 +915,7 @@
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, { method: 'POST', body: JSON.stringify(tareasLocales) });
       const res = await r.json();
       if(res.resultado === "OK") {
-        document.getElementById('alert-title').innerText = "METAS ACTUALIZADAS";
+        document.getElementById('alert-title').innerText = "TAREAS ACTUALIZADAS";
         document.getElementById('custom-alert').style.display = 'block';
       }
     } catch(e) { alert("Error actualizando tareas"); }
@@ -395,14 +924,25 @@
 
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
-    document.getElementById('container-cats').innerHTML = cats.map(c => `<button class="btn btn-cat flex-shrink-0" onclick="seleccionarCategoria(this, '${c}')">${c}</button>`).join('');
+    document.getElementById('container-cats').innerHTML = cats.map((c, idx) => `
+      <button class="btn btn-cat ${idx === 0 ? 'active-cat' : ''}" onclick="seleccionarCategoria(this, '${c}')">${c}</button>
+    `).join('');
+    if(cats.length > 0) seleccionarCategoria(document.querySelector('.btn-cat'), cats[0]);
   }
 
   function seleccionarCategoria(btn, c) {
     document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
     btn.classList.add('active-cat');
     const items = configLocal.filter(i => i.categoria === c);
-    document.getElementById('container-items').innerHTML = items.map(i => `<button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')"><b>${i.nombre}</b><br><span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span></button>`).join('');
+    document.getElementById('container-items').innerHTML = items.map(i => `
+      <button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')">
+        <span class="item-name">${i.nombre}</span>
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
+          <i class="bi bi-plus-circle-fill text-muted"></i>
+        </div>
+      </button>
+    `).join('');
   }
   
   function agregarAlCarrito(n) {
@@ -426,21 +966,27 @@
     document.getElementById('cart-list').innerHTML = carrito.map(i => { 
       t += parseFloat(i.pvp); 
       return `
-        <div class="cart-row" style="flex-direction:column; align-items:start;">
-          <div class="d-flex justify-content-between w-100 mb-2">
-            <span class="fw-bold">${i.nombre}</span>
-            <div>
-              <b class="me-2 text-dark">S/${parseFloat(i.pvp).toFixed(2)}</b>
-              <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})">❌</button>
+        <div class="cart-row">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="fw-bold text-dark" style="font-size:0.8rem">${i.nombre}</span>
+            <div class="d-flex align-items-center gap-2">
+              <span class="fw-bold text-dark">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
+              <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})" title="Eliminar servicio">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
             </div>
           </div>
-          <div class="w-100 bg-white p-2 rounded border mt-1">
-            <div style="font-size:0.75rem; color:#64748b; margin-bottom:5px;">Agendar próximo control (Opcional):</div>
+          <div class="bg-light p-2 rounded-2 border">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px;">
+              <i class="bi bi-clock-history"></i> Programar próximo control (Opcional):
+            </div>
             <div class="d-flex gap-2 align-items-center">
-              <span style="font-size:0.8rem">En:</span>
-              <input type="number" id="seg-num-${i.idU}" class="form-control form-control-sm" style="width:70px" placeholder="Ej: 15" min="1">
+              <span style="font-size:0.75rem; font-weight:600;">En:</span>
+              <input type="number" id="seg-num-${i.idU}" class="form-control form-control-sm" style="width:70px" placeholder="15" min="1">
               <select id="seg-tipo-${i.idU}" class="form-select form-select-sm" style="width:110px">
-                <option value="d">Días</option><option value="s">Semanas</option><option value="m">Meses</option>
+                <option value="d">Días</option>
+                <option value="s">Semanas</option>
+                <option value="m">Meses</option>
               </select>
             </div>
           </div>
@@ -452,15 +998,20 @@
     if(finalTotal < 0) finalTotal = 0;
     
     if (desc > 0) {
-      document.getElementById('cart-total').innerHTML = `Subtotal: S/ ${t.toFixed(2)} <br> <span class="text-success h4">Total Final: S/ ${finalTotal.toFixed(2)}</span>`;
+      document.getElementById('cart-total').innerHTML = `
+        <span class="text-muted small">Subtotal: S/ ${t.toFixed(2)} | Descuento: -S/ ${desc.toFixed(2)}</span><br>
+        <span class="text-success fw-bold" style="font-size:1.05rem;">Total Final: S/ ${finalTotal.toFixed(2)}</span>
+      `;
     } else {
       document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${finalTotal.toFixed(2)}`;
     }
   }
 
   async function enviarDatos() {
-    const dni = document.getElementById('dni').value;
-    if(!dni || carrito.length === 0) return alert("DNI y servicios requeridos");
+    const dni = document.getElementById('dni').value.trim();
+    if(!dni) return alert("Por favor, ingrese el DNI del paciente.");
+    if(carrito.length === 0) return alert("Debe seleccionar al menos un servicio.");
+    
     mostrarLoading(true);
 
     carrito.forEach(item => {
@@ -480,15 +1031,16 @@
     });
 
     const p = { 
-      dni, nombre: document.getElementById('nombrePac').value, 
+      dni, 
+      nombre: document.getElementById('nombrePac').value, 
       apellidoP: document.getElementById('apePat').value, 
       apellidoM: document.getElementById('apeMat').value, 
-      distrito: document.getElementById('distrito').value,
+      distrito: document.getElementById('distrito').value, 
       edad: document.getElementById('edad').value, 
       celular: document.getElementById('celular').value, 
       tipoPago: document.getElementById('tipoPago').value, 
       origen: document.getElementById('origen').value, 
-      descuento: document.getElementById('val-desc').value,
+      descuento: document.getElementById('val-desc').value, 
       carrito 
     };
 
@@ -496,21 +1048,32 @@
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}`, { method: 'POST', body: JSON.stringify(p) });
       const res = await r.json();
       if(res.resultado === "OK") document.getElementById('custom-alert').style.display = 'block';
-    } catch(e) { alert("Error al guardar registro"); }
+    } catch(e) { alert("Error al guardar el registro en base de datos."); }
     mostrarLoading(false);
   }
 
   async function ejecutarBusqueda() {
-    const d = document.getElementById('buscardni').value;
+    const d = document.getElementById('buscardni').value.trim();
     if(!d) return;
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
       const res = await r.json();
       const c = document.getElementById('historial-resultados');
-      if(res.length === 0) c.innerHTML = "<p class='text-center small py-3 text-secondary'>Sin registros previos.</p>";
-      else c.innerHTML = res.map(h => `<div class='ui-card border-start border-primary border-4 mb-2'><div class='small text-primary fw-bold'>${h.fecha} | ${h.servicio}</div><div class='fw-bold my-1'>${h.producto}</div></div>`).join('');
-    } catch(e) { alert("Error en búsqueda"); }
+      if(!res || res.length === 0) {
+        c.innerHTML = "<p class='text-center small py-4 text-muted'>Sin atenciones previas registradas para este DNI.</p>";
+      } else {
+        c.innerHTML = res.map(h => `
+          <div class='ui-card border-start border-4 border-primary mb-2'>
+            <div class='d-flex justify-content-between align-items-center'>
+              <span class='badge bg-light text-primary border'>${h.fecha}</span>
+              <span class='small fw-bold text-muted'>${h.servicio}</span>
+            </div>
+            <div class='fw-bold text-dark mt-2'>${h.producto}</div>
+          </div>
+        `).join('');
+      }
+    } catch(e) { alert("Error al consultar el historial."); }
     mostrarLoading(false);
   }
 
@@ -523,7 +1086,7 @@
       let htmlAtrasados = "", htmlHoyManana = "", htmlProximos = "";
       
       if(!data || data.length === 0) {
-        const msgVacio = "<p class='text-center small py-2 text-muted'>No hay controles pendientes en agenda.</p>";
+        const msgVacio = "<p class='text-center small py-2 text-muted'>No hay pacientes en esta categoría.</p>";
         document.getElementById('seg-atrasados').innerHTML = msgVacio;
         document.getElementById('seg-hoy-manana').innerHTML = msgVacio;
         document.getElementById('seg-proximos').innerHTML = msgVacio;
@@ -542,15 +1105,19 @@
           <div class="card-seg">
             <div class="d-flex justify-content-between align-items-start">
               <div>
-                <div class="fw-bold text-dark" style="font-size:0.85rem">${item.nombre}</div>
-                <div class="text-muted mt-1" style="font-size:0.75rem">
+                <div class="fw-bold text-dark" style="font-size:0.83rem">${item.nombre}</div>
+                <div class="text-muted mt-1" style="font-size:0.74rem; line-height:1.4;">
                   <b>Motivo:</b> ${item.motivo}<br>
-                  <b>Fecha:</b> <span class="badge bg-secondary">${item.fechaStr}</span>
+                  <b>Fecha:</b> <span class="badge bg-light text-dark border">${item.fechaStr}</span>
                 </div>
               </div>
-              <div class="d-flex flex-column gap-2">
-                <a href="${linkWhatsApp}" target="_blank" class="btn-wa text-center">💬 Enviar WA</a>
-                <button onclick="marcarComoContactado(${item.fila})" class="btn btn-sm btn-outline-success" style="font-size:0.75rem; font-weight:bold;">✅ Contactado</button>
+              <div class="d-flex flex-column gap-2 align-items-end">
+                <a href="${linkWhatsApp}" target="_blank" class="btn-wa">
+                  <i class="bi bi-whatsapp"></i> Recordar WA
+                </a>
+                <button onclick="marcarComoContactado(${item.fila})" class="btn btn-sm btn-outline-success" style="font-size:0.72rem; font-weight:700; border-radius:7px;">
+                  <i class="bi bi-check2"></i> Contactado
+                </button>
               </div>
             </div>
           </div>
@@ -562,15 +1129,15 @@
       });
       
       document.getElementById('seg-atrasados').innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted'>Sin citas retrasadas.</p>";
-      document.getElementById('seg-hoy-manana').innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted'>Sin pendientes.</p>";
-      document.getElementById('seg-proximos').innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted'>Sin controles futuros.</p>";
+      document.getElementById('seg-hoy-manana').innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted'>Sin controles pendientes hoy.</p>";
+      document.getElementById('seg-proximos').innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted'>Sin controles próximos.</p>";
       
     } catch(e) { alert("Error al cargar seguimiento"); }
     mostrarLoading(false);
   }
 
   async function marcarComoContactado(filaExcel) {
-    if(!confirm("¿Confirmas que ya escribiste a este paciente? Desaparecerá de tu lista.")) return;
+    if(!confirm("¿Confirmas que ya contactaste a este paciente? Se archivará de la lista.")) return;
     mostrarLoading(true);
     try {
       await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, { method: 'POST', body: JSON.stringify({ fila: filaExcel }) });
