@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>DM Dynamic Analytics - Gestión Clínica</title>
+  <title>DM Dynamic Analytics - Gestión Clínica & Obstétrica</title>
   
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +56,7 @@
     .app-header {
       background: #ffffff;
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 18px;
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 1020;
@@ -65,23 +65,27 @@
     .brand-container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
+      justify-content: space-between;
+    }
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .logo-dm {
-      height: 38px;
+      height: 34px;
       width: auto;
       object-fit: contain;
     }
     .brand-divider {
       width: 1px;
-      height: 32px;
+      height: 28px;
       background-color: var(--border-color);
       display: none;
     }
     .logo-cliente {
-      max-height: 38px;
-      max-width: 140px;
+      max-height: 34px;
+      max-width: 130px;
       object-fit: contain;
       display: none;
     }
@@ -89,9 +93,7 @@
       font-size: 0.72rem;
       font-weight: 500;
       color: var(--text-muted);
-      text-align: center;
-      margin-top: 6px;
-      letter-spacing: 0.2px;
+      margin-top: 4px;
     }
     .brand-subtitle strong {
       color: var(--accent);
@@ -105,16 +107,16 @@
       border-bottom: 1px solid var(--border-color);
     }
     .nav-pills-custom {
-      gap: 6px;
+      gap: 4px;
       display: flex;
     }
     .nav-pills-custom .nav-link {
       flex: 1;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-muted);
-      border-radius: 10px;
-      padding: 9px 4px;
+      border-radius: 9px;
+      padding: 8px 2px;
       text-align: center;
       background: #f1f5f9;
       border: 1px solid transparent;
@@ -125,16 +127,16 @@
       transition: all 0.2s ease;
     }
     .nav-pills-custom .nav-link i {
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
     .nav-pills-custom .nav-link.active {
       background: var(--primary);
       color: #ffffff !important;
       border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
     }
 
-    /* Cards */
+    /* UI Cards */
     .ui-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -156,7 +158,7 @@
       font-weight: 700;
       color: var(--primary);
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -167,19 +169,19 @@
       font-size: 0.95rem;
     }
 
-    /* Inputs & Selects */
+    /* Forms */
     .form-label {
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
     .form-control, .form-select {
-      border-radius: 9px;
+      border-radius: 8px;
       border: 1px solid #cbd5e1;
-      padding: 8px 12px;
+      padding: 7px 10px;
       font-size: 0.82rem;
       font-weight: 500;
       background-color: #ffffff;
@@ -196,12 +198,12 @@
       font-weight: 600;
     }
 
-    /* Category Chips & Item Badges */
+    /* Chips & Catalog */
     .btn-cat {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      border-radius: 30px;
-      padding: 6px 14px;
+      border-radius: 20px;
+      padding: 5px 12px;
       border: 1px solid #cbd5e1;
       background: #ffffff;
       color: var(--text-muted);
@@ -212,7 +214,7 @@
       background: var(--accent) !important;
       color: #ffffff !important;
       border-color: var(--accent) !important;
-      box-shadow: 0 3px 8px rgba(13, 148, 136, 0.25);
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
     }
 
     .btn-item {
@@ -220,15 +222,14 @@
       margin: 3px;
       border: 1px solid var(--border-color);
       background: #ffffff;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.76rem;
+      padding: 9px;
+      border-radius: 9px;
+      font-size: 0.75rem;
       text-align: left;
       transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
     .btn-item:active {
       transform: scale(0.97);
@@ -237,8 +238,8 @@
     .item-name {
       font-weight: 600;
       color: var(--primary);
-      line-height: 1.25;
-      margin-bottom: 6px;
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
     .item-precio {
       color: var(--accent);
@@ -246,7 +247,7 @@
       font-size: 0.8rem;
     }
 
-    /* Cart Rows */
+    /* Cart */
     .cart-row {
       background: #ffffff;
       border-left: 4px solid var(--accent);
@@ -269,47 +270,41 @@
       justify-content: center;
       font-size: 0.75rem;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-remove:hover {
-      background: #fecaca;
     }
 
-    /* Seguimiento Cards */
+    /* CRM Agenda */
     .card-seg {
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 9px;
       background: #ffffff;
-      padding: 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      transition: transform 0.15s;
+      padding: 11px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
     .btn-wa {
       background-color: #25d366;
       color: white;
       border: none;
-      border-radius: 7px;
+      border-radius: 6px;
       font-weight: 600;
       font-size: 0.72rem;
-      padding: 6px 10px;
+      padding: 5px 9px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       text-decoration: none;
-      box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);
     }
     .btn-wa:hover {
       background-color: #1eb956;
       color: white;
     }
 
-    /* Metas & Cirle */
+    /* Metas & Chart */
     .circle-progress-wrapper {
       position: relative;
-      width: 170px;
-      height: 170px;
-      margin: 15px auto;
+      width: 160px;
+      height: 160px;
+      margin: 12px auto;
     }
     .circle-progress-svg {
       transform: rotate(-90deg);
@@ -328,51 +323,39 @@
       stroke-linecap: round;
       stroke-dasharray: 502.65;
       stroke-dashoffset: 502.65;
-      transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.3s;
     }
     .circle-percentage {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 1.9rem;
+      font-size: 1.8rem;
       font-weight: 800;
       color: var(--primary);
     }
-
     .pin-input {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       text-align: center;
-      letter-spacing: 12px;
-      width: 160px;
-      margin: 15px auto;
+      letter-spacing: 10px;
+      width: 150px;
+      margin: 12px auto;
       border: 2px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 6px;
-      background: #f8fafc;
+      border-radius: 10px;
+      padding: 5px;
       font-weight: 700;
     }
-    .pin-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: #fff;
-    }
 
+    /* Task List */
     .task-item {
       background: #f8fafc;
-      padding: 12px;
-      border-radius: 9px;
-      margin-bottom: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-    .task-item input[type="checkbox"] {
-      width: 19px;
-      height: 19px;
-      accent-color: var(--accent);
-      cursor: pointer;
     }
     .task-completed {
       text-decoration: line-through;
@@ -388,27 +371,22 @@
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(8px);
       border-top: 1px solid var(--border-color);
-      padding: 12px 16px;
+      padding: 10px 14px;
       z-index: 1030;
-      box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 -4px 10px rgba(15, 23, 42, 0.04);
     }
     .btn-guardar {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-accent) 100%);
       color: #ffffff;
       border: none;
-      border-radius: 11px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 0.88rem;
-      padding: 12px;
-      letter-spacing: 0.4px;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
-      transition: all 0.2s;
-    }
-    .btn-guardar:active {
-      transform: scale(0.98);
+      font-size: 0.86rem;
+      padding: 11px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
     }
 
-    /* Loaders & Overlays */
+    /* Loader & Alerts */
     #spinner-overlay {
       display: none;
       position: fixed;
@@ -416,8 +394,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(3px);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -425,10 +403,10 @@
     }
     .spinner-box {
       background: #ffffff;
-      padding: 24px 32px;
-      border-radius: 16px;
+      padding: 20px 28px;
+      border-radius: 14px;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
 
     #custom-alert {
@@ -438,7 +416,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(3px);
       z-index: 9999;
     }
@@ -448,55 +426,86 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: #ffffff;
-      padding: 26px 22px;
-      border-radius: 18px;
+      padding: 22px 20px;
+      border-radius: 16px;
       text-align: center;
-      width: 88%;
+      width: 90%;
       max-width: 320px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
     }
     .alert-icon-check {
-      width: 58px;
-      height: 58px;
+      width: 52px;
+      height: 52px;
       background: var(--accent-light);
       color: var(--accent);
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      margin-bottom: 12px;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    /* Estilos de Impresión Exclusivos para Informe Obstétrico */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #area-impresion, #area-impresion * {
+        visibility: visible;
+      }
+      #area-impresion {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        background: #ffffff;
+      }
+      .no-print {
+        display: none !important;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- Spinner Overlay -->
+<!-- Loader -->
 <div id="spinner-overlay">
   <div class="spinner-box">
     <div class="spinner-border text-teal" style="color:var(--accent)" role="status"></div>
-    <div class="mt-2 fw-bold text-dark" style="font-size:0.85rem">Sincronizando datos...</div>
+    <div class="mt-2 fw-bold text-dark" style="font-size:0.82rem">Sincronizando con base de datos...</div>
   </div>
 </div>
 
-<!-- Modal Alert -->
+<!-- Modal Alerta de Éxito -->
 <div id="custom-alert">
   <div class="alert-modal-card">
-    <div class="alert-icon-check">
-      <i class="bi bi-check-lg"></i>
+    <div class="alert-icon-check"><i class="bi bi-check-lg"></i></div>
+    <h6 id="alert-title" class="fw-bold text-dark mb-1">REGISTRO EXITOSO</h6>
+    <p class="text-muted small mb-3">La atención ha sido registrada correctamente.</p>
+    <div class="d-flex flex-column gap-2">
+      <button class="btn btn-primary w-100 py-2 fw-bold" style="background:var(--accent); border:none; border-radius:8px; font-size:0.8rem;" onclick="prepararInformeDesdeAdmision()">
+        <i class="bi bi-file-earmark-medical me-1"></i> Redactar Informe / Receta
+      </button>
+      <button class="btn btn-light w-100 py-2 fw-semibold text-muted border" style="border-radius:8px; font-size:0.8rem;" onclick="cerrarAlerta()">
+        Cerrar y Nueva Admisión
+      </button>
     </div>
-    <h5 id="alert-title" class="fw-bold text-dark mb-2">OPERACIÓN EXITOSA</h5>
-    <p class="text-muted small mb-4">El registro ha sido procesado correctamente en el sistema.</p>
-    <button class="btn btn-primary w-100 py-2 fw-bold" style="background:var(--primary); border:none; border-radius:10px;" onclick="location.reload()">Aceptar</button>
   </div>
 </div>
 
 <!-- Header -->
 <header class="app-header">
   <div class="brand-container">
-    <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
-    <div id="web-brand-divider" class="brand-divider"></div>
-    <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Clínica">
+    <div class="brand-logos">
+      <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
+      <div id="web-brand-divider" class="brand-divider"></div>
+      <img id="web-clinica-logo" src="" class="logo-cliente" alt="Logo Clínica">
+    </div>
+    <button class="btn btn-sm btn-outline-secondary" onclick="forzarSincronizacionCatalogo()" title="Actualizar tarifas">
+      <i class="bi bi-arrow-repeat"></i> Sincronizar
+    </button>
   </div>
   <div class="brand-subtitle">
     <div id="web-clinica-nombre">Cargando consultorio...</div>
@@ -504,25 +513,30 @@
 </header>
 
 <!-- Navegación por Pestañas -->
-<div class="nav-tabs-container sticky-top" style="top:69px; z-index:1015;">
+<div class="nav-tabs-container sticky-top" style="top:65px; z-index:1015;">
   <ul class="nav nav-pills-custom nav-justified" id="mainTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="admision-tab" data-bs-toggle="pill" data-bs-target="#tab-adm" type="button" role="tab">
+    <li class="nav-item">
+      <button class="nav-link active" id="admision-tab" data-bs-toggle="pill" data-bs-target="#tab-adm" type="button">
         <i class="bi bi-person-plus-fill"></i> Admisión
       </button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="historial-tab" data-bs-toggle="pill" data-bs-target="#tab-his" type="button" role="tab">
+    <li class="nav-item">
+      <button class="nav-link" id="informe-tab" data-bs-toggle="pill" data-bs-target="#tab-inf" type="button">
+        <i class="bi bi-file-earmark-medical-fill"></i> Informe
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="historial-tab" data-bs-toggle="pill" data-bs-target="#tab-his" type="button">
         <i class="bi bi-journal-text"></i> Historial
       </button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="seguimiento-tab" data-bs-toggle="pill" data-bs-target="#tab-seg" type="button" role="tab" onclick="cargarMóduloSeguimiento()">
+    <li class="nav-item">
+      <button class="nav-link" id="seguimiento-tab" data-bs-toggle="pill" data-bs-target="#tab-seg" type="button" onclick="cargarModuloSeguimiento()">
         <i class="bi bi-calendar2-week-fill"></i> Agenda
       </button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="metas-tab" data-bs-toggle="pill" data-bs-target="#tab-metas" type="button" role="tab" onclick="ocultarBotonGuardar()">
+    <li class="nav-item">
+      <button class="nav-link" id="metas-tab" data-bs-toggle="pill" data-bs-target="#tab-metas" type="button">
         <i class="bi bi-graph-up-arrow"></i> Metas
       </button>
     </li>
@@ -533,28 +547,36 @@
 <main class="container-fluid px-3 pt-3">
   <div class="tab-content" id="mainTabContent">
     
-    <!-- PESTAÑA 1: ADMISIÓN -->
+    <!-- PESTAÑA 1: ADMISIÓN (POS) -->
     <div class="tab-pane fade show active" id="tab-adm" role="tabpanel">
-      <!-- Tarjeta: Datos Paciente -->
+      
+      <!-- Ficha de Registro de Paciente -->
       <div class="ui-card">
         <div class="ui-card-header">
           <h2 class="ui-card-title"><i class="bi bi-person-vcard-fill"></i> Datos del Paciente</h2>
-          <span class="badge bg-light text-secondary border">Ficha Registro</span>
+          <span class="badge bg-light text-secondary border">Admisión Activa</span>
         </div>
         
         <div class="row g-2">
+          <!-- Selector Dinámico de Documento de Identidad -->
+          <div class="col-5">
+            <label class="form-label">Tipo Doc.</label>
+            <select id="tipoDoc" class="form-select" onchange="adaptarMascaraDocumento()">
+              <option value="DNI">DNI</option>
+              <option value="CE">C. Extranjería</option>
+              <option value="PASAPORTE">Pasaporte</option>
+              <option value="CPP_PTP">CPP / PTP</option>
+            </select>
+          </div>
+
           <div class="col-7">
-            <label class="form-label">DNI / Documento</label>
+            <label class="form-label">Nro. Documento</label>
             <div class="input-group">
-              <input type="tel" id="dni" class="form-control" placeholder="Buscar DNI...">
-              <button class="btn btn-outline-secondary" type="button" onclick="buscarPacienteDNI()" title="Buscar Paciente">
+              <input type="text" id="dni" class="form-control" placeholder="8 dígitos" maxlength="8" inputmode="numeric">
+              <button class="btn btn-outline-secondary" type="button" onclick="buscarPacienteDocumento()" title="Buscar">
                 <i class="bi bi-search"></i>
               </button>
             </div>
-          </div>
-          <div class="col-5">
-            <label class="form-label">Edad</label>
-            <input type="number" id="edad" class="form-control" placeholder="Años">
           </div>
 
           <div class="col-12">
@@ -563,19 +585,20 @@
           </div>
           <div class="col-6">
             <label class="form-label">Apellido Paterno</label>
-            <input type="text" id="apePat" class="form-control" placeholder="Ej. Pérez">
+            <input type="text" id="apePat" class="form-control" placeholder="Ej. Gómez">
           </div>
           <div class="col-6">
             <label class="form-label">Apellido Materno</label>
-            <input type="text" id="apeMat" class="form-control" placeholder="Ej. López">
+            <input type="text" id="apeMat" class="form-control" placeholder="Ej. Flores">
           </div>
 
-          <div class="col-12">
+          <div class="col-4">
+            <label class="form-label">Edad</label>
+            <input type="number" id="edad" class="form-control" placeholder="Años">
+          </div>
+          <div class="col-8">
             <label class="form-label">Teléfono / WhatsApp</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted"><i class="bi bi-phone"></i></span>
-              <input type="tel" id="celular" class="form-control" placeholder="Ej. 987654321">
-            </div>
+            <input type="tel" id="celular" class="form-control" placeholder="9XXXXXXXX" maxlength="12">
           </div>
 
           <div class="col-12">
@@ -606,40 +629,39 @@
             <label class="form-label">Método de Pago</label>
             <select id="tipoPago" class="form-select">
               <option>Efectivo</option>
+              <option>Yape/Plin</option>
               <option>Tarjeta</option>
               <option>Transferencia</option>
-              <option>Yape/plin</option>
             </select>
           </div>
 
           <div class="col-6">
             <label class="form-label">Canal de Captación</label>
             <select id="origen" class="form-select">
+              <option>TikTok</option>
               <option>Facebook</option>
               <option>Instagram</option>
-              <option>TikTok</option>
               <option>WhatsApp</option>
               <option>Recomendación</option>
-              <option>Otros</option>
+              <option>Presencial / Letrero</option>
+              <option>Otro</option>
             </select>
           </div>
         </div>
       </div>
 
-      <!-- Tarjeta: Servicios y Tarifas -->
+      <!-- Catálogo de Servicios y POS -->
       <div class="ui-card">
         <div class="ui-card-header">
-          <h2 class="ui-card-title"><i class="bi bi-bag-check-fill"></i> Catálogo y Tarifas</h2>
-          <span class="badge bg-teal-subtle text-teal" style="background:#ccfbf1; color:#0f766e;">Precios Actualizados</span>
+          <h2 class="ui-card-title"><i class="bi bi-bag-check-fill"></i> Servicios & Procedimientos</h2>
         </div>
 
-        <div id="container-cats" class="d-flex overflow-auto pb-2 mb-2" style="gap:8px; scrollbar-width:none;"></div>
-        
+        <div id="container-cats" class="d-flex overflow-auto pb-2 mb-2" style="gap:6px; scrollbar-width:none;"></div>
         <div id="container-items" class="d-flex flex-wrap rounded-3 mb-3" style="background: #f8fafc; border:1px solid #e2e8f0; padding: 6px;"></div>
 
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="form-label mb-0">Detalle de Atención:</span>
-          <span class="text-primary small fw-semibold text-decoration-none" style="cursor:pointer; font-size:0.75rem;" onclick="toggleDescuento()">
+          <span class="form-label mb-0">Servicios Seleccionados:</span>
+          <span class="text-primary small fw-semibold" style="cursor:pointer; font-size:0.75rem;" onclick="toggleDescuento()">
             <i class="bi bi-tag-fill"></i> ¿Aplicar descuento?
           </span>
         </div>
@@ -647,25 +669,141 @@
         <div id="cart-list"></div>
 
         <div id="box-desc" class="p-2 mb-2 rounded bg-light border" style="display:none; justify-content:flex-end; align-items:center; gap:8px;">
-          <span class="small fw-bold text-muted">Descuento Especial (S/):</span>
-          <input type="number" id="val-desc" class="form-control form-control-sm border-primary" style="width:90px; text-align:right" value="0" min="0" oninput="actualizarCarrito()">
+          <span class="small fw-bold text-muted">Descuento Total (S/):</span>
+          <input type="number" id="val-desc" class="form-control form-control-sm" style="width:85px; text-align:right" value="0" min="0" oninput="actualizarCarrito()">
         </div>
 
         <div class="p-3 mt-3 rounded-3 bg-light border text-end">
-          <div id="cart-total" class="h6 fw-bold text-dark mb-0">Total a Pagar: S/ 0.00</div>
+          <div id="cart-total" class="h6 fw-bold text-dark mb-0">Total: S/ 0.00</div>
         </div>
       </div>
     </div>
 
-    <!-- PESTAÑA 2: HISTORIAL -->
+    <!-- PESTAÑA 2: INFORME / RECETA MÉDICA OBSTÉTRICA -->
+    <div class="tab-pane fade" id="tab-inf" role="tabpanel">
+      <div class="ui-card no-print">
+        <div class="ui-card-header">
+          <h2 class="ui-card-title"><i class="bi bi-file-earmark-text-fill"></i> Redactor de Informe / Receta</h2>
+          <span class="badge bg-teal-subtle text-teal" style="background:#ccfbf1; color:#0f766e;">Exportación Local</span>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label">Plantilla Obstétrica</label>
+            <select id="inf-plantilla" class="form-select" onchange="adaptarCamposInforme()">
+              <option value="GENERAL">Consulta General / Receta</option>
+              <option value="PRENATAL">Control Prenatal</option>
+              <option value="GINECO">Ginecología / Papanicolaou</option>
+              <option value="PLANIFICACION">Planificación Familiar</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label">Profesional Tratante</label>
+            <input type="text" id="inf-profesional" class="form-control" placeholder="Lic. Obstetra">
+          </div>
+        </div>
+
+        <!-- Campos Específicos Control Prenatal -->
+        <div id="box-prenatal" class="row g-2 mb-3 p-2 rounded bg-light border" style="display:none;">
+          <div class="col-4">
+            <label class="form-label">F.U.R.</label>
+            <input type="date" id="inf-fur" class="form-control form-control-sm" onchange="calcularEdadGestacional()">
+          </div>
+          <div class="col-4">
+            <label class="form-label">E.G. (Semanas)</label>
+            <input type="text" id="inf-eg" class="form-control form-control-sm" placeholder="Ej. 24.3 sem">
+          </div>
+          <div class="col-4">
+            <label class="form-label">F.P.P.</label>
+            <input type="date" id="inf-fpp" class="form-control form-control-sm">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Alt. Uterina (cm)</label>
+            <input type="text" id="inf-au" class="form-control form-control-sm" placeholder="Ej. 22 cm">
+          </div>
+          <div class="col-6">
+            <label class="form-label">L.C.F. (lpm)</label>
+            <input type="text" id="inf-lcf" class="form-control form-control-sm" placeholder="Ej. 142 lpm">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Diagnóstico Clínico</label>
+          <textarea id="inf-diagnostico" class="form-control" rows="2" placeholder="Describir evaluación y diagnóstico..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Tratamiento / Indicaciones Farmacológicas</label>
+          <textarea id="inf-tratamiento" class="form-control" rows="3" placeholder="Medicamentos, dosis, frecuencia y cuidados..."></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary flex-fill py-2 fw-bold" style="background:var(--primary); border:none; border-radius:8px;" onclick="imprimirInformeLocal()">
+            <i class="bi bi-printer-fill me-1"></i> Imprimir / Guardar PDF
+          </button>
+          <button class="btn btn-success flex-fill py-2 fw-bold" style="border:none; border-radius:8px;" onclick="enviarInformeWhatsApp()">
+            <i class="bi bi-whatsapp me-1"></i> Enviar por WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- Hoja de Impresión A4 / A5 (Oculta en pantalla, visible al imprimir) -->
+      <div id="area-impresion" class="border p-4 rounded bg-white shadow-sm">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+          <div>
+            <h5 id="print-clinica-nombre" class="fw-bold text-dark mb-0">CONSULTORIO OBSTÉTRICO</h5>
+            <div id="print-profesional" class="small text-muted">Obstetricia & Salud Integral de la Mujer</div>
+          </div>
+          <div class="text-end">
+            <div class="badge bg-dark text-white p-2">INFORME / RECETA</div>
+            <div id="print-fecha" class="small text-muted mt-1"></div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3 pb-2 border-bottom small">
+          <div class="col-8"><strong>Paciente:</strong> <span id="print-paciente"></span></div>
+          <div class="col-4 text-end"><strong>Doc:</strong> <span id="print-dni"></span></div>
+          <div class="col-4"><strong>Edad:</strong> <span id="print-edad"></span></div>
+          <div class="col-8 text-end"><strong>Servicio:</strong> <span id="print-servicio"></span></div>
+        </div>
+
+        <div id="print-bloque-prenatal" class="row g-2 mb-3 pb-2 border-bottom small" style="display:none;">
+          <div class="col-4"><strong>FUR:</strong> <span id="print-fur">-</span></div>
+          <div class="col-4"><strong>EG:</strong> <span id="print-eg">-</span></div>
+          <div class="col-4"><strong>FPP:</strong> <span id="print-fpp">-</span></div>
+          <div class="col-6"><strong>Altura Uterina:</strong> <span id="print-au">-</span></div>
+          <div class="col-6"><strong>LCF:</strong> <span id="print-lcf">-</span></div>
+        </div>
+
+        <div class="mb-3">
+          <h6 class="fw-bold text-dark mb-1" style="font-size:0.85rem">DIAGNÓSTICO / EVALUACIÓN:</h6>
+          <div id="print-diagnostico" class="p-2 bg-light rounded" style="font-size:0.82rem; min-height:45px;"></div>
+        </div>
+
+        <div class="mb-4">
+          <h6 class="fw-bold text-dark mb-1" style="font-size:0.85rem">PLAN DE TRATAMIENTO & RECETA MÉDICA:</h6>
+          <div id="print-tratamiento" class="p-2 bg-light rounded" style="font-size:0.82rem; min-height:90px; white-space: pre-line;"></div>
+        </div>
+
+        <div class="row pt-4 mt-5 text-center small">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <div class="border-top border-dark pt-1 fw-bold" id="print-firma-profesional">Lic. Obstetra</div>
+            <div class="text-muted" style="font-size:0.7rem;">Sello y Firma</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 3: HISTORIAL CLÍNICO -->
     <div class="tab-pane fade" id="tab-his" role="tabpanel">
       <div class="ui-card">
         <div class="ui-card-header">
-          <h2 class="ui-card-title"><i class="bi bi-search-heart"></i> Historial Clínico Rápido</h2>
+          <h2 class="ui-card-title"><i class="bi bi-search-heart"></i> Historial Clínico</h2>
         </div>
         <div class="input-group">
-          <input type="tel" id="buscardni" class="form-control" placeholder="Ingrese DNI del paciente...">
-          <button class="btn btn-primary px-3 fw-bold" style="background:var(--primary); border:none;" onclick="ejecutarBusqueda()">
+          <input type="text" id="buscardni" class="form-control" placeholder="DNI o Documento...">
+          <button class="btn btn-primary px-3 fw-bold" style="background:var(--primary); border:none;" onclick="ejecutarBusquedaHistorial()">
             <i class="bi bi-search"></i> Buscar
           </button>
         </div>
@@ -673,27 +811,27 @@
       <div id="historial-resultados"></div>
     </div>
 
-    <!-- PESTAÑA 3: SEGUIMIENTO -->
+    <!-- PESTAÑA 4: AGENDA / CRM DE SEGUIMIENTO -->
     <div class="tab-pane fade" id="tab-seg" role="tabpanel">
       <div class="ui-card">
         <div class="ui-card-header">
-          <h2 class="ui-card-title"><i class="bi bi-bell-fill"></i> Recordatorios y Controles</h2>
-          <button class="btn btn-sm btn-outline-secondary" onclick="cargarMóduloSeguimiento()">
+          <h2 class="ui-card-title"><i class="bi bi-bell-fill"></i> Recordatorios & Controles</h2>
+          <button class="btn btn-sm btn-outline-secondary" onclick="cargarModuloSeguimiento()">
             <i class="bi bi-arrow-clockwise"></i> Refrescar
           </button>
         </div>
 
         <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge bg-danger">Atrasados</span>
-          <span class="text-muted small fw-bold">Por contactar con prioridad</span>
+          <span class="text-muted small fw-bold">Por contactar prioritariamente</span>
         </div>
-        <div id="seg-atrasados" class="mb-4"></div>
+        <div id="seg-atrasados" class="mb-3"></div>
 
         <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge bg-warning text-dark">Hoy y Mañana</span>
           <span class="text-muted small fw-bold">Controles inmediatos</span>
         </div>
-        <div id="seg-hoy-manana" class="mb-4"></div>
+        <div id="seg-hoy-manana" class="mb-3"></div>
 
         <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge bg-success">Próximos 7 Días</span>
@@ -703,19 +841,19 @@
       </div>
     </div>
 
-    <!-- PESTAÑA 4: METAS -->
+    <!-- PESTAÑA 5: METAS & ADMINISTRACIÓN -->
     <div class="tab-pane fade" id="tab-metas" role="tabpanel">
       
-      <!-- PIN Lock -->
-      <div id="metas-lock" class="ui-card text-center py-5">
-        <div style="font-size:36px; color:var(--text-muted);"><i class="bi bi-shield-lock-fill"></i></div>
+      <!-- Barrera PIN (POST Seguro) -->
+      <div id="metas-lock" class="ui-card text-center py-4">
+        <div style="font-size:32px; color:var(--text-muted);"><i class="bi bi-shield-lock-fill"></i></div>
         <h6 class="fw-bold mt-2 mb-1">Módulo Administrativo</h6>
-        <p class="text-muted small mb-3">Ingrese su PIN de 4 dígitos para ver métricas y metas.</p>
+        <p class="text-muted small mb-2">Ingrese PIN de 4 dígitos para consultar métricas.</p>
         <input type="password" id="metas-pin" class="pin-input form-control" maxlength="4" placeholder="••••" oninput="evaluarPinMaestro()">
         <p id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;"><i class="bi bi-exclamation-triangle-fill"></i> PIN Incorrecto</p>
       </div>
 
-      <!-- Contenido Metas -->
+      <!-- Contenido Métricas y Tareas -->
       <div id="metas-content" style="display:none">
         <div class="ui-card">
           <div class="ui-card-header text-center justify-content-center">
@@ -724,27 +862,27 @@
 
           <div class="circle-progress-wrapper">
             <svg class="circle-progress-svg">
-              <circle class="circle-bg" cx="85" cy="85" r="75"/>
-              <circle id="progreso-circulo" class="circle-fill" cx="85" cy="85" r="75"/>
+              <circle class="circle-bg" cx="80" cy="80" r="70"/>
+              <circle id="progreso-circulo" class="circle-fill" cx="80" cy="80" r="70"/>
             </svg>
             <div id="progreso-texto" class="circle-percentage">0%</div>
           </div>
 
-          <div id="mensaje-motivador" class="p-3 rounded-3 text-center mb-3" style="border-left: 5px solid #ccc; background: #f8fafc;">
+          <div id="mensaje-motivador" class="p-2 rounded-3 text-center mb-3" style="border-left: 4px solid #ccc; background: #f8fafc;">
             <p id="txt-motivador" class="fw-bold mb-0 small"></p>
           </div>
 
           <div class="row g-2">
             <div class="col-6">
-              <div class="bg-light p-3 rounded-3 border text-center">
+              <div class="bg-light p-2 rounded border text-center">
                 <span class="text-muted small fw-bold">Meta Semanal</span>
-                <div id="val-meta" class="h5 fw-bold text-dark mt-1 mb-0">S/ 0.00</div>
+                <div id="val-meta" class="h6 fw-bold text-dark mt-1 mb-0">S/ 0.00</div>
               </div>
             </div>
             <div class="col-6">
-              <div class="bg-light p-3 rounded-3 border text-center">
+              <div class="bg-light p-2 rounded border text-center">
                 <span class="text-muted small fw-bold">Recaudado</span>
-                <div id="val-logrado" class="h5 fw-bold text-teal mt-1 mb-0" style="color:var(--accent);">S/ 0.00</div>
+                <div id="val-logrado" class="h6 fw-bold text-teal mt-1 mb-0" style="color:var(--accent);">S/ 0.00</div>
               </div>
             </div>
           </div>
@@ -755,8 +893,8 @@
             <h2 class="ui-card-title"><i class="bi bi-check2-square"></i> Tareas y Objetivos Semanales</h2>
           </div>
           <div id="lista-tareas" class="mb-3"></div>
-          <button class="btn btn-primary w-100 py-3 fw-bold" style="background:var(--accent); border:none; border-radius:10px;" onclick="enviarActualizacionTareas()">
-            <i class="bi bi-cloud-arrow-up-fill"></i> GUARDAR ESTADO DE TAREAS
+          <button class="btn btn-primary w-100 py-2 fw-bold" style="background:var(--accent); border:none; border-radius:8px;" onclick="enviarActualizacionTareas()">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> GUARDAR ESTADO DE TAREAS
           </button>
         </div>
       </div>
@@ -768,166 +906,149 @@
 
 <!-- Barra Inferior de Acción -->
 <div id="panel-inferior">
-  <button onclick="enviarDatos()" class="btn btn-guardar w-100">
+  <button onclick="enviarAdmision()" class="btn btn-guardar w-100">
     <i class="bi bi-check-circle-fill me-1"></i> GUARDAR REGISTRO DE ADMISIÓN
   </button>
 </div>
 
-<!-- Scripts -->
+<!-- Bootstrap 5.3 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
+  // CONFIGURACIÓN CENTRALIZADA MULTI-TENANT
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   const ID_CLINICA = params.get('id');
 
+  const CACHE_KEY_CONFIG = `dm_config_${ID_CLINICA}`;
+  const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 Horas
+
   let configLocal = [], carrito = [], tareasLocales = [];
+  let ultimoPacienteAtendido = null;
 
+  // INICIALIZACIÓN CON CACHÉ DE 24 HORAS
   window.onload = async () => {
-    if(!ID_CLINICA) return alert("Falta ID de Clínica en la URL.");
-    mostrarLoading(true);
-    try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
-      const respuestaBackend = await r.json();
-      
-      if(respuestaBackend.clinicaNombre && respuestaBackend.clinicaNombre.trim() !== "") {
-         document.getElementById('web-clinica-nombre').innerHTML = `DM DYNAMIC ANALYTICS potenciando a <strong>${respuestaBackend.clinicaNombre}</strong>`;
-      } else {
-         document.getElementById('web-clinica-nombre').innerText = "";
-      }
-
-      if(respuestaBackend.clinicaLogo && respuestaBackend.clinicaLogo.trim() !== "") {
-         document.getElementById('web-clinica-logo').src = respuestaBackend.clinicaLogo;
-         document.getElementById('web-clinica-logo').style.display = 'block';
-         document.getElementById('web-brand-divider').style.display = 'block';
-      } else {
-         document.getElementById('web-clinica-logo').style.display = 'none';
-         document.getElementById('web-brand-divider').style.display = 'none';
-      }
-      
-      configLocal = respuestaBackend.servicios;
-      dibujarCategorias();
-    } catch(e) { alert("Error de conexión con el servidor"); }
-    mostrarLoading(false);
+    if (!ID_CLINICA) return alert("Parámetro ?id= no detectado en la URL.");
+    adaptarMascaraDocumento();
+    await cargarConfiguracionInicial(false);
   };
 
+  async function cargarConfiguracionInicial(forzarSync) {
+    mostrarLoading(true);
+    try {
+      const cacheGuardado = localStorage.getItem(CACHE_KEY_CONFIG);
+      const cacheTime = localStorage.getItem(`${CACHE_KEY_CONFIG}_time`);
+      const esValido = cacheGuardado && cacheTime && (Date.now() - parseInt(cacheTime) < CACHE_TTL);
+
+      if (esValido && !forzarSync) {
+        procesarConfiguracion(JSON.parse(cacheGuardado));
+        mostrarLoading(false);
+        return;
+      }
+
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      const data = await r.json();
+
+      if (data && !data.error) {
+        localStorage.setItem(CACHE_KEY_CONFIG, JSON.stringify(data));
+        localStorage.setItem(`${CACHE_KEY_CONFIG}_time`, Date.now().toString());
+        procesarConfiguracion(data);
+      }
+    } catch(e) {
+      alert("Error al sincronizar datos con el servidor central.");
+    }
+    mostrarLoading(false);
+  }
+
+  function forzarSincronizacionCatalogo() {
+    cargarConfiguracionInicial(true);
+  }
+
+  function procesarConfiguracion(data) {
+    if (data.clinicaNombre && data.clinicaNombre.trim() !== "") {
+      document.getElementById('web-clinica-nombre').innerHTML = `DM ANALYTICS potenciando a <strong>${data.clinicaNombre}</strong>`;
+      document.getElementById('print-clinica-nombre').innerText = data.clinicaNombre.toUpperCase();
+    }
+    if (data.clinicaLogo && data.clinicaLogo.trim() !== "") {
+      document.getElementById('web-clinica-logo').src = data.clinicaLogo;
+      document.getElementById('web-clinica-logo').style.display = 'block';
+      document.getElementById('web-brand-divider').style.display = 'block';
+    }
+    configLocal = data.servicios || [];
+    dibujarCategorias();
+  }
+
   function mostrarLoading(s) { document.getElementById('spinner-overlay').style.display = s ? 'flex' : 'none'; }
-  function ocultarBotonGuardar() { document.getElementById('panel-inferior').style.display = 'none'; }
-  
+
+  // GESTIÓN DE VISIBILIDAD DE BARRA INFERIOR
   document.querySelectorAll('.nav-link').forEach(t => {
     t.addEventListener('click', (e) => { 
-      const textoTab = e.currentTarget.innerText.toUpperCase();
-      if(!textoTab.includes("METAS") && !textoTab.includes("AGENDA")) {
-         document.getElementById('panel-inferior').style.display = 'block'; 
-      } else {
-         document.getElementById('panel-inferior').style.display = 'none';
-      }
+      const targetId = e.currentTarget.getAttribute('data-bs-target');
+      document.getElementById('panel-inferior').style.display = (targetId === '#tab-adm') ? 'block' : 'none';
     });
   });
 
-  async function buscarPacienteDNI() {
-    const d = document.getElementById('dni').value.trim();
-    if(!d) return;
+  // SELECTOR DINÁMICO DE DOCUMENTOS
+  function adaptarMascaraDocumento() {
+    const tipo = document.getElementById('tipoDoc').value;
+    const input = document.getElementById('dni');
+    input.value = "";
+    
+    if (tipo === "DNI") {
+      input.maxLength = 8;
+      input.inputMode = "numeric";
+      input.placeholder = "8 dígitos numéricos";
+    } else if (tipo === "CE") {
+      input.maxLength = 9;
+      input.inputMode = "text";
+      input.placeholder = "9 caracteres";
+    } else if (tipo === "PASAPORTE") {
+      input.maxLength = 12;
+      input.inputMode = "text";
+      input.placeholder = "Hasta 12 caracteres";
+    } else if (tipo === "CPP_PTP") {
+      input.maxLength = 9;
+      input.inputMode = "numeric";
+      input.placeholder = "9 dígitos";
+    }
+  }
+
+  // BÚSQUEDA DE PACIENTES
+  async function buscarPacienteDocumento() {
+    const numDoc = document.getElementById('dni').value.trim();
+    if (!numDoc) return;
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarPaciente&dni=${d}`);
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarPaciente&dni=${encodeURIComponent(numDoc)}`);
       const res = await r.json();
-      if(!res.error && res.encontrado) {
+      if (!res.error && res.encontrado) {
         document.getElementById('nombrePac').value = res.data.nombre || "";
         document.getElementById('apePat').value = res.data.apePat || "";
         document.getElementById('apeMat').value = res.data.apeMat || "";
         document.getElementById('celular').value = res.data.celular || "";
+        document.getElementById('edad').value = res.data.edad || "";
         
         if (res.data.distrito) {
-           let selectDistrito = document.getElementById('distrito');
-           let options = Array.from(selectDistrito.options);
-           let match = options.find(opt => opt.value.toLowerCase() === res.data.distrito.toLowerCase());
-           if(match) selectDistrito.value = match.value;
+          let selectDist = document.getElementById('distrito');
+          let opt = Array.from(selectDist.options).find(o => o.value.toLowerCase() === res.data.distrito.toLowerCase());
+          if (opt) selectDist.value = opt.value;
         }
-
-        ['nombrePac', 'apePat', 'apeMat'].forEach(id => document.getElementById(id).readOnly = true);
       } else {
-        ['nombrePac', 'apePat', 'apeMat', 'celular'].forEach(id => {
-          document.getElementById(id).value = "";
-          document.getElementById(id).readOnly = false;
-        });
-        document.getElementById('distrito').value = "";
+        ['nombrePac', 'apePat', 'apeMat', 'celular', 'edad'].forEach(id => document.getElementById(id).value = "");
       }
-    } catch(e) { alert("Error buscando paciente"); }
-    mostrarLoading(false);
-  }
-
-  async function evaluarPinMaestro() {
-    const pin = document.getElementById('metas-pin').value;
-    if(pin.length === 4) {
-      mostrarLoading(true);
-      try {
-        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas&pin=${pin}`);
-        const res = await r.json();
-        if(res.error) {
-          document.getElementById('pin-error').style.display = 'block';
-          document.getElementById('metas-pin').value = "";
-        } else {
-          document.getElementById('metas-lock').style.display = 'none';
-          document.getElementById('metas-content').style.display = 'block';
-          dibujarMetas(res);
-        }
-      } catch(e) { alert("Error de validación de PIN"); }
-      mostrarLoading(false);
+    } catch(e) {
+      alert("Error al consultar el padrón de pacientes.");
     }
-  }
-
-  function dibujarMetas(res) {
-    const f = res.metaFinanciera;
-    document.getElementById('val-meta').innerText = `S/ ${f.meta.toFixed(2)}`;
-    document.getElementById('val-logrado').innerText = `S/ ${f.logrado.toFixed(2)}`;
-    document.getElementById('progreso-texto').innerText = `${f.porcentaje}%`;
-
-    const circle = document.getElementById('progreso-circulo');
-    const pct = Math.min(f.porcentaje, 100);
-    circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65; 
-
-    let color = "--color-0-30", msg = "¡Buen arranque! Cada paciente cuenta para el objetivo semanal.";
-    if(f.porcentaje > 30) { color = "--color-31-60"; msg = "¡Buen ritmo de atención! Sigamos sumando."; }
-    if(f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Excelente desempeño! Muy cerca de la meta semanal."; }
-    if(f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Casi en la cima! Último esfuerzo."; }
-    if(f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡META SEMANAL SUPERADA! Extraordinario trabajo."; }
-
-    circle.style.stroke = `var(${color})`;
-    document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
-    document.getElementById('txt-motivador').innerText = msg;
-    document.getElementById('txt-motivador').style.color = `var(${color})`;
-
-    tareasLocales = res.objetivosTareas;
-    const cont = document.getElementById('lista-tareas');
-    cont.innerHTML = tareasLocales.map((t, i) => `
-      <div class="task-item">
-        <input type="checkbox" id="chk-task-${i}" ${t.completado ? 'checked' : ''} onchange="actualizarEstadoTarea(${i}, this.checked)">
-        <label for="chk-task-${i}" class="m-0 ${t.completado ? 'task-completed' : 'fw-semibold text-dark'}">${t.descripcion}</label>
-      </div>
-    `).join('');
-  }
-
-  function actualizarEstadoTarea(index, completado) { tareasLocales[index].completado = completado; }
-
-  async function enviarActualizacionTareas() {
-    mostrarLoading(true);
-    try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, { method: 'POST', body: JSON.stringify(tareasLocales) });
-      const res = await r.json();
-      if(res.resultado === "OK") {
-        document.getElementById('alert-title').innerText = "TAREAS ACTUALIZADAS";
-        document.getElementById('custom-alert').style.display = 'block';
-      }
-    } catch(e) { alert("Error actualizando tareas"); }
     mostrarLoading(false);
   }
 
+  // CATÁLOGO Y CARRITO (POS)
   function dibujarCategorias() {
     const cats = [...new Set(configLocal.map(i => i.categoria))];
     document.getElementById('container-cats').innerHTML = cats.map((c, idx) => `
       <button class="btn btn-cat ${idx === 0 ? 'active-cat' : ''}" onclick="seleccionarCategoria(this, '${c}')">${c}</button>
     `).join('');
-    if(cats.length > 0) seleccionarCategoria(document.querySelector('.btn-cat'), cats[0]);
+    if (cats.length > 0) seleccionarCategoria(document.querySelector('.btn-cat'), cats[0]);
   }
 
   function seleccionarCategoria(btn, c) {
@@ -944,9 +1065,11 @@
       </button>
     `).join('');
   }
-  
-  function agregarAlCarrito(n) {
-    carrito.push({...configLocal.find(x => x.nombre === n), idU: Date.now()});
+
+  function agregarAlCarrito(nombre) {
+    const item = configLocal.find(x => x.nombre === nombre);
+    if (!item) return;
+    carrito.push({ ...item, idU: Date.now() + Math.random().toString(36).substring(2, 5) });
     actualizarCarrito();
   }
 
@@ -958,191 +1081,390 @@
   function toggleDescuento() {
     const box = document.getElementById('box-desc');
     box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'flex' : 'none';
-    if(box.style.display === 'none') { document.getElementById('val-desc').value = 0; actualizarCarrito(); }
+    if (box.style.display === 'none') {
+      document.getElementById('val-desc').value = 0;
+      actualizarCarrito();
+    }
   }
 
   function actualizarCarrito() {
-    let t = 0;
-    document.getElementById('cart-list').innerHTML = carrito.map(i => { 
-      t += parseFloat(i.pvp); 
+    let subtotal = 0;
+    document.getElementById('cart-list').innerHTML = carrito.map(i => {
+      subtotal += parseFloat(i.pvp) || 0;
       return `
         <div class="cart-row">
           <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="fw-bold text-dark" style="font-size:0.8rem">${i.nombre}</span>
+            <span class="fw-bold text-dark" style="font-size:0.78rem">${i.nombre}</span>
             <div class="d-flex align-items-center gap-2">
               <span class="fw-bold text-dark">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
-              <button type="button" class="btn-remove" onclick="eliminarDelCarrito(${i.idU})" title="Eliminar servicio">
+              <button type="button" class="btn-remove" onclick="eliminarDelCarrito('${i.idU}')">
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </div>
           </div>
           <div class="bg-light p-2 rounded-2 border">
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px;">
-              <i class="bi bi-clock-history"></i> Programar próximo control (Opcional):
+            <div style="font-size:0.68rem; color:var(--text-muted); font-weight:600; margin-bottom:3px;">
+              <i class="bi bi-clock-history"></i> Programar control (Opcional):
             </div>
             <div class="d-flex gap-2 align-items-center">
-              <span style="font-size:0.75rem; font-weight:600;">En:</span>
-              <input type="number" id="seg-num-${i.idU}" class="form-control form-control-sm" style="width:70px" placeholder="15" min="1">
-              <select id="seg-tipo-${i.idU}" class="form-select form-select-sm" style="width:110px">
+              <span style="font-size:0.72rem; font-weight:600;">En:</span>
+              <input type="number" id="seg-num-${i.idU}" class="form-control form-control-sm" style="width:65px" placeholder="15" min="1">
+              <select id="seg-tipo-${i.idU}" class="form-select form-select-sm" style="width:105px">
                 <option value="d">Días</option>
                 <option value="s">Semanas</option>
                 <option value="m">Meses</option>
               </select>
             </div>
           </div>
-        </div>`; 
+        </div>`;
     }).join('');
-    
+
     let desc = parseFloat(document.getElementById('val-desc').value) || 0;
-    let finalTotal = t - desc;
-    if(finalTotal < 0) finalTotal = 0;
-    
+    let finalTotal = Math.max(0, subtotal - desc);
+
     if (desc > 0) {
       document.getElementById('cart-total').innerHTML = `
-        <span class="text-muted small">Subtotal: S/ ${t.toFixed(2)} | Descuento: -S/ ${desc.toFixed(2)}</span><br>
-        <span class="text-success fw-bold" style="font-size:1.05rem;">Total Final: S/ ${finalTotal.toFixed(2)}</span>
+        <span class="text-muted small">Subtotal: S/ ${subtotal.toFixed(2)} | Desc: -S/ ${desc.toFixed(2)}</span><br>
+        <span class="text-success fw-bold" style="font-size:0.95rem;">Total Final: S/ ${finalTotal.toFixed(2)}</span>
       `;
     } else {
-      document.getElementById('cart-total').innerText = `Total a Pagar: S/ ${finalTotal.toFixed(2)}`;
+      document.getElementById('cart-total').innerText = `Total: S/ ${finalTotal.toFixed(2)}`;
     }
   }
 
-  async function enviarDatos() {
-    const dni = document.getElementById('dni').value.trim();
-    if(!dni) return alert("Por favor, ingrese el DNI del paciente.");
-    if(carrito.length === 0) return alert("Debe seleccionar al menos un servicio.");
-    
+  // GUARDADO DE ADMISIÓN
+  async function enviarAdmision() {
+    const numDoc = document.getElementById('dni').value.trim();
+    if (!numDoc) return alert("Por favor, ingrese el documento de identidad.");
+    if (carrito.length === 0) return alert("Debe seleccionar al menos un servicio del catálogo.");
+
     mostrarLoading(true);
 
     carrito.forEach(item => {
-       const numInput = document.getElementById(`seg-num-${item.idU}`).value;
-       const tipoIntervalo = document.getElementById(`seg-tipo-${item.idU}`).value;
-       if (numInput && parseInt(numInput) > 0) {
-         let fechaFutura = new Date();
-         const cantidad = parseInt(numInput);
-         if (tipoIntervalo === 'd') fechaFutura.setDate(fechaFutura.getDate() + cantidad);
-         else if (tipoIntervalo === 's') fechaFutura.setDate(fechaFutura.getDate() + (cantidad * 7));
-         else if (tipoIntervalo === 'm') fechaFutura.setMonth(fechaFutura.getMonth() + cantidad);
-         
-         const dia = String(fechaFutura.getDate()).padStart(2, '0');
-         const mes = String(fechaFutura.getMonth() + 1).padStart(2, '0');
-         item.fechaSeguimiento = `${dia}/${mes}/${fechaFutura.getFullYear()}`;
-       }
+      const numInput = document.getElementById(`seg-num-${item.idU}`)?.value;
+      const tipoIntervalo = document.getElementById(`seg-tipo-${item.idU}`)?.value;
+      if (numInput && parseInt(numInput) > 0) {
+        let f = new Date();
+        const cant = parseInt(numInput);
+        if (tipoIntervalo === 'd') f.setDate(f.getDate() + cant);
+        else if (tipoIntervalo === 's') f.setDate(f.getDate() + (cant * 7));
+        else if (tipoIntervalo === 'm') f.setMonth(f.getMonth() + cant);
+
+        const dia = String(f.getDate()).padStart(2, '0');
+        const mes = String(f.getMonth() + 1).padStart(2, '0');
+        item.fechaSeguimiento = `${dia}/${mes}/${f.getFullYear()}`;
+      }
     });
 
-    const p = { 
-      dni, 
-      nombre: document.getElementById('nombrePac').value, 
-      apellidoP: document.getElementById('apePat').value, 
-      apellidoM: document.getElementById('apeMat').value, 
-      distrito: document.getElementById('distrito').value, 
-      edad: document.getElementById('edad').value, 
-      celular: document.getElementById('celular').value, 
-      tipoPago: document.getElementById('tipoPago').value, 
-      origen: document.getElementById('origen').value, 
-      descuento: document.getElementById('val-desc').value, 
-      carrito 
+    const payload = {
+      tipoDoc: document.getElementById('tipoDoc').value,
+      numDoc: numDoc,
+      nombre: document.getElementById('nombrePac').value.trim(),
+      apellidoP: document.getElementById('apePat').value.trim(),
+      apellidoM: document.getElementById('apeMat').value.trim(),
+      distrito: document.getElementById('distrito').value,
+      edad: document.getElementById('edad').value,
+      celular: document.getElementById('celular').value.trim(),
+      tipoPago: document.getElementById('tipoPago').value,
+      origen: document.getElementById('origen').value,
+      descuento: document.getElementById('val-desc').value || 0,
+      carrito: carrito
     };
 
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}`, { method: 'POST', body: JSON.stringify(p) });
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=registrarAdmision`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
       const res = await r.json();
-      if(res.resultado === "OK") document.getElementById('custom-alert').style.display = 'block';
-    } catch(e) { alert("Error al guardar el registro en base de datos."); }
+      if (res.resultado === "OK") {
+        ultimoPacienteAtendido = { ...payload, primerServicio: carrito[0]?.nombre || "Consulta Obstétrica" };
+        document.getElementById('custom-alert').style.display = 'block';
+      } else {
+        alert("Error al procesar la atención: " + (res.mensaje || ""));
+      }
+    } catch(e) {
+      alert("Error de conexión al guardar el registro.");
+    }
     mostrarLoading(false);
   }
 
-  async function ejecutarBusqueda() {
-    const d = document.getElementById('buscardni').value.trim();
-    if(!d) return;
+  function cerrarAlerta() {
+    document.getElementById('custom-alert').style.display = 'none';
+    limpiarFormularioAdmision();
+  }
+
+  function limpiarFormularioAdmision() {
+    ['dni', 'nombrePac', 'apePat', 'apeMat', 'edad', 'celular'].forEach(id => document.getElementById(id).value = "");
+    document.getElementById('distrito').value = "";
+    document.getElementById('val-desc').value = 0;
+    carrito = [];
+    actualizarCarrito();
+  }
+
+  // PUENTE AUTOMÁTICO ADMISIÓN -> INFORME
+  function prepararInformeDesdeAdmision() {
+    document.getElementById('custom-alert').style.display = 'none';
+    const triggerTab = new bootstrap.Tab(document.getElementById('informe-tab'));
+    triggerTab.show();
+
+    if (ultimoPacienteAtendido) {
+      document.getElementById('print-paciente').innerText = `${ultimoPacienteAtendido.nombre} ${ultimoPacienteAtendido.apellidoP} ${ultimoPacienteAtendido.apellidoM}`.trim();
+      document.getElementById('print-dni').innerText = `${ultimoPacienteAtendido.tipoDoc}: ${ultimoPacienteAtendido.numDoc}`;
+      document.getElementById('print-edad').innerText = ultimoPacienteAtendido.edad ? `${ultimoPacienteAtendido.edad} años` : '-';
+      document.getElementById('print-servicio').innerText = ultimoPacienteAtendido.primerServicio;
+      document.getElementById('print-fecha').innerText = new Date().toLocaleDateString('es-PE');
+    }
+    limpiarFormularioAdmision();
+  }
+
+  // MÓDULO DE INFORMES CLÍNICOS Y RECETAS
+  function adaptarCamposInforme() {
+    const tipo = document.getElementById('inf-plantilla').value;
+    document.getElementById('box-prenatal').style.display = (tipo === 'PRENATAL') ? 'flex' : 'none';
+    document.getElementById('print-bloque-prenatal').style.display = (tipo === 'PRENATAL') ? 'flex' : 'none';
+  }
+
+  function calcularEdadGestacional() {
+    const furVal = document.getElementById('inf-fur').value;
+    if (!furVal) return;
+    const fur = new Date(furVal);
+    const hoy = new Date();
+    const diffDias = Math.floor((hoy - fur) / (1000 * 60 * 60 * 24));
+    
+    if (diffDias > 0) {
+      const sem = Math.floor(diffDias / 7);
+      const dias = diffDias % 7;
+      document.getElementById('inf-eg').value = `${sem}.${dias} sem`;
+      
+      // FPP Regla Naegele (+7 días, -3 meses, +1 año)
+      let fpp = new Date(fur);
+      fpp.setDate(fpp.getDate() + 7);
+      fpp.setMonth(fpp.getMonth() + 9);
+      document.getElementById('inf-fpp').value = fpp.toISOString().split('T')[0];
+    }
+  }
+
+  function imprimirInformeLocal() {
+    const diag = document.getElementById('inf-diagnostico').value.trim();
+    const trat = document.getElementById('inf-tratamiento').value.trim();
+    const prof = document.getElementById('inf-profesional').value.trim() || "Lic. Obstetra";
+
+    if (!diag && !trat) return alert("Por favor, ingrese el diagnóstico o las indicaciones del tratamiento.");
+
+    document.getElementById('print-diagnostico').innerText = diag || "Sin observaciones específicas.";
+    document.getElementById('print-tratamiento').innerText = trat || "Sin prescripción farmacológica.";
+    document.getElementById('print-profesional').innerText = prof;
+    document.getElementById('print-firma-profesional').innerText = prof;
+
+    if (document.getElementById('inf-plantilla').value === 'PRENATAL') {
+      document.getElementById('print-fur').innerText = document.getElementById('inf-fur').value || "-";
+      document.getElementById('print-eg').innerText = document.getElementById('inf-eg').value || "-";
+      document.getElementById('print-fpp').innerText = document.getElementById('inf-fpp').value || "-";
+      document.getElementById('print-au').innerText = document.getElementById('inf-au').value || "-";
+      document.getElementById('print-lcf').innerText = document.getElementById('inf-lcf').value || "-";
+    }
+
+    window.print();
+  }
+
+  function enviarInformeWhatsApp() {
+    if (!ultimoPacienteAtendido || !ultimoPacienteAtendido.celular) {
+      return alert("No hay número de teléfono asociado para enviar el informe por WhatsApp.");
+    }
+    const diag = document.getElementById('inf-diagnostico').value.trim();
+    const trat = document.getElementById('inf-tratamiento').value.trim();
+    const prof = document.getElementById('inf-profesional').value.trim() || "Lic. Obstetra";
+
+    let msg = `*RESUMEN DE ATENCIÓN OBSTÉTRICA*\n`;
+    msg += `*Paciente:* ${ultimoPacienteAtendido.nombre} ${ultimoPacienteAtendido.apellidoP}\n`;
+    msg += `*Fecha:* ${new Date().toLocaleDateString('es-PE')}\n\n`;
+    if (diag) msg += `*Diagnóstico:* ${diag}\n\n`;
+    if (trat) msg += `*Tratamiento & Indicaciones:*\n${trat}\n\n`;
+    msg += `_Atendido por: ${prof}_`;
+
+    let nro = ultimoPacienteAtendido.celular.replace(/\D/g, '');
+    if (nro.length === 9 && nro.startsWith('9')) nro = '51' + nro;
+    window.open(`https://wa.me/${nro}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  // HISTORIAL CLÍNICO RÁPIDO
+  async function ejecutarBusquedaHistorial() {
+    const doc = document.getElementById('buscardni').value.trim();
+    if (!doc) return;
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${d}`);
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${encodeURIComponent(doc)}`);
       const res = await r.json();
-      const c = document.getElementById('historial-resultados');
-      if(!res || res.length === 0) {
-        c.innerHTML = "<p class='text-center small py-4 text-muted'>Sin atenciones previas registradas para este DNI.</p>";
+      const cont = document.getElementById('historial-resultados');
+      if (!res || res.length === 0) {
+        cont.innerHTML = "<p class='text-center small py-3 text-muted'>Sin atenciones registradas para este documento.</p>";
       } else {
-        c.innerHTML = res.map(h => `
+        cont.innerHTML = res.map(h => `
           <div class='ui-card border-start border-4 border-primary mb-2'>
             <div class='d-flex justify-content-between align-items-center'>
               <span class='badge bg-light text-primary border'>${h.fecha}</span>
               <span class='small fw-bold text-muted'>${h.servicio}</span>
             </div>
             <div class='fw-bold text-dark mt-2'>${h.producto}</div>
+            ${h.diagnostico ? `<div class='small text-muted mt-1'><b>Dx:</b> ${h.diagnostico}</div>` : ''}
           </div>
         `).join('');
       }
-    } catch(e) { alert("Error al consultar el historial."); }
+    } catch(e) {
+      alert("Error al recuperar el historial.");
+    }
     mostrarLoading(false);
   }
 
-  async function cargarMóduloSeguimiento() {
+  // CRM SEGUIMIENTO
+  async function cargarModuloSeguimiento() {
     mostrarLoading(true);
     try {
       const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerSeguimiento`);
       const data = await r.json();
-      
+
       let htmlAtrasados = "", htmlHoyManana = "", htmlProximos = "";
-      
-      if(!data || data.length === 0) {
-        const msgVacio = "<p class='text-center small py-2 text-muted'>No hay pacientes en esta categoría.</p>";
+
+      if (!data || data.length === 0) {
+        const msgVacio = "<p class='text-center small py-2 text-muted'>Sin controles en esta sección.</p>";
         document.getElementById('seg-atrasados').innerHTML = msgVacio;
         document.getElementById('seg-hoy-manana').innerHTML = msgVacio;
         document.getElementById('seg-proximos').innerHTML = msgVacio;
-        mostrarLoading(false); return;
+        mostrarLoading(false);
+        return;
       }
-      
+
       data.forEach(item => {
-        const mensajeWA = `Hola ${item.nombre}, te saludamos de la clínica. Te recordamos que tienes programado tu próximo control médico de ${item.motivo} para el día ${item.fechaStr}. Por favor, confírmanos tu asistencia respondiendo a este mensaje. ¡Te esperamos!`;
-        
-        let nroCelular = item.celular.toString().replace(/\s+/g, '');
-        if(nroCelular.length === 9 && nroCelular.startsWith('9')) nroCelular = '51' + nroCelular;
-        
-        const linkWhatsApp = `https://wa.me/${nroCelular}?text=${encodeURIComponent(mensajeWA)}`;
-        
-        const cardHTML = `
-          <div class="card-seg">
+        const msgWA = `Hola ${item.nombre}, te recordamos tu próximo control obstétrico de *${item.motivo}* programado para el día *${item.fechaStr}*. Por favor confírmanos tu asistencia. ¡Te esperamos!`;
+        let nro = (item.celular || "").toString().replace(/\D/g, '');
+        if (nro.length === 9 && nro.startsWith('9')) nro = '51' + nro;
+
+        const card = `
+          <div class="card-seg" id="card-seg-${item.idSeg}">
             <div class="d-flex justify-content-between align-items-start">
               <div>
-                <div class="fw-bold text-dark" style="font-size:0.83rem">${item.nombre}</div>
-                <div class="text-muted mt-1" style="font-size:0.74rem; line-height:1.4;">
+                <div class="fw-bold text-dark" style="font-size:0.82rem">${item.nombre}</div>
+                <div class="text-muted mt-1" style="font-size:0.74rem;">
                   <b>Motivo:</b> ${item.motivo}<br>
                   <b>Fecha:</b> <span class="badge bg-light text-dark border">${item.fechaStr}</span>
                 </div>
               </div>
               <div class="d-flex flex-column gap-2 align-items-end">
-                <a href="${linkWhatsApp}" target="_blank" class="btn-wa">
-                  <i class="bi bi-whatsapp"></i> Recordar WA
+                <a href="https://wa.me/${nro}?text=${encodeURIComponent(msgWA)}" target="_blank" class="btn-wa">
+                  <i class="bi bi-whatsapp"></i> Recordar
                 </a>
-                <button onclick="marcarComoContactado(${item.fila})" class="btn btn-sm btn-outline-success" style="font-size:0.72rem; font-weight:700; border-radius:7px;">
+                <button onclick="marcarComoContactado('${item.idSeg}')" class="btn btn-sm btn-outline-success" style="font-size:0.7rem; font-weight:700; border-radius:6px;">
                   <i class="bi bi-check2"></i> Contactado
                 </button>
               </div>
             </div>
           </div>
         `;
-        
-        if (item.categoria === 'atrasado') htmlAtrasados += cardHTML;
-        else if (item.categoria === 'hoy_manana') htmlHoyManana += cardHTML;
-        else htmlProximos += cardHTML;
+
+        if (item.categoria === 'atrasado') htmlAtrasados += card;
+        else if (item.categoria === 'hoy_manana') htmlHoyManana += card;
+        else htmlProximos += card;
       });
-      
-      document.getElementById('seg-atrasados').innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted'>Sin citas retrasadas.</p>";
-      document.getElementById('seg-hoy-manana').innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted'>Sin controles pendientes hoy.</p>";
-      document.getElementById('seg-proximos').innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted'>Sin controles próximos.</p>";
-      
-    } catch(e) { alert("Error al cargar seguimiento"); }
+
+      document.getElementById('seg-atrasados').innerHTML = htmlAtrasados || "<p class='text-center small py-2 text-muted'>Sin controles atrasados.</p>";
+      document.getElementById('seg-hoy-manana').innerHTML = htmlHoyManana || "<p class='text-center small py-2 text-muted'>Sin citas para hoy o mañana.</p>";
+      document.getElementById('seg-proximos').innerHTML = htmlProximos || "<p class='text-center small py-2 text-muted'>Sin controles en los próximos 7 días.</p>";
+    } catch(e) {
+      alert("Error al cargar la agenda de seguimiento.");
+    }
     mostrarLoading(false);
   }
 
-  async function marcarComoContactado(filaExcel) {
-    if(!confirm("¿Confirmas que ya contactaste a este paciente? Se archivará de la lista.")) return;
+  async function marcarComoContactado(idSeg) {
+    if (!confirm("¿Marcar a este paciente como contactado?")) return;
+    
+    // Transición DOM inmediata
+    const elem = document.getElementById(`card-seg-${idSeg}`);
+    if (elem) elem.style.opacity = '0.3';
+
+    try {
+      await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, {
+        method: 'POST',
+        body: JSON.stringify({ idSeg: idSeg })
+      });
+      if (elem) elem.remove();
+    } catch(e) {
+      alert("Error al actualizar estado en la base de datos.");
+      if (elem) elem.style.opacity = '1';
+    }
+  }
+
+  // METAS FINANCIERAS Y PIN (POST SEGURO)
+  async function evaluarPinMaestro() {
+    const pin = document.getElementById('metas-pin').value;
+    if (pin.length === 4) {
+      mostrarLoading(true);
+      try {
+        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas`, {
+          method: 'POST',
+          body: JSON.stringify({ pin: pin })
+        });
+        const res = await r.json();
+
+        if (res.error) {
+          document.getElementById('pin-error').style.display = 'block';
+          document.getElementById('metas-pin').value = "";
+        } else {
+          document.getElementById('pin-error').style.display = 'none';
+          document.getElementById('metas-lock').style.display = 'none';
+          document.getElementById('metas-content').style.display = 'block';
+          dibujarMetas(res);
+        }
+      } catch(e) {
+        alert("Error de autenticación de PIN.");
+      }
+      mostrarLoading(false);
+    }
+  }
+
+  function dibujarMetas(res) {
+    const f = res.metaFinanciera;
+    document.getElementById('val-meta').innerText = `S/ ${f.meta.toFixed(2)}`;
+    document.getElementById('val-logrado').innerText = `S/ ${f.logrado.toFixed(2)}`;
+    document.getElementById('progreso-texto').innerText = `${f.porcentaje}%`;
+
+    const circle = document.getElementById('progreso-circulo');
+    const pct = Math.min(f.porcentaje, 100);
+    circle.style.strokeDashoffset = 502.65 - (pct / 100) * 502.65;
+
+    let color = "--color-0-30", msg = "Buen inicio de semana. Sigamos sumando atenciones.";
+    if (f.porcentaje > 30) { color = "--color-31-60"; msg = "Buen ritmo de consultas obstétricas."; }
+    if (f.porcentaje > 60) { color = "var(--accent)"; msg = "¡Excelente avance! Muy cerca de la meta semanal."; }
+    if (f.porcentaje > 90) { color = "--color-91-99"; msg = "¡Último esfuerzo para superar el objetivo!"; }
+    if (f.porcentaje >= 100) { color = "--color-100"; msg = "🏆 ¡META SEMANAL SUPERADA! Extraordinario desempeño."; }
+
+    circle.style.stroke = `var(${color})`;
+    document.getElementById('mensaje-motivador').style.borderColor = `var(${color})`;
+    document.getElementById('txt-motivador').innerText = msg;
+    document.getElementById('txt-motivador').style.color = `var(${color})`;
+
+    tareasLocales = res.objetivosTareas || [];
+    document.getElementById('lista-tareas').innerHTML = tareasLocales.map((t, i) => `
+      <div class="task-item">
+        <input type="checkbox" id="chk-task-${i}" ${t.completado ? 'checked' : ''} onchange="tareasLocales[${i}].completado = this.checked">
+        <label for="chk-task-${i}" class="m-0 ${t.completado ? 'task-completed' : 'fw-semibold text-dark'}">${t.descripcion}</label>
+      </div>
+    `).join('');
+  }
+
+  async function enviarActualizacionTareas() {
     mostrarLoading(true);
     try {
-      await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, { method: 'POST', body: JSON.stringify({ fila: filaExcel }) });
-      cargarMóduloSeguimiento();
-    } catch(e) { alert("Error al actualizar la base de datos."); }
+      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
+        method: 'POST',
+        body: JSON.stringify({ tareas: tareasLocales })
+      });
+      const res = await r.json();
+      if (res.resultado === "OK") alert("Tareas actualizadas correctamente.");
+    } catch(e) {
+      alert("Error al actualizar lista de tareas.");
+    }
     mostrarLoading(false);
   }
 </script>
