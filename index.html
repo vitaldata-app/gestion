@@ -28,7 +28,7 @@
     /* HEADER & BRANDING */
     header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 16px; position: sticky; top: 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; }
     .brand-group { display: flex; align-items: center; gap: 10px; }
-    .brand-group img { height: 38px; object-fit: contain; }
+    .brand-group img { height: 38px; width: auto; object-fit: contain; border-radius: 4px; }
     .brand-title { font-size: 15px; font-weight: 700; color: var(--primary); }
     .brand-subtitle { font-size: 11px; color: var(--text-muted); }
 
@@ -71,7 +71,7 @@
     .segment-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); border-radius: 6px; cursor: pointer; }
     .segment-btn.active { background: var(--surface); color: var(--primary); box-shadow: var(--shadow); }
 
-    /* MODAL */
+    /* MODALES */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
     .modal-overlay.active { display: flex; }
     .modal-sheet { background: var(--surface); width: 100%; max-width: 500px; border-radius: 20px 20px 0 0; padding: 20px 16px; max-height: 85vh; overflow-y: auto; }
@@ -85,10 +85,10 @@
     /* MICRO HISTORIAL ACCORDION */
     .history-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 12px; }
 
-    /* PRINT LAYOUT (@media print) */
+    /* IMPRESIÓN */
     @media print {
       body { background: white; padding: 0; }
-      header, .bottom-nav, .no-print { display: none !important; }
+      header, .bottom-nav, .no-print, .modal-overlay { display: none !important; }
       .print-only { display: block !important; }
       .container { max-width: 100%; padding: 0; }
       .card { border: none; box-shadow: none; padding: 0; }
@@ -98,12 +98,33 @@
 </head>
 <body>
 
+  <!-- PANTALLA DE ACCESO / LOGIN (SI NO HAY SESIÓN) -->
+  <div id="loginScreen" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:200; padding:24px; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:380px;">
+      <div style="text-align:center; margin-bottom:16px;">
+        <h2 style="color:var(--primary); font-size:18px;">DM Suite Clínica</h2>
+        <p style="font-size:12px; color:var(--text-muted);">Ingrese con sus credenciales de suscripción</p>
+      </div>
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="email" id="loginEmail" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="form-group">
+        <label>Clave de Acceso</label>
+        <input type="password" id="loginPass" placeholder="****">
+      </div>
+      <button class="btn btn-primary" onclick="ejecutarLogin()">Ingresar al Sistema</button>
+      <div id="loginError" style="color:var(--danger); font-size:12px; margin-top:8px; text-align:center;"></div>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <header>
     <div class="brand-group">
+      <img id="clinicLogoImg" src="" alt="Logo" style="display:none;">
       <div id="clinicLogoPlaceholder" style="font-weight:900; color:var(--accent); font-size:20px;">DM</div>
       <div>
-        <div class="brand-title" id="txtClinicName">Vital Data Clinic</div>
+        <div class="brand-title" id="txtClinicName">Cargando...</div>
         <div class="brand-subtitle">Powered by DM Analytics</div>
       </div>
     </div>
@@ -123,8 +144,8 @@
             <option value="CE">CE</option>
             <option value="PAS">PAS</option>
           </select>
-          <input type="tel" id="admNumDoc" placeholder="Número de Documento" maxlength="15">
-          <button class="btn btn-outline btn-icon" onclick="buscarPacienteLocal()">🔍</button>
+          <input type="tel" id="admNumDoc" placeholder="Número Documento" maxlength="15">
+          <button class="btn btn-outline btn-icon" onclick="buscarPacienteEnBackend()">🔍</button>
         </div>
         <div class="form-group">
           <input type="text" id="admNombres" placeholder="Nombres y Apellidos Completos">
@@ -142,8 +163,8 @@
         </div>
         <div class="chips-group" id="categoryChips">
           <div class="chip active" onclick="filtrarCategoria('TODOS', this)">Todos</div>
-          <div class="chip" onclick="filtrarCategoria('Ecografía', this)">Ecografías</div>
           <div class="chip" onclick="filtrarCategoria('Consulta', this)">Consultas</div>
+          <div class="chip" onclick="filtrarCategoria('Ecografía', this)">Ecografías</div>
           <div class="chip" onclick="filtrarCategoria('Farmacia', this)">Farmacia/Insumos</div>
         </div>
         <div id="serviceListContainer" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;"></div>
@@ -164,7 +185,7 @@
       </div>
     </section>
 
-    <!-- TAB 2: INFORMES Y RECETAS (CON MICRO-HISTORIAL) -->
+    <!-- TAB 2: INFORMES Y RECETAS (MICRO-HISTORIAL CONTEXTUAL) -->
     <section id="tab-informes" class="view-section">
       <div class="card no-print">
         <div class="card-title">Búsqueda Rápida de Paciente</div>
@@ -173,8 +194,6 @@
           <input type="tel" id="infNumDoc" placeholder="Documento para Historial/Informe">
           <button class="btn btn-outline btn-icon" onclick="cargarHistorialContextual()">🔍</button>
         </div>
-        
-        <!-- MICRO-HISTORIAL CONTEXTUAL -->
         <div id="microHistoryContainer" style="display:none; margin-top:10px;">
           <div style="font-size:12px; font-weight:700; color:var(--teal); margin-bottom:4px;">Últimas 3 Atenciones:</div>
           <div id="microHistoryList"></div>
@@ -211,14 +230,12 @@
         <button class="segment-btn active" onclick="switchAgendaTab('programadas', this)">📅 Controles Programados</button>
         <button class="segment-btn" onclick="switchAgendaTab('reactivacion', this)">🎯 Reactivación (+90d)</button>
       </div>
-
       <div id="agendaProgramadaView">
         <div class="card">
           <div class="card-title">Citas de la Semana</div>
           <div id="agendaList" style="font-size:13px;">Cargando citas...</div>
         </div>
       </div>
-
       <div id="agendaReactivacionView" style="display:none;">
         <div class="card">
           <div class="card-title">Pacientes Inactivas para Campaña</div>
@@ -302,33 +319,87 @@
 
   <!-- LÓGICA DE CONTROL JS -->
   <script>
-    const CONFIG_APP = {
-      API_URL: "https://script.google.com/macros/s/AKfycbyVnXXXXX-TU-DEPLOYMENT-ID/exec",
-      SPREADSHEET_ID: new URLSearchParams(window.location.search).get("id") || "TU_SPREADSHEET_ID_AQUI"
-    };
+    const API_URL = "https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec"; // Reemplazar con tu URL
 
     let state = {
+      spreadsheetId: localStorage.getItem("dm_ss_id") || "",
+      empresa: localStorage.getItem("dm_empresa") || "Vital Data Clinic",
+      logoUrl: localStorage.getItem("dm_logo") || "",
       cart: [],
-      catalog: [
-        { id: "S01", name: "Consulta Obstétrica", category: "Consulta", price: 50.00, stockRef: "INS01", stock: 25 },
-        { id: "S02", name: "Ecografía Transvaginal", category: "Ecografía", price: 80.00, stockRef: "INS02", stock: 3 },
-        { id: "S03", name: "Papanicolaou", category: "Consulta", price: 40.00, stockRef: "INS03", stock: 0 },
-        { id: "S04", name: "Ampolla Trimestral", category: "Farmacia", price: 30.00, stockRef: "INS04", stock: 12 }
-      ],
+      catalog: [],
+      inventory: [],
       selectedExpenseCat: "Insumos"
     };
 
-    // INICIALIZACIÓN
     document.addEventListener("DOMContentLoaded", () => {
-      renderCatalog(state.catalog);
+      if (!state.spreadsheetId) {
+        document.getElementById("loginScreen").style.display = "flex";
+      } else {
+        aplicarBranding();
+        cargarDatosIniciales();
+      }
     });
 
-    // NAVEGACIÓN SPA
+    async function ejecutarLogin() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const pass = document.getElementById("loginPass").value.trim();
+      const errEl = document.getElementById("loginError");
+      errEl.innerText = "Validando acceso...";
+
+      try {
+        const res = await fetch(`${API_URL}?action=validarAcceso&correo=${encodeURIComponent(email)}&clave=${encodeURIComponent(pass)}`);
+        const data = await res.json();
+
+        if (data.status === "success") {
+          state.spreadsheetId = data.spreadsheetId;
+          state.empresa = data.empresa;
+          state.logoUrl = data.logoUrl;
+          localStorage.setItem("dm_ss_id", data.spreadsheetId);
+          localStorage.setItem("dm_empresa", data.empresa);
+          localStorage.setItem("dm_logo", data.logoUrl);
+          document.getElementById("loginScreen").style.display = "none";
+          aplicarBranding();
+          cargarDatosIniciales();
+        } else {
+          errEl.innerText = data.message || "Error al validar.";
+        }
+      } catch (err) {
+        errEl.innerText = "Error de conexión con el servidor.";
+      }
+    }
+
+    function aplicarBranding() {
+      document.getElementById("txtClinicName").innerText = state.empresa;
+      if (state.logoUrl && state.logoUrl.startsWith("http")) {
+        const img = document.getElementById("clinicLogoImg");
+        img.src = state.logoUrl;
+        img.style.display = "block";
+        document.getElementById("clinicLogoPlaceholder").style.display = "none";
+      }
+    }
+
+    async function cargarDatosIniciales() {
+      try {
+        const res = await fetch(`${API_URL}?action=obtenerConfig&id=${state.spreadsheetId}`);
+        const data = await res.json();
+        if (data.status === "success") {
+          state.catalog = data.catalogo || [];
+          state.inventory = data.inventario || [];
+          renderCatalog(state.catalog);
+        }
+      } catch (e) {
+        console.error("Error cargando configuración:", e);
+      }
+    }
+
     function switchNav(viewId, btn) {
       document.querySelectorAll(".view-section").forEach(el => el.classList.remove("active"));
       document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
       document.getElementById(viewId).classList.add("active");
       btn.classList.add("active");
+
+      if (viewId === "tab-agenda") cargarAgenda();
+      if (viewId === "tab-metas") cargarMetas();
     }
 
     function switchAgendaTab(view, btn) {
@@ -338,23 +409,26 @@
       document.getElementById("agendaReactivacionView").style.display = view === 'reactivacion' ? 'block' : 'none';
     }
 
-    // RENDERIZADO DEL CATÁLOGO & CARRITO
     function renderCatalog(items) {
       const container = document.getElementById("serviceListContainer");
-      container.innerHTML = items.map(item => {
-        let stockBadge = item.stock > 5 ? `<span class="badge-stock stock-green">Stock: ${item.stock}</span>` :
-                         item.stock > 0 ? `<span class="badge-stock stock-yellow">Quedan: ${item.stock}</span>` :
-                         `<span class="badge-stock stock-red">Agotado</span>`;
-        return `
-          <div style="border:1px solid var(--border); padding:10px; border-radius:8px; background:var(--bg);" onclick="addToCart('${item.id}')">
-            <div style="font-size:12px; font-weight:700;">${item.name}</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-              <span style="font-size:13px; font-weight:800; color:var(--accent);">S/ ${item.price.toFixed(2)}</span>
-              ${stockBadge}
-            </div>
+      container.innerHTML = items.map(item => `
+        <div style="border:1px solid var(--border); padding:10px; border-radius:8px; background:var(--bg); cursor:pointer;" onclick="addToCart('${item.id}')">
+          <div style="font-size:12px; font-weight:700;">${item.name}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <span style="font-size:13px; font-weight:800; color:var(--accent);">S/ ${Number(item.price).toFixed(2)}</span>
           </div>
-        `;
-      }).join("");
+        </div>
+      `).join("");
+    }
+
+    function filtrarCategoria(cat, chipEl) {
+      document.querySelectorAll("#categoryChips .chip").forEach(c => c.classList.remove("active"));
+      chipEl.classList.add("active");
+      if (cat === "TODOS") {
+        renderCatalog(state.catalog);
+      } else {
+        renderCatalog(state.catalog.filter(i => i.category === cat));
+      }
     }
 
     function addToCart(itemId) {
@@ -368,23 +442,80 @@
     function renderCart() {
       const list = document.getElementById("cartItemsList");
       const totalEl = document.getElementById("admTotalVenta");
-      if(state.cart.length === 0) {
+      if (state.cart.length === 0) {
         list.innerHTML = `<span style="color:var(--text-muted)">Sin servicios seleccionados</span>`;
         totalEl.value = "S/ 0.00";
         return;
       }
       let total = 0;
       list.innerHTML = state.cart.map((item, idx) => {
-        total += item.price;
+        total += Number(item.price);
         return `<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                   <span>${item.name}</span>
-                  <b>S/ ${item.price.toFixed(2)}</b>
+                  <b>S/ ${Number(item.price).toFixed(2)}</b>
                 </div>`;
       }).join("");
       totalEl.value = `S/ ${total.toFixed(2)}`;
     }
 
-    // MODALES
+    async function buscarPacienteEnBackend() {
+      const doc = document.getElementById("admNumDoc").value.trim();
+      if (!doc) return;
+      try {
+        const res = await fetch(`${API_URL}?action=buscarPaciente&id=${state.spreadsheetId}&numDoc=${doc}`);
+        const data = await res.json();
+        if (data.status === "success" && data.encontrado) {
+          document.getElementById("admNombres").value = data.paciente.nombres;
+          document.getElementById("admTelefono").value = data.paciente.telefono;
+          document.getElementById("admEdad").value = data.paciente.edad;
+        } else {
+          alert("Paciente no registrado. Complete los datos.");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function procesarAdmision() {
+      if (state.cart.length === 0) { alert("Agregue al menos un servicio"); return; }
+      const doc = document.getElementById("admNumDoc").value.trim();
+      const nom = document.getElementById("admNombres").value.trim();
+      if (!doc || !nom) { alert("Documento y Nombres son obligatorios"); return; }
+
+      const payload = {
+        spreadsheetId: state.spreadsheetId,
+        action: "registrarTransaccionAdmision",
+        paciente: {
+          tipoDoc: document.getElementById("admTipoDoc").value,
+          numDoc: doc,
+          nombres: nom,
+          telefono: document.getElementById("admTelefono").value.trim(),
+          edad: document.getElementById("admEdad").value.trim()
+        },
+        servicios: state.cart.map(c => ({ nombre: c.name, precio: c.price, categoria: c.category })),
+        medioPago: document.getElementById("admMedioPago").value
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("Atención registrada correctamente. ID: " + data.transaccionId);
+          state.cart = [];
+          renderCart();
+          document.getElementById("admNumDoc").value = "";
+          document.getElementById("admNombres").value = "";
+          document.getElementById("admTelefono").value = "";
+          document.getElementById("admEdad").value = "";
+        }
+      } catch (e) {
+        alert("Error al procesar la atención.");
+      }
+    }
+
     function openExpenseModal() { document.getElementById("expenseModal").classList.add("active"); }
     function closeExpenseModal() { document.getElementById("expenseModal").classList.remove("active"); }
     function setExpenseCat(cat, el) {
@@ -393,58 +524,137 @@
       el.classList.add("active");
     }
 
+    async function guardarGastoRapido() {
+      const detalle = document.getElementById("expDetalle").value.trim();
+      const monto = Number(document.getElementById("expMonto").value);
+      if (!detalle || monto <= 0) { alert("Complete detalle y monto válido."); return; }
+
+      const payload = {
+        spreadsheetId: state.spreadsheetId,
+        action: "registrarGasto",
+        gasto: { categoria: state.selectedExpenseCat, detalle: detalle, monto: monto, medioPago: "Efectivo", documento: "Recibo" }
+      };
+
+      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+      alert("Gasto guardado en GASTOS_ESTRUCTURA");
+      closeExpenseModal();
+      document.getElementById("expDetalle").value = "";
+      document.getElementById("expMonto").value = "";
+    }
+
     function openInventoryModal() {
       const list = document.getElementById("inventoryItemsList");
-      list.innerHTML = state.catalog.map(item => `
+      list.innerHTML = state.inventory.map(item => `
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding:8px 0;">
           <div>
             <div style="font-weight:600; font-size:13px;">${item.name}</div>
-            <div style="font-size:11px; color:var(--text-muted);">Insumo Base: ${item.stockRef}</div>
+            <div style="font-size:11px; color:var(--text-muted);">Mínimo: ${item.stockMinimo} | ${item.unidad}</div>
           </div>
-          <div><b style="font-size:14px;">${item.stock} un.</b></div>
+          <div><b style="font-size:14px; color:${item.stockActual <= item.stockMinimo ? 'var(--danger)' : 'var(--text)'};">${item.stockActual}</b></div>
         </div>
       `).join("");
       document.getElementById("inventoryModal").classList.add("active");
     }
     function closeInventoryModal() { document.getElementById("inventoryModal").classList.remove("active"); }
 
-    // DESPACHO DIRECTO WHATSAPP
+    async function cargarHistorialContextual() {
+      const doc = document.getElementById("infNumDoc").value.trim();
+      if (!doc) return;
+      try {
+        const res = await fetch(`${API_URL}?action=buscarHistorialClinico&id=${state.spreadsheetId}&numDoc=${doc}`);
+        const data = await res.json();
+        const container = document.getElementById("microHistoryContainer");
+        const list = document.getElementById("microHistoryList");
+
+        if (data.status === "success" && data.historial.length > 0) {
+          container.style.display = "block";
+          list.innerHTML = data.historial.map(h => `
+            <div class="history-card">
+              <b>${h.fecha} - ${h.servicio}</b><br>
+              <span style="color:var(--text-muted)">Dx: ${h.diagnostico || 'Sin diagnóstico'}</span><br>
+              <span style="color:var(--text-muted)">Rx: ${h.receta || 'Sin indicaciones'}</span>
+            </div>
+          `).join("");
+        } else {
+          container.style.display = "block";
+          list.innerHTML = `<div style="font-size:12px; color:var(--text-muted);">Sin historial previo registrado.</div>`;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     function despacharWhatsAppDirecto() {
       const tel = document.getElementById("admTelefono").value.trim();
       const paciente = document.getElementById("infPacienteNombre").value || "Paciente";
       const dx = document.getElementById("infDiagnostico").value;
       const rx = document.getElementById("infReceta").value;
 
-      if(!tel) { alert("Ingrese el teléfono del paciente en Admisión"); return; }
+      if (!tel) { alert("Complete el número telefónico."); return; }
 
-      const msg = `*RESUMEN CLÍNICO - VITAL DATA*%0A` +
+      const msg = `*RESUMEN CLÍNICO - ${encodeURIComponent(state.empresa)}*%0A` +
                   `*Paciente:* ${encodeURIComponent(paciente)}%0A` +
                   `*Diagnóstico:* ${encodeURIComponent(dx)}%0A` +
                   `*Indicaciones:* ${encodeURIComponent(rx)}%0A%0A` +
-                  `_Gracias por confiar en nuestra atención médica._`;
+                  `_Atención registrada exitosamente._`;
       
       window.open(`https://wa.me/51${tel}?text=${msg}`, "_blank");
     }
 
-    // MICRO-HISTORIAL CONTEXTUAL
-    function cargarHistorialContextual() {
-      const doc = document.getElementById("infNumDoc").value.trim();
-      if(!doc) return;
-      document.getElementById("infPacienteNombre").value = "Paciente Demo (" + doc + ")";
-      const container = document.getElementById("microHistoryContainer");
-      const list = document.getElementById("microHistoryList");
-      
-      container.style.display = "block";
-      list.innerHTML = `
-        <div class="history-card">
-          <b>14/07/2026 - Ecografía TV</b><br>
-          <span style="color:var(--text-muted)">Dx: Gestación 8 semanas activa. Receta: Ácido fólico 0.5mg.</span>
-        </div>
-        <div class="history-card">
-          <b>10/02/2026 - Consulta Ginecológica</b><br>
-          <span style="color:var(--text-muted)">Dx: Chequeo preventivo PAP negativo.</span>
-        </div>
-      `;
+    async function cargarMetas() {
+      try {
+        const res = await fetch(`${API_URL}?action=obtenerMetasYTareas&id=${state.spreadsheetId}`);
+        const data = await res.json();
+        if (data.status === "success") {
+          document.getElementById("txtVentaActualSemana").innerText = `S/ ${data.ventaSemanal.toFixed(2)}`;
+          document.getElementById("txtMetaObjetivo").innerText = `Meta Semanal: S/ ${data.metaMonto.toFixed(2)}`;
+          const pct = data.metaMonto > 0 ? Math.min(100, (data.ventaSemanal / data.metaMonto) * 100) : 0;
+          document.getElementById("barProgresoMeta").style.width = `${pct}%`;
+
+          const tCont = document.getElementById("tasksListContainer");
+          tCont.innerHTML = data.tareas.map(t => `
+            <div style="display:flex; align-items:center; gap:8px; background:var(--bg); padding:10px; border-radius:8px; font-size:12px;">
+              <input type="checkbox" ${t.estado === 'COMPLETADO' ? 'checked' : ''} onchange="marcarTarea('${t.id}', this.checked)">
+              <div>
+                <b>[${t.categoria}]</b> ${t.descripcion}
+              </div>
+            </div>
+          `).join("");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function marcarTarea(idTarea, isChecked) {
+      const payload = {
+        spreadsheetId: state.spreadsheetId,
+        action: "marcarTareaCompletada",
+        idTarea: idTarea,
+        estado: isChecked ? "COMPLETADO" : "PENDIENTE"
+      };
+      await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+    }
+
+    async function cargarAgenda() {
+      const el = document.getElementById("agendaList");
+      el.innerHTML = "Cargando citas...";
+      try {
+        const res = await fetch(`${API_URL}?action=obtenerAgendaSeguimiento&id=${state.spreadsheetId}`);
+        const data = await res.json();
+        if (data.status === "success" && data.citas.length > 0) {
+          el.innerHTML = data.citas.map(c => `
+            <div style="border-bottom:1px solid var(--border); padding:8px 0;">
+              <b>${c.fecha} - ${c.paciente}</b><br>
+              <span style="color:var(--text-muted)">Motivo: ${c.motivo} (${c.telefono})</span>
+            </div>
+          `).join("");
+        } else {
+          el.innerHTML = "No hay citas pendientes para esta semana.";
+        }
+      } catch (e) {
+        el.innerHTML = "Error al cargar agenda.";
+      }
     }
   </script>
 </body>
