@@ -480,7 +480,6 @@
   </div>
 </header>
 
-<!-- Navegación Refactorizada a 4 Pestañas -->
 <div class="nav-tabs-container sticky-top" style="top:65px; z-index:1015;">
   <ul class="nav nav-pills-custom nav-justified" id="mainTabs" role="tablist">
     <li class="nav-item">
@@ -637,7 +636,7 @@
       </div>
     </div>
 
-    <!-- PESTAÑA 2: INFORME / RECETA CON MICRO-HISTORIAL INTEGRADO -->
+    <!-- PESTAÑA 2: INFORME / RECETA CON MICRO-HISTORIAL -->
     <div class="tab-pane fade" id="tab-inf" role="tabpanel">
       <div class="ui-card no-print">
         <div class="ui-card-header">
@@ -645,7 +644,6 @@
           <span class="badge" style="background:#ccfbf1; color:#0f766e;">Exportación Local</span>
         </div>
 
-        <!-- Micro-Historial Contextual de las Últimas 3 Atenciones -->
         <div id="box-micro-historial" class="mb-3" style="display:none;">
           <div class="d-flex align-items-center justify-content-between mb-1">
             <span class="form-label mb-0" style="color:var(--accent);"><i class="bi bi-clock-history"></i> Atenciones Anteriores (Últimas 3)</span>
@@ -861,16 +859,12 @@
   const URL_API = "https://script.google.com/macros/s/AKfycbxLOIXNcYPT9Jdr61jAKM3TaON7jcsAJ3xO529lRaDgYdTgfagBULs5k2Q9GG6YcmDoSA/exec"; 
   const params = new URLSearchParams(window.location.search);
   
-  // Detección automática del ID de la clínica
+  // Detección de ID de clínica
   let ID_CLINICA = params.get('id') || localStorage.getItem('dm_ss_id') || "1jci2QuOuGmQQVmr6mMgVoYgYWxnS-UlnmOAdI9mqRwY";
-
-  const CACHE_KEY_CONFIG = `dm_config_${ID_CLINICA}`;
-  const CACHE_TTL = 24 * 60 * 60 * 1000;
 
   let configLocal = [], carrito = [], tareasLocales = [];
   let ultimoPacienteAtendido = null;
 
-  // Conversor de enlaces de Drive para visualización directa
   function formatearUrlDrive(url) {
     if (!url || typeof url !== 'string') return '';
     if (url.includes('drive.google.com/thumbnail')) return url;
@@ -886,26 +880,21 @@
   async function cargarConfiguracionInicial(forzarSync) {
     mostrarLoading(true);
     try {
-      const cacheGuardado = localStorage.getItem(CACHE_KEY_CONFIG);
-      const cacheTime = localStorage.getItem(`${CACHE_KEY_CONFIG}_time`);
-      const esValido = cacheGuardado && cacheTime && (Date.now() - parseInt(cacheTime) < CACHE_TTL);
-
-      if (esValido && !forzarSync) {
-        procesarConfiguracion(JSON.parse(cacheGuardado));
-        mostrarLoading(false);
-        return;
+      if (forzarSync) {
+        localStorage.clear();
       }
 
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerConfig`);
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=obtenerConfig`);
       const data = await r.json();
 
       if (data && !data.error) {
-        localStorage.setItem(CACHE_KEY_CONFIG, JSON.stringify(data));
-        localStorage.setItem(`${CACHE_KEY_CONFIG}_time`, Date.now().toString());
         procesarConfiguracion(data);
+      } else {
+        document.getElementById('web-clinica-nombre').innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-exclamation-octagon"></i> ${data.mensaje || 'Error al conectar con la base de datos'}</span>`;
       }
     } catch(e) {
       console.error("Error al sincronizar:", e);
+      document.getElementById('web-clinica-nombre').innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-wifi-off"></i> Error de red al sincronizar</span>`;
     }
     mostrarLoading(false);
   }
@@ -915,17 +904,19 @@
   }
 
   function procesarConfiguracion(data) {
-    if (data.clinicaNombre && data.clinicaNombre.trim() !== "") {
-      document.getElementById('web-clinica-nombre').innerHTML = `DM ANALYTICS potenciando a <strong>${data.clinicaNombre}</strong>`;
-      document.getElementById('print-clinica-nombre').innerText = data.clinicaNombre.toUpperCase();
-    }
-    if (data.clinicaLogo && data.clinicaLogo.trim() !== "") {
+    const nombre = data.clinicaNombre || data.clinica || "Global Medic";
+    document.getElementById('web-clinica-nombre').innerHTML = `DM ANALYTICS potenciando a <strong>${nombre}</strong>`;
+    document.getElementById('print-clinica-nombre').innerText = nombre.toUpperCase();
+
+    const logoUrl = data.clinicaLogo || data.logoUrl || "";
+    if (logoUrl) {
       const logoImg = document.getElementById('web-clinica-logo');
-      logoImg.src = formatearUrlDrive(data.clinicaLogo);
+      logoImg.src = formatearUrlDrive(logoUrl);
       logoImg.style.display = 'block';
       document.getElementById('web-brand-divider').style.display = 'block';
     }
-    configLocal = data.servicios || [];
+
+    configLocal = data.servicios || data.catalogo || [];
     dibujarCategorias();
   }
 
@@ -967,7 +958,7 @@
     if (!numDoc) return;
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarPaciente&dni=${encodeURIComponent(numDoc)}`);
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=buscarPaciente&dni=${encodeURIComponent(numDoc)}`);
       const res = await r.json();
       if (!res.error && res.encontrado) {
         document.getElementById('nombrePac').value = res.data.nombre || "";
@@ -981,13 +972,12 @@
           let opt = Array.from(selectDist.options).find(o => o.value.toLowerCase() === res.data.distrito.toLowerCase());
           if (opt) selectDist.value = opt.value;
         }
-        // Carga automática del micro-historial
         cargarMicroHistorial(numDoc);
       } else {
         ['nombrePac', 'apePat', 'apeMat', 'celular', 'edad'].forEach(id => document.getElementById(id).value = "");
       }
     } catch(e) {
-      alert("Error al consultar padrón de pacientes.");
+      console.error("Error buscando paciente:", e);
     }
     mostrarLoading(false);
   }
@@ -995,9 +985,9 @@
   async function cargarMicroHistorial(numDoc) {
     if (!numDoc) return;
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=buscarHistorial&dni=${encodeURIComponent(numDoc)}`);
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=buscarHistorial&dni=${encodeURIComponent(numDoc)}`);
       const data = await r.json();
-      renderizarMicroHistorial(data);
+      renderizarMicroHistorial(Array.isArray(data) ? data : (data.historial || []));
     } catch(e) {
       console.error("Error al obtener micro-historial:", e);
     }
@@ -1018,7 +1008,7 @@
     cont.innerHTML = historial.slice(0, 3).map(h => `
       <div class="p-2 rounded bg-light border" style="font-size:0.75rem; border-left: 3px solid var(--accent) !important;">
         <div class="d-flex justify-content-between fw-bold text-dark">
-          <span>${h.servicio || h.producto}</span>
+          <span>${h.servicio || h.producto || h.name}</span>
           <span class="text-muted" style="font-size:0.7rem">${h.fecha}</span>
         </div>
         ${h.diagnostico ? `<div class="text-muted mt-1"><b>Dx:</b> ${h.diagnostico}</div>` : ''}
@@ -1028,7 +1018,7 @@
   }
 
   function dibujarCategorias() {
-    const cats = [...new Set(configLocal.map(i => i.categoria))];
+    const cats = [...new Set(configLocal.map(i => i.categoria || i.category || "General"))];
     document.getElementById('container-cats').innerHTML = cats.map((c, idx) => `
       <button class="btn btn-cat ${idx === 0 ? 'active-cat' : ''}" onclick="seleccionarCategoria(this, '${c}')">${c}</button>
     `).join('');
@@ -1038,22 +1028,29 @@
   function seleccionarCategoria(btn, c) {
     document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active-cat'));
     btn.classList.add('active-cat');
-    const items = configLocal.filter(i => i.categoria === c);
-    document.getElementById('container-items').innerHTML = items.map(i => `
-      <button class="btn btn-item" onclick="agregarAlCarrito('${i.nombre}')">
-        <span class="item-name">${i.nombre}</span>
-        <div class="d-flex justify-content-between align-items-center w-100">
-          <span class="item-precio">S/ ${parseFloat(i.pvp).toFixed(2)}</span>
-          <i class="bi bi-plus-circle-fill text-muted"></i>
-        </div>
-      </button>
-    `).join('');
+    const items = configLocal.filter(i => (i.categoria || i.category || "General") === c);
+    document.getElementById('container-items').innerHTML = items.map(i => {
+      const nombre = i.nombre || i.name;
+      const precio = parseFloat(i.pvp || i.precio || i.price || 0);
+      return `
+        <button class="btn btn-item" onclick="agregarAlCarrito('${nombre}')">
+          <span class="item-name">${nombre}</span>
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <span class="item-precio">S/ ${precio.toFixed(2)}</span>
+            <i class="bi bi-plus-circle-fill text-muted"></i>
+          </div>
+        </button>
+      `;
+    }).join('');
   }
 
   function agregarAlCarrito(nombre) {
-    const item = configLocal.find(x => x.nombre === nombre);
+    const item = configLocal.find(x => (x.nombre || x.name) === nombre);
     if (!item) return;
-    carrito.push({ ...item, idU: Date.now() + Math.random().toString(36).substring(2, 5) });
+    const pvp = parseFloat(item.pvp || item.precio || item.price || 0);
+    const nombreItem = item.nombre || item.name;
+    const categoria = item.categoria || item.category || "General";
+    carrito.push({ nombre: nombreItem, categoria: categoria, pvp: pvp, idU: Date.now() + Math.random().toString(36).substring(2, 5) });
     actualizarCarrito();
   }
 
@@ -1155,12 +1152,12 @@
     };
 
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=registrarAdmision`, {
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=registrarAdmision`, {
         method: 'POST',
         body: JSON.stringify(payload)
       });
       const res = await r.json();
-      if (res.resultado === "OK") {
+      if (res.resultado === "OK" || res.status === "success") {
         ultimoPacienteAtendido = { ...payload, primerServicio: carrito[0]?.nombre || "Consulta Obstétrica" };
         document.getElementById('custom-alert').style.display = 'block';
       } else {
@@ -1272,12 +1269,12 @@
   async function cargarModuloSeguimiento() {
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerSeguimiento`);
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=obtenerSeguimiento`);
       const data = await r.json();
 
       let htmlAtrasados = "", htmlHoyManana = "", htmlProximos = "";
 
-      if (!data || data.length === 0) {
+      if (!data || !Array.isArray(data) || data.length === 0) {
         const msgVacio = "<p class='text-center small py-2 text-muted'>Sin controles en esta sección.</p>";
         document.getElementById('seg-atrasados').innerHTML = msgVacio;
         document.getElementById('seg-hoy-manana').innerHTML = msgVacio;
@@ -1334,7 +1331,7 @@
     if (elem) elem.style.opacity = '0.3';
 
     try {
-      await fetch(`${URL_API}?id=${ID_CLINICA}&accion=marcarContactado`, {
+      await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=marcarContactado`, {
         method: 'POST',
         body: JSON.stringify({ idSeg: idSeg })
       });
@@ -1350,7 +1347,7 @@
     if (pin.length === 4) {
       mostrarLoading(true);
       try {
-        const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=obtenerMetas`, {
+        const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=obtenerMetas`, {
           method: 'POST',
           body: JSON.stringify({ pin: pin })
         });
@@ -1405,7 +1402,7 @@
   async function enviarActualizacionTareas() {
     mostrarLoading(true);
     try {
-      const r = await fetch(`${URL_API}?id=${ID_CLINICA}&accion=actualizarTareas`, {
+      const r = await fetch(`${URL_API}?id=${encodeURIComponent(ID_CLINICA)}&accion=actualizarTareas`, {
         method: 'POST',
         body: JSON.stringify({ tareas: tareasLocales })
       });
