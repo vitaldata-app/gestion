@@ -467,7 +467,6 @@
 </head>
 <body>
 
-<!-- Loader -->
 <div id="spinner-overlay">
   <div class="spinner-box">
     <div class="spinner-border" style="color:var(--accent)" role="status"></div>
@@ -475,7 +474,6 @@
   </div>
 </div>
 
-<!-- Modal Alerta de Éxito -->
 <div id="custom-alert">
   <div class="alert-modal-card">
     <div class="alert-icon-check"><i class="bi bi-check-lg"></i></div>
@@ -492,7 +490,6 @@
   </div>
 </div>
 
-<!-- Header Centrado con Toolbar Inferior -->
 <header class="app-header">
   <div class="brand-logos-center">
     <img src="https://drive.google.com/thumbnail?id=1RFiDNFx8YbsrI66ge95mh_IAcDObmxCb&sz=w500" class="logo-dm" alt="DM Dynamic Analytics">
@@ -510,7 +507,6 @@
   </div>
 </header>
 
-<!-- Navegación Refactorizada a 4 Pestañas -->
 <div class="nav-tabs-container sticky-top" style="top:98px; z-index:1015;">
   <ul class="nav nav-pills-custom nav-justified" id="mainTabs" role="tablist">
     <li class="nav-item">
@@ -675,7 +671,6 @@
           <span class="badge" style="background:#ccfbf1; color:#0f766e;">Exportación Local</span>
         </div>
 
-        <!-- Micro-Historial Contextual (Últimas 3 Visitas) -->
         <div id="box-micro-historial" class="mb-3" style="display:none;">
           <div class="d-flex align-items-center justify-content-between mb-1">
             <span class="form-label mb-0" style="color:var(--accent);"><i class="bi bi-clock-history"></i> Atenciones Anteriores (Últimas 3)</span>
@@ -822,17 +817,14 @@
 
     <!-- PESTAÑA 4: METAS (CONECTADA A FÓRMULA Y FILTRO DINÁMICO) -->
     <div class="tab-pane fade" id="tab-metas" role="tabpanel">
-      
-      <!-- Barrera PIN -->
       <div id="metas-lock" class="ui-card text-center py-4">
         <div style="font-size:32px; color:var(--text-muted);"><i class="bi bi-shield-lock-fill"></i></div>
         <h6 class="fw-bold mt-2 mb-1">Módulo Administrativo & Metas</h6>
-        <p class="text-muted small mb-2">Ingrese PIN de 4 dígitos para actualizar métricas en vivo.</p>
+        <p class="text-muted small mb-2">Ingrese PIN de 4 dígitos para consultar métricas.</p>
         <input type="password" id="metas-pin" class="pin-input form-control" maxlength="4" placeholder="••••" oninput="evaluarPinMaestro()">
         <p id="pin-error" class="text-danger small fw-bold mt-2" style="display:none;"><i class="bi bi-exclamation-triangle-fill"></i> PIN Incorrecto</p>
       </div>
 
-      <!-- Métricas y Checklist de Tareas -->
       <div id="metas-content" style="display:none">
         <div class="ui-card">
           <div class="ui-card-header text-center justify-content-between">
